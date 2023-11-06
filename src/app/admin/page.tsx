@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { Breadcrumb, theme } from 'antd';
+import { Breadcrumb, theme } from "antd";
 
 const App: React.FC = () => {
   const {
@@ -8,15 +8,13 @@ const App: React.FC = () => {
   } = theme.useToken();
   return (
     <>
-      <Breadcrumb style={{ margin: '16px 0' }}>
-        <Breadcrumb.Item>User</Breadcrumb.Item>
-        <Breadcrumb.Item>Bill</Breadcrumb.Item>
-      </Breadcrumb>
-      <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
+      <div
+        style={{ padding: 24, minHeight: 360, background: colorBgContainer }}
+      >
         Bill is a cat.
       </div>
     </>
-  )
+  );
 };
 
 export default App;
