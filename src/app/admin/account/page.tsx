@@ -1,6 +1,6 @@
 "use client";
 
-import { Table } from "antd";
+import { Space, Table } from "antd";
 import { connect } from "@/lib/Axios";
 import { useEffect, useState } from "react";
 import Account from "./model";
@@ -39,9 +39,9 @@ export default function Page() {
     // fetch;
   }, []);
   return (
-    <>
+    <Space direction="vertical" style={{ display: "flex" }}>
       <Add />
       <Table columns={columns} />
-    </>
+    </Space>
   );
 }

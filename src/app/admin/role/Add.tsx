@@ -1,6 +1,10 @@
 "use client";
 
+import { connect } from "@/lib/Axios";
 import { Button, Form, Input, Modal, Space, Spin } from "antd";
+import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
+import { NamePath } from "antd/es/form/interface";
+import { HttpStatusCode } from "axios";
 import { useState } from "react";
 
 type AddType = {
@@ -8,7 +12,16 @@ type AddType = {
   password?: string;
 };
 
-export default function Add() {
+export default function Add<T>(
+  props: Readonly<{
+    title: string;
+    url: string;
+    sections: {
+      label: string;
+      name: NamePath<T>;
+    }[];
+  }>,
+) {
   const [isSpining, setIsSpining] = useState(false);
   const [form] = Form.useForm<AddType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,9 +32,12 @@ export default function Add() {
   };
   const handleCancel = () => setIsModalOpen(false);
   const onAction = (data: AddType) => {
-    setTimeout(() => {
-      setIsSpining(false);
-    }, 2000);
+    connect.post<T>(props.url, data).then((res) => {
+      if (res.status === HttpStatusCode.Ok) {
+        setIsSpining(false);
+        setIsModalOpen(false);
+      }
+    });
   };
   return (
     <Space>
@@ -29,7 +45,7 @@ export default function Add() {
         Tạo mới
       </Button>
       <Modal
-        title="Thêm tài khoản"
+        title={props.title}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -45,12 +61,15 @@ export default function Add() {
             method={"POST"}
             form={form}
           >
-            <Form.Item<AddType> label="Tên tài khoản" name="username">
-              <Input />
-            </Form.Item>
-            <Form.Item<AddType> label="Mật khẩu" name="password">
-              <Input.Password />
-            </Form.Item>
+            {props.sections.map((item) => (
+              <Form.Item<T>
+                label={item.label}
+                name={item.name}
+                key={item.name as string}
+              >
+                <Input />
+              </Form.Item>
+            ))}
           </Form>
         </Spin>
       </Modal>
