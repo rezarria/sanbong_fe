@@ -1,10 +1,17 @@
 import { Space } from "antd";
-import Add from "./Add";
-import List from "./List";
+import Add from "../../../components/Add";
+import List from "@/components/List";
 
 type AddType = {
   name: string;
 };
+
+type ListType = {
+  id: string;
+  name: string;
+};
+
+const A = List<ListType>();
 
 export default function Page() {
   return (
@@ -14,7 +21,7 @@ export default function Page() {
         url={""}
         sections={[{ label: "Tên quyền", name: "name" }]}
       />
-      <List<AddType> url={""} />
+      <A url={"/api/role"} columnsDef={[]} />
     </Space>
   );
 }
