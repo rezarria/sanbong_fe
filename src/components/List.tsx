@@ -19,21 +19,21 @@ type Pagination = {
   pageSize: number;
 };
 
-type Ref = {};
+type Ref = {
+  reload: () => void;
+};
 type Props<T> = Readonly<{
   url: string;
   columnsDef: ColumnsType<T>;
 }>;
 
-function List<T extends AnyObject & { id: string }>(
+function ListFC<T extends AnyObject & { id: string }>(
   props: Props<T>,
   ref: ForwardedRef<Ref>,
 ) {
   const [data, setData] = useState<T[]>([]);
-  useImperativeHandle(ref, () => ({}), []);
   const fetch = useCallback(
     (
-      url: string,
       limit: number = 300,
       pagination?: {
         current: number;
@@ -49,7 +49,7 @@ function List<T extends AnyObject & { id: string }>(
           ...pagination,
         };
       }
-      connect.get<T[]>(url, config).then((res) => {
+      connect.get<T[]>(props.url, config).then((res) => {
         if (res.status == HttpStatusCode.Ok) {
           const list = res.data.map((i) => i.id);
           const oldData = data.filter((i) => !list.includes(i.id));
@@ -57,27 +57,37 @@ function List<T extends AnyObject & { id: string }>(
         }
       });
     },
-    [data],
+    [props.url],
   );
   useEffect(() => {
-    fetch(props.url);
-  }, [fetch, props.url]);
+    fetch();
+  }, [fetch]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      reload: () => {
+        fetch();
+      },
+    }),
+    [fetch],
+  );
   return (
     <Space direction="vertical" className="flex">
-      <Table
+      <Table<T>
         columns={props.columnsDef}
         pagination={{
           total: 500,
           showQuickJumper: {},
         }}
+        dataSource={data}
+        rowKey={"id"}
       />
     </Space>
   );
 }
 
-export default function _List<T extends AnyObject & { id: string }>(
-  props: Props<T>,
-) {
-  const Ty = forwardRef(List<T>);
-  return <Ty {...props} />;
+export default function List<T extends AnyObject & { id: string }>() {
+  return forwardRef(ListFC<T>);
 }
+
+export { type Ref };

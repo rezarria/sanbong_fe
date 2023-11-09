@@ -2,7 +2,6 @@
 
 import { connect } from "@/lib/Axios";
 import { Button, Form, Input, Modal, Space, Spin } from "antd";
-import { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { NamePath } from "antd/es/form/interface";
 import { HttpStatusCode } from "axios";
 import { useState } from "react";
@@ -12,16 +11,17 @@ type AddType = {
   password?: string;
 };
 
-export default function Add<T>(
-  props: Readonly<{
-    title: string;
-    url: string;
-    sections: {
-      label: string;
-      name: NamePath<T>;
-    }[];
-  }>,
-) {
+type Props<T> = Readonly<{
+  title: string;
+  url: string;
+  sections: {
+    label: string;
+    name: NamePath<T>;
+  }[];
+  onClose?: () => void;
+}>;
+
+export default function Add<T>(props: Props<T>) {
   const [isSpining, setIsSpining] = useState(false);
   const [form] = Form.useForm<AddType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,11 +31,12 @@ export default function Add<T>(
     form.submit();
   };
   const handleCancel = () => setIsModalOpen(false);
-  const onAction = (data: AddType) => {
+  const onFinish = (data: AddType) => {
     connect.post<T>(props.url, data).then((res) => {
       if (res.status === HttpStatusCode.Ok) {
         setIsSpining(false);
         setIsModalOpen(false);
+        props.onClose?.();
       }
     });
   };
@@ -57,7 +58,7 @@ export default function Add<T>(
             labelAlign="left"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
-            onFinish={onAction}
+            onFinish={onFinish}
             method={"POST"}
             form={form}
           >

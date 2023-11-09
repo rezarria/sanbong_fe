@@ -69,6 +69,7 @@ const App: React.FC<AppProps> = (props) => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+          onSelect={(i) => console.log(i)}
         />
       </Sider>
       <Layout>
