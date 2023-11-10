@@ -3,6 +3,7 @@ import {
   forwardRef,
   useCallback,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import { connect } from "@/lib/Axios";
@@ -23,15 +24,18 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
   const [isOpening, setIsOpening] = useState(false);
   const [data, setData] = useState<EditModel>();
   const [form] = Form.useForm<EditModel>();
+  const firstOpen = useRef(true);
   const fetch = useCallback(
     (id: string) =>
       connect.get("api/role", { params: { id } }).then((res) => {
         if (res.status == HttpStatusCode.Ok) {
           setData(res.data);
-          form.setFieldsValue(res.data);
+          if (!firstOpen.current) {
+            form.setFieldsValue(res.data);
+          } else firstOpen.current = false;
         }
       }),
-    [],
+    [form],
   );
   const onFinish = useCallback(
     (newData: EditModel) => {
@@ -76,18 +80,19 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
         name="basic"
         autoComplete="on"
         labelAlign="left"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 20 }}
         onFinish={onFinish}
         form={form}
       >
-        <Form.Item name={"id"} key={"id"}>
+        <Form.Item name={"id"} key={"id"} hidden>
           <Input value={data?.id} />
         </Form.Item>
         <Form.Item<EditModel> label={"Tên"} name={"name"} key={"name"}>
           <Input />
         </Form.Item>
         <Form.Item<EditModel>
+          hidden
           name={"lastModifiedDate"}
           key={"lastModifiedDate"}
         >
