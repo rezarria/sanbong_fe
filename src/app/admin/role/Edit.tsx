@@ -1,7 +1,10 @@
+"use client";
+
 import {
   ForwardedRef,
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -24,23 +27,25 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
   const [isOpening, setIsOpening] = useState(false);
   const [data, setData] = useState<EditModel>();
   const [form] = Form.useForm<EditModel>();
-  const firstOpen = useRef(true);
   const fetch = useCallback(
     (id: string) =>
       connect.get("api/role", { params: { id } }).then((res) => {
         if (res.status == HttpStatusCode.Ok) {
           setData(res.data);
-          if (!firstOpen.current) {
-            form.setFieldsValue(res.data);
-          } else firstOpen.current = false;
         }
       }),
-    [form],
+    [],
   );
   const onFinish = useCallback(
     (newData: EditModel) => {
       if (data != null) {
-        const patch = jsonpatch.compare(data, newData);
+        const d = structuredClone(newData);
+
+        Object.keys(d).forEach((key) => {
+          d[key as keyof EditModel] = data[key as keyof EditModel];
+        });
+
+        const patch = jsonpatch.compare(d, newData);
         connect
           .patch("api/role", {
             id: data.id,
@@ -69,11 +74,15 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
     }),
     [fetch],
   );
-
+  useEffect(() => {
+    if (data != null) form.setFieldsValue(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
   return (
     <Modal
       open={isOpening}
       onCancel={() => setIsOpening(false)}
+      onOk={() => form.submit()}
       title={"Sửa thông tin quyền"}
     >
       <Form

@@ -1,6 +1,6 @@
 type EditModel = {
   id: string;
   name: string;
-  lastModifiedDate: Date;
+  lastModifiedDate: string;
 };
 export default EditModel;
