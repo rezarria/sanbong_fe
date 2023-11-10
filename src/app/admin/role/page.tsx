@@ -1,12 +1,14 @@
 "use client";
 
-import { Button, Flex, Space } from "antd";
+import { Button, Flex, Popconfirm, Space } from "antd";
 import Add from "@/components/Add";
 import List, { Ref as ListRef } from "@/components/List";
 import { useRef } from "react";
 import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import View, { ViewRef } from "@/app/admin/role/View";
 import Edit, { EditRef } from "./Edit";
+import { connect } from "../../../lib/Axios";
+import DeleteButton from "../../../components/DeleteButton";
 
 type AddType = {
   name: string;
@@ -68,11 +70,14 @@ export default function Page() {
                       editRef.current?.show(record.id);
                     }}
                   />
-                  <Button
-                    title="xoá"
-                    danger
-                    type="primary"
-                    icon={<DeleteOutlined />}
+                  <DeleteButton
+                    title="Xoá quyền"
+                    description="Bạn có chắc chắn xoá quyền này"
+                    url="api/role"
+                    id={[record.id]}
+                    onFinish={() => {
+                      listRef.current?.reload();
+                    }}
                   />
                 </Space>
               );
