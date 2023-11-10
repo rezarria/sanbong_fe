@@ -57,7 +57,7 @@ const App: React.FC<AppProps> = (props) => {
   } = theme.useToken();
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ height: "100vh" }}>
       <Sider
         collapsible
         collapsed={collapsed}
@@ -72,7 +72,7 @@ const App: React.FC<AppProps> = (props) => {
           onSelect={(i) => console.log(i)}
         />
       </Sider>
-      <Layout>
+      <Layout className="h-100">
         <Header style={{ padding: 0, background: colorBgContainer }}>
           <Button
             type="text"
@@ -85,21 +85,23 @@ const App: React.FC<AppProps> = (props) => {
             }}
           />
         </Header>
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: colorBgContainer,
-            }}
-          >
-            <>{props.children}</>
-          </Content>
+        <Content className="flex-auto" style={{ margin: "0 16px" }}>
+          <Layout className="h-full">
+            <Breadcrumb style={{ margin: "16px 0" }}>
+              <Breadcrumb.Item>User</Breadcrumb.Item>
+              <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            </Breadcrumb>
+            <Content
+              style={{
+                padding: 24,
+                margin: 0,
+                minHeight: 280,
+                background: colorBgContainer,
+              }}
+            >
+              <>{props.children}</>
+            </Content>
+          </Layout>
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Ant Design ©2023 Created by Ant UED

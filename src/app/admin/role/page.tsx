@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Space } from "antd";
+import { Button, Flex, Space } from "antd";
 import Add from "@/components/Add";
 import List, { Ref as ListRef } from "@/components/List";
 import { useRef } from "react";
@@ -25,11 +25,14 @@ export default function Page() {
   const editRef = useRef<EditRef>(null);
 
   return (
-    <Space direction="vertical" style={{ display: "flex" }}>
+    <Flex vertical={true} className="h-full">
       <Add<AddType>
         title={"Thêm quyền"}
         url={"api/role"}
         sections={[{ label: "Tên quyền", name: "name" }]}
+        onClose={() => {
+          listRef.current?.reload();
+        }}
       />
       <MyList
         url={"api/role"}
@@ -79,7 +82,12 @@ export default function Page() {
         ref={listRef}
       />
       <View ref={viewRef} />
-      <Edit ref={editRef} />
-    </Space>
+      <Edit
+        ref={editRef}
+        onComplete={() => {
+          listRef.current?.reload();
+        }}
+      />
+    </Flex>
   );
 }

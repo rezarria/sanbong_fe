@@ -1,12 +1,17 @@
 "use client";
 
 import { connect } from "@/lib/Axios";
-import { Space, Table } from "antd";
+import { Flex, Pagination, Space, Table, TableColumnProps } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TablePaginationConfig, TableProps } from "antd/es/table";
 import { AxiosRequestConfig, HttpStatusCode } from "axios";
+import { resolve } from "url";
+import path from "path";
 import {
+  CSSProperties,
   ForwardedRef,
+  PropsWithChildren,
+  ReactNode,
   forwardRef,
   useCallback,
   useEffect,
@@ -32,10 +37,13 @@ function ListFC<T extends AnyObject & { id: string }>(
   ref: ForwardedRef<Ref>,
 ) {
   const [data, setData] = useState<T[]>([]);
+  const [paginationA, setPaginationA] = useState<TablePaginationConfig>({
+    showSizeChanger: true,
+  });
   const fetch = useCallback(
     (
       limit: number = 300,
-      pagination?: {
+      paginationPostion?: {
         current: number;
         pageSize: number;
       },
@@ -43,17 +51,26 @@ function ListFC<T extends AnyObject & { id: string }>(
       const config: AxiosRequestConfig = {
         params: { limit },
       };
-      if (pagination != null) {
+      if (paginationPostion != null) {
         config.params = {
           ...config.params,
-          ...pagination,
+          ...paginationPostion,
         };
       }
-      connect.get<T[]>(props.url, config).then((res) => {
-        if (res.status == HttpStatusCode.Ok) {
-          const list = res.data.map((i) => i.id);
+      Promise.all([
+        connect.get<T[]>(props.url, config),
+        connect.get<number>(resolve(props.url + "/", "size")),
+      ]).then((api) => {
+        if (
+          api.filter((i) => i.status == HttpStatusCode.Ok).length === api.length
+        ) {
+          const list = api[0].data.map((i) => i.id);
           const oldData = data.filter((i) => !list.includes(i.id));
-          setData([...oldData, ...res.data]);
+          setData([...oldData, ...api[0].data]);
+          setPaginationA({
+            ...paginationA,
+            total: api[1].data,
+          });
         }
       });
     },
@@ -72,17 +89,35 @@ function ListFC<T extends AnyObject & { id: string }>(
     [fetch],
   );
   return (
-    <Space direction="vertical" className="flex">
-      <Table<T>
-        columns={props.columnsDef}
-        pagination={{
-          total: 500,
-          showQuickJumper: {},
-        }}
-        dataSource={data}
-        rowKey={"id"}
-      />
-    </Space>
+    <div className="flex-grow overflow-hidden">
+      <Flex vertical={true} className="h-full">
+        <div className="flex-grow overflow-hidden">
+          <Table<T>
+            columns={props.columnsDef}
+            dataSource={data}
+            rowKey={"id"}
+            pagination={false}
+            sticky={true}
+            components={{ table: TableBody }}
+          />
+        </div>
+        <div className="">
+          <Pagination className="w-full" />
+        </div>
+      </Flex>
+    </div>
+  );
+}
+
+function TableBody(
+  props: Readonly<{ style: CSSProperties; children: ReactNode[] }>,
+) {
+  console.log(props);
+  return (
+    <table style={props.style}>
+      {props.children[1]}
+      {props.children[2]}
+    </table>
   );
 }
 
