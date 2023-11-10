@@ -11,13 +11,18 @@ import {
   CSSProperties,
   ForwardedRef,
   PropsWithChildren,
+  ReactEventHandler,
   ReactNode,
+  RefObject,
   forwardRef,
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
+  useRef,
   useState,
 } from "react";
+import { RefTable } from "antd/es/table/interface";
 
 type Pagination = {
   current: number;
@@ -91,16 +96,7 @@ function ListFC<T extends AnyObject & { id: string }>(
   return (
     <div className="flex-grow overflow-hidden">
       <Flex vertical={true} className="h-full">
-        <div className="flex-grow overflow-hidden">
-          <Table<T>
-            columns={props.columnsDef}
-            dataSource={data}
-            rowKey={"id"}
-            pagination={false}
-            sticky={true}
-            components={{ table: TableBody }}
-          />
-        </div>
+        {TableWrapper<T>(props, data)}
         <div className="">
           <Pagination className="w-full" />
         </div>
@@ -109,16 +105,59 @@ function ListFC<T extends AnyObject & { id: string }>(
   );
 }
 
-function TableBody(
-  props: Readonly<{ style: CSSProperties; children: ReactNode[] }>,
+function TableWrapper<T extends AnyObject & { id: string }>(
+  props: Readonly<{ url: string; columnsDef: ColumnsType<T> }>,
+  data: T[],
 ) {
-  console.log(props);
+  const divRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLTableSectionElement>(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const headerComponent = useCallback(HeaderComponent(headerRef), []);
+  const [loading, setLoading] = useState(true);
+  const [height, setHeight] = useState(0);
+  useLayoutEffect(() => {
+    if (divRef.current != null) {
+      setLoading(false);
+      setHeight(divRef.current.clientHeight);
+    }
+  }, []);
+  useLayoutEffect(() => {
+    if (headerRef.current != null && divRef.current != null) {
+      setHeight(divRef.current.clientHeight - headerRef.current.clientHeight);
+    }
+  }, [headerRef, divRef]);
   return (
-    <table style={props.style}>
-      {props.children[1]}
-      {props.children[2]}
-    </table>
+    <div ref={divRef} className="flex-grow overflow-hidden">
+      {!loading && (
+        <Table<T>
+          columns={props.columnsDef}
+          dataSource={data}
+          rowKey={"id"}
+          pagination={false}
+          sticky={true}
+          scroll={{ y: height }}
+          components={{
+            header: {
+              wrapper: headerComponent,
+            },
+          }}
+        />
+      )}
+    </div>
   );
+}
+
+function HeaderComponent(ref: RefObject<HTMLTableSectionElement>) {
+  return function HeaderComponentTemplate(props: {
+    style: CSSProperties;
+    children: ReactNode[];
+  }) {
+    return (
+      <thead className="ant-table-thead" ref={ref} style={props.style}>
+        {props.children}
+      </thead>
+    );
+  };
 }
 
 export default function List<T extends AnyObject & { id: string }>() {
