@@ -116,33 +116,26 @@ function TableWrapper<T extends AnyObject & { id: string }>(
   const [loading, setLoading] = useState(true);
   const [height, setHeight] = useState(0);
   useLayoutEffect(() => {
-    if (divRef.current != null) {
-      setLoading(false);
-      setHeight(divRef.current.clientHeight);
-    }
-  }, []);
-  useLayoutEffect(() => {
     if (headerRef.current != null && divRef.current != null) {
+      setLoading(false);
       setHeight(divRef.current.clientHeight - headerRef.current.clientHeight);
     }
-  }, [headerRef, divRef]);
+  }, []);
   return (
     <div ref={divRef} className="flex-grow overflow-hidden">
-      {!loading && (
-        <Table<T>
-          columns={props.columnsDef}
-          dataSource={data}
-          rowKey={"id"}
-          pagination={false}
-          sticky={true}
-          scroll={{ y: height }}
-          components={{
-            header: {
-              wrapper: headerComponent,
-            },
-          }}
-        />
-      )}
+      <Table<T>
+        columns={props.columnsDef}
+        dataSource={data}
+        rowKey={"id"}
+        pagination={false}
+        sticky={true}
+        scroll={{ y: height }}
+        components={{
+          header: {
+            wrapper: headerComponent,
+          },
+        }}
+      />
     </div>
   );
 }
