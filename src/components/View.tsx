@@ -90,7 +90,7 @@ function View<T extends { id: string }>(
             <Space direction="vertical" className="flex">
               {data.map((d) => (
                 <Row key={d.name as string} gutter={18} align={"middle"}>
-                  <Col span={3}>
+                  <Col span={5}>
                     <label htmlFor={d.id}>{d.label}</label>
                   </Col>
                   <Col flex={"auto"}>

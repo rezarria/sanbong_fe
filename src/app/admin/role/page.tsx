@@ -5,12 +5,13 @@ import Add from "@/components/Add";
 import List, { Ref as ListRef } from "@/components/List";
 import { useRef } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import Edit, { EditRef } from "./Edit";
 
 import DeleteButton from "@/components/DeleteButton";
-import ViewComponent, { ViewRef } from "./ViewComponent";
+import ViewComponent, { ViewRef } from "../../../components/View";
 import ViewModel from "./ViewModel";
 import { url } from "inspector";
+import Edit, { EditRef } from "../../../components/Edit";
+import EditModel from "./EditModel";
 
 type AddType = {
   name: string;
@@ -23,6 +24,7 @@ type ListType = {
 
 const MyList = List<ListType>();
 const MyView = ViewComponent<ViewModel>();
+const MyEdit = Edit<EditModel>();
 
 export default function Page() {
   const listRef = useRef<ListRef>(null);
@@ -89,12 +91,25 @@ export default function Page() {
         ]}
         ref={listRef}
       />
-      <MyView ref={viewRef} url={"api/role"} modalTitle="Thông tin về quyền" />
-      <Edit
+      <MyView
+        ref={viewRef}
+        url={"api/role"}
+        modalTitle="Thông tin về quyền"
+        sections={[
+          {
+            id: "name",
+            label: "Tên quyền",
+            title: "name",
+            name: "name",
+          },
+        ]}
+      />
+      <MyEdit
         ref={editRef}
         onComplete={() => {
           listRef.current?.reload();
         }}
+        sections={[{ id: "name", name: "name", label: "Tên quyền" }]}
       />
     </Flex>
   );

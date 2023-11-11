@@ -6,27 +6,33 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useRef,
   useState,
 } from "react";
 import { connect } from "@/lib/Axios";
 import { HttpStatusCode } from "axios";
-import EditModel from "./EditModel";
 import { Form, Input, Modal } from "antd";
 import * as jsonpatch from "fast-json-patch";
-
+type Section<T extends { id: string; lastModifiedDate: string }> = {
+  id: string;
+  name: Extract<keyof T, string>;
+  label: string;
+};
 type Ref = {
   show: (id: string) => void;
   hide: () => void;
 };
-type Props = {
+type Props<T extends { id: string; lastModifiedDate: string }> = {
   onComplete?: () => void;
+  sections?: Section<T>[];
 };
 
-function Edit(props: Props, ref: ForwardedRef<Ref>) {
+function Edit<T extends { id: string; lastModifiedDate: string }>(
+  props: Props<T>,
+  ref: ForwardedRef<Ref>,
+) {
   const [isOpening, setIsOpening] = useState(false);
-  const [data, setData] = useState<EditModel>();
-  const [form] = Form.useForm<EditModel>();
+  const [data, setData] = useState<T>();
+  const [form] = Form.useForm<T>();
   const fetch = useCallback(
     (id: string) =>
       connect.get("api/role", { params: { id } }).then((res) => {
@@ -37,12 +43,12 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
     [],
   );
   const onFinish = useCallback(
-    (newData: EditModel) => {
+    (newData: T) => {
       if (data != null) {
         const d = structuredClone(newData);
 
         Object.keys(d).forEach((key) => {
-          d[key as keyof EditModel] = data[key as keyof EditModel];
+          d[key as keyof T] = data[key as keyof T];
         });
 
         const patch = jsonpatch.compare(d, newData);
@@ -75,7 +81,7 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
     [fetch],
   );
   useEffect(() => {
-    if (data != null) form.setFieldsValue(data);
+    if (data != null) form.setFieldsValue(data as NonNullable<T>);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
   return (
@@ -97,14 +103,21 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
         <Form.Item name={"id"} key={"id"} hidden>
           <Input value={data?.id} />
         </Form.Item>
-        <Form.Item<EditModel> label={"Tên"} name={"name"} key={"name"}>
-          <Input />
-        </Form.Item>
-        <Form.Item<EditModel>
-          hidden
-          name={"lastModifiedDate"}
-          key={"lastModifiedDate"}
-        >
+        {props.sections?.map((i) => (
+          <Form.Item
+            key={i.id}
+            id={i.id}
+            name={i.name as string}
+            label={i.label}
+          >
+            <Input
+              value={
+                (data?.[i.name as keyof T] as string | number) ?? undefined
+              }
+            />
+          </Form.Item>
+        ))}
+        <Form.Item hidden name={"lastModifiedDate"} key={"lastModifiedDate"}>
           <Input />
         </Form.Item>
       </Form>
@@ -113,4 +126,7 @@ function Edit(props: Props, ref: ForwardedRef<Ref>) {
 }
 
 export { type Ref as EditRef };
-export default forwardRef(Edit);
+const ForwardedRefEdit = <
+  T extends { id: string; lastModifiedDate: string },
+>() => forwardRef(Edit<T>);
+export default ForwardedRefEdit;
