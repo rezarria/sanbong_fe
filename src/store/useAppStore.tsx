@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { RouterEnum } from "../app/admin/MenuItem";
-import { devtools, persist } from "zustand/middleware";
 
 interface State {
   path: (keyof typeof RouterEnum)[];

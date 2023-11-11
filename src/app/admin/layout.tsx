@@ -1,11 +1,13 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, theme } from "antd";
 import AppBreadcrumb from "./AppBreadcrumb";
-import { RouterEnum, items, routerItems } from "./MenuItem";
-import { useRouter } from "next/navigation";
+import AppMenu from "./AppMenu";
+import { usePathname } from "next/navigation";
+import useAppStore from "../../store/useAppStore";
+import { RouterEnum, routerItems } from "./MenuItem";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -14,11 +16,13 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = (props) => {
+  const [change] = useAppStore((s) => [s.change]);
+  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const router = useRouter();
+  useEffect(() => {}, [pathname]);
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider
@@ -27,15 +31,7 @@ const App: React.FC<AppProps> = (props) => {
         onCollapse={(value) => setCollapsed(value)}
       >
         <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          defaultSelectedKeys={["1"]}
-          mode="inline"
-          items={items}
-          onClick={(i) => {
-            router.push(routerItems[i.key as keyof typeof RouterEnum].src);
-          }}
-        />
+        <AppMenu />
       </Sider>
       <Layout className="h-100">
         <Header style={{ padding: 0, background: colorBgContainer }}>

@@ -1,6 +1,11 @@
 import { DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
+import Icon from "@ant-design/icons/lib/components/Icon";
 import { MenuProps } from "antd";
 import MenuItem from "antd/es/menu/MenuItem";
+import {
+  MenuDividerType,
+  MenuItemGroupType,
+} from "antd/es/menu/hooks/useItems";
 
 enum Routers {
   Role,
@@ -9,54 +14,42 @@ enum Routers {
 }
 
 type MenuItem = Required<MenuProps>["items"][number];
-type RouterItems = {
-  [key in keyof typeof Routers]: {
-    src: string;
-    title: string;
-  };
-};
+interface Struct {
+  src?: string;
+  title?: string;
+  name?: string;
+  icon?: string;
+  children?: RouterItems[];
+}
+type RouterItems = Struct | MenuItemGroupType | MenuDividerType;
 
-const routerItems: RouterItems = {
-  Role: { src: "/admin/role", title: "Quyền" },
-  User: { src: "/admin/user", title: "Người dùng" },
-  Account: { src: "/admin/account", title: "Tài khoản" },
-};
+const routerItems: RouterItems[] = [
+  { name: "role", src: "/admin/role", title: "Quyền", icon: "thunderbolt" },
+  { name: "user", src: "/admin/user", title: "Người dùng", icon: "user" },
+  { type: "divider" },
+  { name: "account", src: "/admin/account", title: "Tài khoản", icon: "lock" },
+];
+
+function convertItem(item: RouterItems) {
+  if ("type" in item) {
+    return { type: item.type } as MenuItem;
+  } else {
+    return {
+      icon: <Icon type={item.icon} />,
+      label: item.title,
+      key: item.name,
+      children: item.children ? convertItems(item.children) : undefined,
+    } as MenuItem;
+  }
+}
+
+function convertItems(items: RouterItems[]): MenuItem[] {
+  return items.map((item) => convertItem(item));
+}
 
 type AppRouterItems = typeof routerItems;
 
-function getItem<T extends RouterItems>(
-  label: React.ReactNode,
-  key: keyof T,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  src?: string,
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    src,
-  } as MenuItem;
-}
-
-const items: MenuProps["items"] = [
-  getItem<AppRouterItems>(
-    routerItems["Role"].title,
-    "Role",
-    <PieChartOutlined />,
-  ),
-  getItem<AppRouterItems>(
-    routerItems["Account"].title,
-    "Account",
-    <DesktopOutlined />,
-  ),
-  getItem<AppRouterItems>(
-    routerItems["User"].title,
-    "User",
-    <DesktopOutlined />,
-  ),
-];
+const items: MenuProps["items"] = convertItems(routerItems);
 
 export { items, routerItems, type AppRouterItems, Routers as RouterEnum };
 export default MenuItem;
