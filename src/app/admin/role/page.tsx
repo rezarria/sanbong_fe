@@ -1,14 +1,16 @@
 "use client";
 
-import { Button, Flex, Popconfirm, Space } from "antd";
+import { Button, Flex, Space } from "antd";
 import Add from "@/components/Add";
 import List, { Ref as ListRef } from "@/components/List";
 import { useRef } from "react";
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
-import View, { ViewRef } from "@/app/admin/role/View";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import Edit, { EditRef } from "./Edit";
-import { connect } from "../../../lib/Axios";
-import DeleteButton from "../../../components/DeleteButton";
+
+import DeleteButton from "@/components/DeleteButton";
+import ViewComponent, { ViewRef } from "./ViewComponent";
+import ViewModel from "./ViewModel";
+import { url } from "inspector";
 
 type AddType = {
   name: string;
@@ -20,6 +22,7 @@ type ListType = {
 };
 
 const MyList = List<ListType>();
+const MyView = ViewComponent<ViewModel>();
 
 export default function Page() {
   const listRef = useRef<ListRef>(null);
@@ -40,9 +43,9 @@ export default function Page() {
         url={"api/role"}
         columnsDef={[
           {
-            key: "id",
-            dataIndex: "id",
-            title: "Id",
+            key: "#",
+            title: "#",
+            render: (_v, _d, i) => <span>{i + 1}</span>,
           },
           {
             key: "name",
@@ -86,7 +89,7 @@ export default function Page() {
         ]}
         ref={listRef}
       />
-      <View ref={viewRef} />
+      <MyView ref={viewRef} url={"api/role"} modalTitle="Thông tin về quyền" />
       <Edit
         ref={editRef}
         onComplete={() => {

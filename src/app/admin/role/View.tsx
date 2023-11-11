@@ -1,19 +1,9 @@
 import { Button, Col, Input, Modal, Row, Space } from "antd";
-import {
-  ForwardedRef,
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from "react";
+import { ForwardedRef, forwardRef, useImperativeHandle, useState } from "react";
 import ViewModel from "./ViewModel";
 import { connect } from "@/lib/Axios";
 import { AxiosError, HttpStatusCode } from "axios";
-type StructType = {
-  [key in keyof ViewModel]?: {
-    title: string;
-  };
-};
+
 type Ref = {
   show: (id: string) => void;
   hide: () => void;
