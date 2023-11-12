@@ -1,11 +1,15 @@
-import { DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
-import Icon from "@ant-design/icons/lib/components/Icon";
+import {
+  LockOutlined,
+  ThunderboltOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { MenuProps } from "antd";
 import MenuItem from "antd/es/menu/MenuItem";
 import {
   MenuDividerType,
   MenuItemGroupType,
 } from "antd/es/menu/hooks/useItems";
+import { ReactNode } from "react";
 
 enum Routers {
   Role,
@@ -18,16 +22,39 @@ interface Struct {
   src?: string;
   title?: string;
   name?: string;
-  icon?: string;
+  icon?: ReactNode;
   children?: RouterItems[];
 }
 type RouterItems = Struct | MenuItemGroupType | MenuDividerType;
 
 const routerItems: RouterItems[] = [
-  { name: "role", src: "/admin/role", title: "Quyền", icon: "thunderbolt" },
-  { name: "user", src: "/admin/user", title: "Người dùng", icon: "user" },
+  {
+    name: "role",
+    src: "/admin/role",
+    title: "Quyền",
+    icon: <ThunderboltOutlined />,
+  },
+  {
+    name: "user",
+    src: "/admin/user",
+    title: "Người dùng",
+    icon: <UserOutlined />,
+    children: [
+      {
+        name: "login",
+        src: "/admin/login",
+        title: "Đăng nhập",
+        icon: <UserOutlined />,
+      },
+    ],
+  },
   { type: "divider" },
-  { name: "account", src: "/admin/account", title: "Tài khoản", icon: "lock" },
+  {
+    name: "account",
+    src: "/admin/account",
+    title: "Tài khoản",
+    icon: <LockOutlined />,
+  },
 ];
 
 function convertItem(item: RouterItems) {
@@ -35,7 +62,7 @@ function convertItem(item: RouterItems) {
     return { type: item.type } as MenuItem;
   } else {
     return {
-      icon: <Icon type={item.icon} />,
+      icon: item.icon,
       label: item.title,
       key: item.name,
       children: item.children ? convertItems(item.children) : undefined,
