@@ -46,7 +46,6 @@ const App: React.FC<AppProps> = (props) => {
             }}
           />
         </Header>
-        <AppBreadcrumb />
         <Content className="flex-auto" style={{ margin: "0 16px" }}>
           <Layout className="h-full">
             <AppBreadcrumb />

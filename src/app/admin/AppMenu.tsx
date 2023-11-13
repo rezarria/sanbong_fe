@@ -1,5 +1,5 @@
 import { Menu } from "antd";
-import { find, items, query } from "./MenuItem";
+import { find, items, query, query2 } from "./MenuItem";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useAppStore from "../../store/useAppStore";
@@ -10,7 +10,7 @@ function AppMenu() {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [change] = useAppStore((s) => [s.change]);
   useEffect(() => {
-    const keys = query(pathName);
+    const keys = query2(pathName);
     if (keys != null) {
       const paths = keys.map((i) => i.name) as string[];
       if (paths.some((i) => i == null)) throw new Error("");
@@ -28,7 +28,7 @@ function AppMenu() {
       items={items}
       onClick={(i) => {
         const data = find(i.keyPath.toReversed());
-        if (data.src != null) {
+        if (data?.src != null) {
           setSelectedKeys(i.keyPath);
           router.push(data.src);
         }

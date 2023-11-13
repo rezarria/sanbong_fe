@@ -63,21 +63,55 @@ const routerItems: RouterItems[] = [
   },
 ];
 
+export const structFlated = flat(structFillter(routerItems));
+
 export function structFillter(list: RouterItems[]) {
   return list.filter((i) => !("type" in i)) as Struct[];
 }
 
-export function find(paths: string[]) {
+export function find(paths: string[]): Struct | undefined {
   const list = structFillter(routerItems);
   let cursor = list.find((i) => i.name == paths[0]);
-  if (cursor == null) throw new Error("");
+  if (cursor == null) return;
   const _paths = paths.slice(1);
   for (const key of _paths) {
-    if (cursor.children == null) throw new Error("");
+    if (cursor.children == null) return;
     cursor = structFillter(cursor.children).find((i) => i.name == key);
-    if (cursor == null) throw new Error("");
+    if (cursor == null) return;
   }
   return cursor;
+}
+
+type StructFlatedType = { data: Struct; previous?: StructFlatedType };
+function flat(
+  structs?: Struct[],
+  previous?: StructFlatedType,
+): StructFlatedType[] {
+  if (structs == null || structs.length === 0) return [];
+  const data: StructFlatedType[] = [];
+  structs.forEach((struct) => {
+    const item: StructFlatedType = { data: struct, previous };
+    data.push(item);
+    if (struct.children != null && struct.children.length != 0) {
+      const children = structFillter(struct.children);
+      data.push(...flat(children, item));
+    }
+  });
+  return data;
+}
+
+export function queryByName(paths: string[]) {}
+
+export function query2(url: string): Struct[] | undefined {
+  const item = structFlated.find((i) => i.data.src == url);
+  if (item == null) return undefined;
+  const result = [item.data];
+  let cursor = item;
+  while (cursor.previous != null) {
+    cursor = cursor.previous;
+    result.push(cursor.data);
+  }
+  return result.toReversed();
 }
 
 export function query(url: string): Struct[] | undefined {
@@ -87,7 +121,7 @@ export function query(url: string): Struct[] | undefined {
   while (true) {
     if (length == 0) break;
     const result = arr.find((i) => (i.src ? url.startsWith(i.src) : false));
-    if (result == null || result.src == null) throw new Error("");
+    if (result == null || result.src == null) return;
     results.push(result);
     length -= result.src.length;
     if (length != 0) {
