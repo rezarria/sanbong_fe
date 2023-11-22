@@ -79,7 +79,7 @@ function ListFC<T extends AnyObject & { id: string }>(
         }
       });
     },
-    [props.url],
+    [data, paginationA, props.url],
   );
   useEffect(() => {
     fetch();
