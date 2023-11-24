@@ -1,17 +1,15 @@
 "use client";
 
 import { Button, Flex, Space } from "antd";
-import Add from "@/components/Add";
-import List, { Ref as ListRef } from "@/components/List";
 import { useRef } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-
-import DeleteButton from "@/components/DeleteButton";
-import ViewComponent, { ViewRef } from "../../../components/View";
+import ViewComponent, { ViewRef } from "@/components/manager/View";
 import ViewModel from "./ViewModel";
-import { url } from "inspector";
-import Edit, { EditRef } from "../../../components/Edit";
+import Edit, { EditRef } from "@/components/manager/Edit";
 import EditModel from "./EditModel";
+import List, { Ref as ListRef } from "@/components/manager/List";
+import Add from "@/components/manager/Add";
+import DeleteButton from "@/components/manager/DeleteButton";
 
 type AddType = {
   name: string;
