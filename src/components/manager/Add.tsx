@@ -1,15 +1,20 @@
 "use client";
 
 import { connect } from "@/lib/Axios";
-import { Button, Form, Input, Modal, Space, Spin } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  FormInstance,
+  Input,
+  InputProps,
+  Modal,
+  Space,
+  Spin,
+} from "antd";
 import { NamePath } from "antd/es/form/interface";
 import { HttpStatusCode } from "axios";
-import { useState } from "react";
-
-type AddType = {
-  username?: string;
-  password?: string;
-};
+import { ReactNode, useState } from "react";
 
 type Props<T> = Readonly<{
   title: string;
@@ -17,13 +22,15 @@ type Props<T> = Readonly<{
   sections: {
     label: string;
     name: NamePath<T>;
+    type?: InputProps["type"];
+    input?: (data: FormInstance<T>) => ReactNode;
   }[];
   onClose?: () => void;
 }>;
 
 export default function Add<T>(props: Props<T>) {
   const [isSpining, setIsSpining] = useState(false);
-  const [form] = Form.useForm<AddType>();
+  const [form] = Form.useForm<T>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => setIsModalOpen(true);
   const handleOk = () => {
@@ -31,7 +38,7 @@ export default function Add<T>(props: Props<T>) {
     form.submit();
   };
   const handleCancel = () => setIsModalOpen(false);
-  const onFinish = (data: AddType) => {
+  const onFinish = (data: T) => {
     connect.post<T>(props.url, data).then((res) => {
       if (res.status === HttpStatusCode.Ok) {
         setIsSpining(false);
@@ -68,7 +75,19 @@ export default function Add<T>(props: Props<T>) {
                 name={item.name}
                 key={item.name as string}
               >
-                <Input />
+                {item.input?.(form) ?? (
+                  <>
+                    {item.type === "datepicker" ? (
+                      <DatePicker
+                        format={"DD-MM-YYYY"}
+                        className="w-full"
+                        name={item.name as string}
+                      />
+                    ) : (
+                      <Input type={item.type} />
+                    )}
+                  </>
+                )}
               </Form.Item>
             ))}
           </Form>

@@ -24,6 +24,8 @@ type Ref = {
 type Props<T extends { id: string; lastModifiedDate: string }> = {
   onComplete?: () => void;
   sections?: Section<T>[];
+  name: string;
+  url: string;
 };
 
 function Edit<T extends { id: string; lastModifiedDate: string }>(
@@ -35,12 +37,12 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
   const [form] = Form.useForm<T>();
   const fetch = useCallback(
     (id: string) =>
-      connect.get("api/role", { params: { id } }).then((res) => {
+      connect.get(props.url, { params: { id } }).then((res) => {
         if (res.status == HttpStatusCode.Ok) {
           setData(res.data);
         }
       }),
-    [],
+    [props.url],
   );
   const onFinish = useCallback(
     (newData: T) => {
@@ -53,7 +55,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
 
         const patch = jsonpatch.compare(d, newData);
         connect
-          .patch("api/role", {
+          .patch(props.url, {
             id: data.id,
             patch,
             time: data.lastModifiedDate,
@@ -89,7 +91,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
       open={isOpening}
       onCancel={() => setIsOpening(false)}
       onOk={() => form.submit()}
-      title={"Sửa thông tin quyền"}
+      title={"Sửa thông tin " + props.name}
     >
       <Form
         name="basic"
