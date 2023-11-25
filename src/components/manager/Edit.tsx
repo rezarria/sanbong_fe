@@ -2,20 +2,41 @@
 
 import {
   ForwardedRef,
+  ReactNode,
   forwardRef,
   useCallback,
+  useContext,
   useEffect,
   useImperativeHandle,
   useState,
 } from "react";
 import { connect } from "@/lib/Axios";
 import { HttpStatusCode } from "axios";
-import { Form, Input, Modal } from "antd";
+import {
+  Col,
+  DatePicker,
+  Form,
+  FormInstance,
+  Image,
+  Input,
+  Modal,
+  Row,
+} from "antd";
 import * as jsonpatch from "fast-json-patch";
-type Section<T extends { id: string; lastModifiedDate: string }> = {
-  id: string;
+import moment from "moment";
+import dayjs from "dayjs";
+import UserAvatar from "@/app/admin/user/UserAvatar";
+import { FormContext, FormContextProps } from "antd/lib/form/context";
+
+interface TrackerModel {
+  lastModifiedDate: string;
+}
+
+type Section<T extends TrackerModel> = {
   name: Extract<keyof T, string>;
   label: string;
+  input?: (index: number, data: T) => ReactNode;
+  type?: string;
 };
 type Ref = {
   show: (id: string) => void;
@@ -97,34 +118,93 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
         name="basic"
         autoComplete="on"
         labelAlign="left"
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
+        labelCol={{ span: 6 }}
+        wrapperCol={{ span: 18 }}
         onFinish={onFinish}
         form={form}
       >
         <Form.Item name={"id"} key={"id"} hidden>
-          <Input value={data?.id} />
+          <Input />
         </Form.Item>
-        {props.sections?.map((i) => (
-          <Form.Item
-            key={i.id}
-            id={i.id}
-            name={i.name as string}
-            label={i.label}
-          >
-            <Input
-              value={
-                (data?.[i.name as keyof T] as string | number) ?? undefined
-              }
-            />
-          </Form.Item>
-        ))}
+        {props.sections?.map((section, index) =>
+          data != null
+            ? section.input?.(index, data) ?? selectType(index, section, form)
+            : undefined,
+        )}
         <Form.Item hidden name={"lastModifiedDate"} key={"lastModifiedDate"}>
           <Input />
         </Form.Item>
       </Form>
     </Modal>
   );
+}
+
+function EditAvatar<T extends TrackerModel>(
+  props: Readonly<{ section: Section<T>; form: FormInstance }>,
+) {
+  const formProps = useContext(FormContext);
+  console.log(props.form?.getFieldValue("avatar"));
+  return (
+    <Row>
+      <Col span={formProps.labelCol?.span}>
+        <label>{props.section.label}:</label>
+      </Col>
+      <Col span={formProps.wrapperCol?.span}>
+        <UserAvatar
+          url="api/file"
+          initalUrl={props.form.getFieldValue("avatar")}
+        />
+      </Col>
+    </Row>
+  );
+}
+
+function selectType<T extends TrackerModel>(
+  index: number,
+  section: Section<T>,
+  form: FormInstance,
+) {
+  if (section.type == null)
+    return (
+      <Form.Item
+        key={index}
+        name={section.name as string}
+        label={section.label}
+      >
+        <Input contentEditable={true} name={section.name} />
+      </Form.Item>
+    );
+  switch (section.type) {
+    case "datepicker":
+      return (
+        <Form.Item
+          key={index}
+          name={section.name as string}
+          label={section.label}
+          getValueProps={(i) => ({
+            value: i === undefined ? undefined : dayjs(i),
+          })}
+        >
+          <DatePicker className="!w-full" format="DD-MM-YYYY" />
+        </Form.Item>
+      );
+    case "avatar":
+      return <EditAvatar key={index} section={section} form={form} />;
+    default:
+      return (
+        <Form.Item
+          key={index}
+          name={section.name as string}
+          label={section.label}
+        >
+          <Input
+            contentEditable={true}
+            type={section.type}
+            name={section.name}
+          />
+        </Form.Item>
+      );
+  }
 }
 
 export { type Ref as EditRef };

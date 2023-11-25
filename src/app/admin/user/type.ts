@@ -1,6 +1,8 @@
 export type EditModel = {
   id: string;
   name: string;
+  dob: string;
+  avatar: string;
   lastModifiedDate: string;
 };
 

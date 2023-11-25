@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Flex, Image, Space } from "antd";
+import { Button, DatePicker, Flex, Image, Space } from "antd";
 import { useRef } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import ViewComponent, { ViewRef } from "@/components/manager/View";
@@ -11,6 +11,7 @@ import DeleteButton from "@/components/manager/DeleteButton";
 import { AddModel, EditModel, ListModel, ViewModel } from "./type";
 import UserAvatar from "./UserAvatar";
 import { connect } from "@/lib/Axios";
+import dayjs from "dayjs";
 
 const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
@@ -140,7 +141,19 @@ export default function Page() {
         onComplete={() => {
           listRef.current?.reload();
         }}
-        sections={[{ id: "name", name: "name", label: "Tên" }]}
+        sections={[
+          { name: "name", label: "Tên" },
+          {
+            name: "dob",
+            label: "Ngày sinh",
+            type: "datepicker",
+          },
+          {
+            name: "avatar",
+            label: "Ảnh đại diện",
+            type: "avatar",
+          },
+        ]}
       />
     </Flex>
   );

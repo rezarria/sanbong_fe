@@ -1,7 +1,7 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Upload, UploadProps, message, Image } from "antd";
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { connect } from "@/lib/Axios";
 
 const beforeUpload = (file: RcFile) => {
@@ -18,6 +18,7 @@ const beforeUpload = (file: RcFile) => {
 
 type Props = {
   url: string;
+  initalUrl?: string;
   callback?: (uploadFile: UploadFile) => void;
 };
 
@@ -26,13 +27,27 @@ export default function UserAvatar(props: Readonly<Props>) {
   const [imageUrl, setImageUrl] = useState<string>();
   const [showPreview, setShowPreview] = useState(false);
   const [list, setList] = useState<UploadFile[]>([]);
+  const id = useId();
+  useEffect(() => {
+    if (props.initalUrl != null) {
+      setList([
+        {
+          uid: id,
+          name: props.initalUrl,
+          url: connect.defaults.baseURL + props.initalUrl,
+        },
+      ]);
+    }
+  }, [id, list, props.initalUrl]);
 
   const handleChange: UploadProps["onChange"] = (
     info: UploadChangeParam<UploadFile>,
   ) => {
     setLoading(info.file.status == "uploading");
     if (info.file.status == "done") {
-      info.fileList.forEach((i) => (i.url = i.response[0].url));
+      info.fileList.forEach(
+        (i) => (i.url = connect.defaults.baseURL! + i.response[0].url),
+      );
     }
     setList(info.fileList);
   };
@@ -51,17 +66,18 @@ export default function UserAvatar(props: Readonly<Props>) {
     ) : undefined;
   return (
     <>
-      <Image
-        hidden
-        alt="preview"
-        preview={{
-          src: connect.defaults.baseURL ?? "" + imageUrl,
-          visible: showPreview,
-          onVisibleChange: (e) => {
-            if (!e) setShowPreview(false);
-          },
-        }}
-      />
+      {imageUrl && (
+        <Image
+          hidden
+          preview={{
+            src: imageUrl,
+            visible: showPreview,
+            onVisibleChange: (e) => {
+              if (!e) setShowPreview(false);
+            },
+          }}
+        />
+      )}
       <Upload
         name="file"
         listType="picture-card"
