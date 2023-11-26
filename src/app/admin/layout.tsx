@@ -3,11 +3,10 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { Button, Layout, theme } from "antd";
-import AppBreadcrumb from "./AppBreadcrumb";
+import AppBreadcrumb from "@/components/AppBreadcrumb/AppBreadcrumb";
 import AppMenu from "./AppMenu";
 import { usePathname } from "next/navigation";
-import useAppStore from "../../store/useAppStore";
-import { RouterEnum, routerItems } from "./MenuItem";
+import useAppStore from "@/store/useAppStore";
 
 const { Header, Content, Footer, Sider } = Layout;
 

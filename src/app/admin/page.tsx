@@ -1,6 +1,6 @@
 "use client";
 
-import { structFlated } from "./MenuItem";
+import { structFlated } from "@/components/AppBreadcrumb/MenuItem";
 
 const App: React.FC = () => {
   return (

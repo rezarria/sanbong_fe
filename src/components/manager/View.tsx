@@ -1,4 +1,4 @@
-import { Button, Col, Input, Modal, Row, Space } from "antd";
+import { Button, Col, DatePicker, Input, Modal, Row, Space } from "antd";
 import {
   ForwardedRef,
   ReactNode,
@@ -9,11 +9,13 @@ import {
 } from "react";
 import { connect } from "@/lib/Axios";
 import { AxiosError, HttpStatusCode } from "axios";
+import dayjs from "dayjs";
 type Section<T> = {
   name: Extract<keyof T, string>;
   title: string;
   label: string;
-  id: string | Extract<keyof T, string>;
+  type?: string;
+  input?: (data: T) => ReactNode;
 };
 type Ref = {
   show: (id: string) => void;
@@ -36,7 +38,6 @@ function View<T extends { id: string }>(
     const arr: Section<T>[] = [
       {
         title: "ID",
-        id: "id",
         label: "Id",
         name: "id" as Extract<keyof T, string>,
       },
@@ -91,16 +92,9 @@ function View<T extends { id: string }>(
               {data.map((d) => (
                 <Row key={d.name as string} gutter={18} align={"middle"}>
                   <Col span={5}>
-                    <label htmlFor={d.id}>{d.label}</label>
+                    <label>{d.label}</label>
                   </Col>
-                  <Col flex={"auto"}>
-                    <Input
-                      title={d.title}
-                      id={d.id}
-                      value={info[d.name] as string | number | undefined}
-                      contentEditable={false}
-                    />
-                  </Col>
+                  <Col span={19}>{d.input?.(info) ?? selectType(d, info)}</Col>
                 </Row>
               ))}
               {props.children}
@@ -110,6 +104,41 @@ function View<T extends { id: string }>(
       )}
     </Modal>
   );
+}
+
+function selectType<T>(section: Section<T>, data: T): ReactNode {
+  if (section.type == null)
+    return (
+      <Input
+        title={section.title}
+        value={data[section.name] as string | number | undefined}
+        contentEditable={false}
+        name={section.name}
+        readOnly
+      />
+    );
+  switch (section.type) {
+    case "datepicker":
+      return (
+        <DatePicker
+          inputReadOnly
+          format={"DD-MM-YYYY"}
+          value={dayjs(data[section.name] as string)}
+          className="!w-full"
+        />
+      );
+    default:
+      return (
+        <Input
+          title={section.title}
+          value={data[section.name] as string | number | undefined}
+          contentEditable={false}
+          type={section.type}
+          name={section.name}
+          readOnly
+        />
+      );
+  }
 }
 
 export { type Ref as ViewRef };

@@ -1,26 +1,19 @@
 "use client";
 
-import { Button, Flex, Space } from "antd";
+import { Button, DatePicker, Flex, Image, Space } from "antd";
 import { useRef } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import ViewComponent, { ViewRef } from "@/components/manager/View";
-import ViewModel from "./ViewModel";
 import Edit, { EditRef } from "@/components/manager/Edit";
-import EditModel from "./EditModel";
 import List, { Ref as ListRef } from "@/components/manager/List";
 import Add from "@/components/manager/Add";
 import DeleteButton from "@/components/manager/DeleteButton";
+import { AddModel, EditModel, ListModel, ViewModel } from "./type";
+import UserAvatar from "./UserAvatar";
+import { connect } from "@/lib/Axios";
+import dayjs from "dayjs";
 
-type AddType = {
-  name: string;
-};
-
-type ListType = {
-  id: string;
-  name: string;
-};
-
-const MyList = List<ListType>();
+const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
 const MyEdit = Edit<EditModel>();
 
@@ -31,16 +24,31 @@ export default function Page() {
 
   return (
     <Flex vertical={true} className="h-full">
-      <Add<AddType>
-        title={"Thêm quyền"}
-        url={"api/role"}
-        sections={[{ label: "Tên quyền", name: "name" }]}
+      <Add<AddModel>
+        title={"Thêm Người dùng mới"}
+        url={"api/user"}
+        sections={[
+          { label: "Tên", name: "name" },
+          { label: "Ngày sinh", name: "dob", type: "datepicker" },
+          {
+            label: "Avatar",
+            name: "avatar",
+            input: (form) => (
+              <UserAvatar
+                url="api/files"
+                callback={(u) => {
+                  form.setFieldValue("avatar", u.response[0].url);
+                }}
+              />
+            ),
+          },
+        ]}
         onClose={() => {
           listRef.current?.reload();
         }}
       />
       <MyList
-        url={"api/role"}
+        url={"api/user"}
         columnsDef={[
           {
             key: "#",
@@ -50,7 +58,7 @@ export default function Page() {
           {
             key: "name",
             dataIndex: "name",
-            title: "Tên quyền",
+            title: "Tên",
           },
           {
             key: "buttons",
@@ -76,7 +84,7 @@ export default function Page() {
                   <DeleteButton
                     title="Xoá quyền"
                     description="Bạn có chắc chắn xoá quyền này"
-                    url="api/role"
+                    url="api/user"
                     id={[record.id]}
                     onFinish={() => {
                       listRef.current?.reload();
@@ -91,23 +99,61 @@ export default function Page() {
       />
       <MyView
         ref={viewRef}
-        url={"api/role"}
-        modalTitle="Thông tin về quyền"
+        url={"api/user"}
+        modalTitle="Thông tin về người dùng"
         sections={[
           {
-            id: "name",
-            label: "Tên quyền",
+            label: "Tên",
             title: "name",
             name: "name",
+          },
+          {
+            label: "Ngày sinh",
+            title: "Ngày sinh",
+            name: "dob",
+            type: "datepicker",
+          },
+          {
+            label: "Avatar",
+            title: "Avatar",
+            name: "avatar",
+            input: (data) => (
+              <Image
+                className="relative"
+                src={connect.defaults.baseURL + data.avatar}
+                alt="avatar"
+              />
+              // <Image
+              //   src={connect.defaults.baseURL + data.avatar}
+              //   layout="fill"
+              //   objectFit="contain"
+              //   alt="avatar"
+              //   className="w-full !relative"
+              // />
+            ),
           },
         ]}
       />
       <MyEdit
+        url="api/user"
+        name="người dùng"
         ref={editRef}
         onComplete={() => {
           listRef.current?.reload();
         }}
-        sections={[{ id: "name", name: "name", label: "Tên quyền" }]}
+        sections={[
+          { name: "name", label: "Tên" },
+          {
+            name: "dob",
+            label: "Ngày sinh",
+            type: "datepicker",
+          },
+          {
+            name: "avatar",
+            label: "Ảnh đại diện",
+            type: "avatar",
+          },
+        ]}
       />
     </Flex>
   );

@@ -8,8 +8,9 @@
 			"type": "msedge",
 			"request": "launch",
 			"name": "Launch Edge against localhost",
-			"url": "http://localhost:3000/admin/role",
-			"webRoot": "${workspaceFolder}"
+			"url": "http://localhost:3000/admin/user",
+			"webRoot": "${workspaceFolder}",
+			"runtimeExecutable": "/var/lib/flatpak/app/com.microsoft.Edge/x86_64/stable/active/export/bin/com.microsoft.Edge"
 		}
 	]
 }

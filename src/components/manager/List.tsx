@@ -79,6 +79,7 @@ function ListFC<T extends AnyObject & { id: string }>(
         }
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.url],
   );
   useEffect(() => {
