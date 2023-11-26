@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, DatePicker, Flex, Image, Space } from "antd";
+import { Button, DatePicker, Flex, FormInstance, Image, Space } from "antd";
 import { useRef } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import ViewComponent, { ViewRef } from "@/components/manager/View";
@@ -11,11 +11,21 @@ import DeleteButton from "@/components/manager/DeleteButton";
 import { AddModel, EditModel, ListModel, ViewModel } from "./type";
 import UserAvatar from "./UserAvatar";
 import { connect } from "@/lib/Axios";
-import dayjs from "dayjs";
 
 const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
 const MyEdit = Edit<EditModel>();
+
+const avatarUpload = (form: FormInstance) => {
+  return (
+    <UserAvatar
+      url="api/files"
+      callback={(u) => {
+        form.setFieldValue("avatar", u.response[0].url);
+      }}
+    />
+  );
+};
 
 export default function Page() {
   const listRef = useRef<ListRef>(null);
@@ -33,14 +43,7 @@ export default function Page() {
           {
             label: "Avatar",
             name: "avatar",
-            input: (form) => (
-              <UserAvatar
-                url="api/files"
-                callback={(u) => {
-                  form.setFieldValue("avatar", u.response[0].url);
-                }}
-              />
-            ),
+            input: avatarUpload,
           },
         ]}
         onClose={() => {
