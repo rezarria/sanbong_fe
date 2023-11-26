@@ -17,14 +17,7 @@ const MyView = ViewComponent<ViewModel>();
 const MyEdit = Edit<EditModel>();
 
 const avatarUpload = (form: FormInstance) => {
-  return (
-    <UserAvatar
-      url="api/files"
-      callback={(u) => {
-        form.setFieldValue("avatar", u.response[0].url);
-      }}
-    />
-  );
+  return <UserAvatar url="api/files" />;
 };
 
 export default function Page() {

@@ -1,8 +1,9 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Upload, UploadProps, message, Image } from "antd";
+import { Upload, UploadProps, message, Image, Input, InputProps } from "antd";
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
-import { useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { connect } from "@/lib/Axios";
+import useFormInstance from "antd/lib/form/hooks/useFormInstance";
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -20,13 +21,14 @@ type Props = {
   url: string;
   initalUrl?: string;
   callback?: (uploadFile: UploadFile) => void;
-};
+} & (typeof Input)["propTypes"];
 
 export default function UserAvatar(props: Readonly<Props>) {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
   const [showPreview, setShowPreview] = useState(false);
   const [list, setList] = useState<UploadFile[]>([]);
+  const form = useFormInstance();
   const id = useId();
   useEffect(() => {
     if (props.initalUrl != null) {
@@ -40,22 +42,27 @@ export default function UserAvatar(props: Readonly<Props>) {
     }
   }, [id, list, props.initalUrl]);
 
-  const handleChange: UploadProps["onChange"] = (
-    info: UploadChangeParam<UploadFile>,
-  ) => {
-    setLoading(info.file.status == "uploading");
-    if (info.file.status == "done") {
-      info.fileList.forEach(
-        (i) => (i.url = connect.defaults.baseURL! + i.response[0].url),
-      );
-    }
-    setList(info.fileList);
-  };
+  const handleChange: UploadProps["onChange"] = useCallback(
+    (info: UploadChangeParam<UploadFile>) => {
+      setLoading(info.file.status == "uploading");
+      if (info.file.status == "done") {
+        info.fileList.forEach(
+          (i) => (i.url = connect.defaults.baseURL! + i.response[0].url),
+        );
+        form.setFieldValue("avatar", info.fileList[0].response[0].url);
+      }
+      setList(info.fileList);
+    },
+    [form],
+  );
 
-  const onPreview: UploadProps["onPreview"] = (file) => {
-    setImageUrl(file.url);
-    setShowPreview(true);
-  };
+  const onPreview: UploadProps["onPreview"] = useCallback(
+    (file: UploadFile) => {
+      setImageUrl(file.url);
+      setShowPreview(true);
+    },
+    [],
+  );
 
   const uploadButton =
     list.length != 1 ? (
@@ -95,6 +102,12 @@ export default function UserAvatar(props: Readonly<Props>) {
       >
         {uploadButton}
       </Upload>
+      <Input
+        {...(props as InputProps)}
+        hidden
+        className="hidden"
+        value={props.initalUrl}
+      />
     </>
   );
 }
