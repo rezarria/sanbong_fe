@@ -36,6 +36,7 @@ export default function Add<T>(props: Props<T>) {
       if (res.status === HttpStatusCode.Ok) {
         setIsSpining(false);
         setIsModalOpen(false);
+        form.resetFields();
         props.onClose?.();
       }
     });
