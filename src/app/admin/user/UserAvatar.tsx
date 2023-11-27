@@ -21,7 +21,8 @@ type Props = {
   url: string;
   initalUrl?: string;
   callback?: (uploadFile: UploadFile) => void;
-} & (typeof Input)["propTypes"];
+  name?: string;
+};
 
 export default function UserAvatar(props: Readonly<Props>) {
   const [loading, setLoading] = useState(false);
@@ -49,7 +50,7 @@ export default function UserAvatar(props: Readonly<Props>) {
         info.fileList.forEach(
           (i) => (i.url = connect.defaults.baseURL! + i.response[0].url),
         );
-        form.setFieldValue("avatar", info.fileList[0].response[0].url);
+        form.setFieldValue(props.name, info.fileList[0].response[0].url);
       }
       setList(info.fileList);
     },

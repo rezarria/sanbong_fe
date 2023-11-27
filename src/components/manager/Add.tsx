@@ -15,6 +15,7 @@ import {
 import { NamePath } from "antd/es/form/interface";
 import { HttpStatusCode } from "axios";
 import { ReactNode, useState } from "react";
+import UserAvatar from "../../app/admin/user/UserAvatar";
 
 type Props<T> = Readonly<{
   title: string;
@@ -62,7 +63,6 @@ export default function Add<T>(props: Props<T>) {
         <Spin spinning={isSpining}>
           <Form
             name="basic"
-            autoComplete="on"
             labelAlign="left"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
@@ -76,19 +76,7 @@ export default function Add<T>(props: Props<T>) {
                 name={item.name}
                 key={item.name as string}
               >
-                {item.input?.(form) ?? (
-                  <>
-                    {item.type === "datepicker" ? (
-                      <DatePicker
-                        format={"DD-MM-YYYY"}
-                        className="w-full"
-                        name={item.name as string}
-                      />
-                    ) : (
-                      <Input type={item.type} />
-                    )}
-                  </>
-                )}
+                {selectInput(item)}
               </Form.Item>
             ))}
           </Form>
@@ -96,4 +84,25 @@ export default function Add<T>(props: Props<T>) {
       </Modal>
     </Space>
   );
+}
+
+type SelectInput<T> = Props<T>["sections"] extends readonly (infer T)[]
+  ? T
+  : never;
+
+function selectInput<T>(section: SelectInput<T>) {
+  if (!section.type) return <Input />;
+  switch (section.type) {
+    case "avatar":
+      return (
+        <>
+          <UserAvatar url="api/files" name={section.name as string} />
+          {/* <Input className="hidden" /> */}
+        </>
+      );
+    case "datepicker":
+      return <DatePicker format={"DD-MM-YYYY"} className="w-full" />;
+    default:
+      return <Input type={section.type} />;
+  }
 }
