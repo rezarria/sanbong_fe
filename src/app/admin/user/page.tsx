@@ -36,7 +36,7 @@ export default function Page() {
           {
             label: "Avatar",
             name: "avatar",
-            input: avatarUpload,
+            type: "avatar",
           },
         ]}
         onClose={() => {
