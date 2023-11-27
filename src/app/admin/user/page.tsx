@@ -1,7 +1,17 @@
 "use client";
 
-import { Button, DatePicker, Flex, FormInstance, Image, Space } from "antd";
-import { useRef } from "react";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Flex,
+  Form,
+  FormInstance,
+  Image,
+  Row,
+  Space,
+} from "antd";
+import { useContext, useRef } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import ViewComponent, { ViewRef } from "@/components/manager/View";
 import Edit, { EditRef } from "@/components/manager/Edit";
@@ -11,6 +21,7 @@ import DeleteButton from "@/components/manager/DeleteButton";
 import { AddModel, EditModel, ListModel, ViewModel } from "./type";
 import UserAvatar from "./UserAvatar";
 import { connect } from "@/lib/Axios";
+import { FormContext, FormContextProps } from "antd/es/form/context";
 
 const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
@@ -150,7 +161,19 @@ export default function Page() {
             type: "avatar",
           },
         ]}
-      />
+      >
+        <EditAvatar />
+      </MyEdit>
     </Flex>
+  );
+}
+
+function EditAvatar() {
+  const formProps = useContext(FormContext);
+  const avatar = Form.useWatch("avatar", Form.useFormInstance<EditModel>());
+  return (
+    <Form.Item>
+      <UserAvatar url="api/files" value={avatar} />
+    </Form.Item>
   );
 }

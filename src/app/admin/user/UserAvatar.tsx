@@ -1,9 +1,16 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Upload, UploadProps, message, Image, Input, InputProps } from "antd";
+import {
+  Upload,
+  UploadProps,
+  message,
+  Image,
+  Input,
+  InputProps,
+  Form,
+} from "antd";
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useCallback, useEffect, useId, useState } from "react";
 import { connect } from "@/lib/Axios";
-import useFormInstance from "antd/lib/form/hooks/useFormInstance";
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -19,9 +26,10 @@ const beforeUpload = (file: RcFile) => {
 
 type Props = {
   url: string;
-  initalUrl?: string;
   callback?: (uploadFile: UploadFile) => void;
   name?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 };
 
 export default function UserAvatar(props: Readonly<Props>) {
@@ -29,20 +37,9 @@ export default function UserAvatar(props: Readonly<Props>) {
   const [imageUrl, setImageUrl] = useState<string>();
   const [showPreview, setShowPreview] = useState(false);
   const [list, setList] = useState<UploadFile[]>([]);
-  const form = useFormInstance();
+  const form = Form.useFormInstance();
   const id = useId();
-  useEffect(() => {
-    if (props.initalUrl != null) {
-      setList([
-        {
-          uid: id,
-          name: props.initalUrl,
-          url: connect.defaults.baseURL + props.initalUrl,
-        },
-      ]);
-    }
-  }, [id, list, props.initalUrl]);
-
+  console.log(props.value);
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
       setLoading(info.file.status == "uploading");
@@ -50,7 +47,9 @@ export default function UserAvatar(props: Readonly<Props>) {
         info.fileList.forEach(
           (i) => (i.url = connect.defaults.baseURL! + i.response[0].url),
         );
-        form.setFieldValue(props.name, info.fileList[0].response[0].url);
+        const fileUrl = info.fileList[0].response[0].url;
+        props.onChange?.(fileUrl);
+        form.setFieldValue(props.name, fileUrl);
       }
       setList(info.fileList);
     },
@@ -64,6 +63,18 @@ export default function UserAvatar(props: Readonly<Props>) {
     },
     [],
   );
+
+  useEffect(() => {
+    if (props.value != null) {
+      setList([
+        {
+          uid: id,
+          name: props.value,
+          url: connect.defaults.baseURL + props.value,
+        },
+      ]);
+    }
+  }, [id, props.value]);
 
   const uploadButton =
     list.length != 1 ? (
@@ -88,6 +99,7 @@ export default function UserAvatar(props: Readonly<Props>) {
       )}
       <Upload
         name="file"
+        multiple={false}
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={true}
@@ -103,12 +115,12 @@ export default function UserAvatar(props: Readonly<Props>) {
       >
         {uploadButton}
       </Upload>
-      <Input
+      {/* <Input
         {...(props as InputProps)}
         hidden
         className="hidden"
-        value={props.initalUrl}
-      />
+        value={props.initalurl}
+      /> */}
     </>
   );
 }
