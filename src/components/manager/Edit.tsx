@@ -65,11 +65,19 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
 
         const patch = jsonpatch.compare(d, newData);
         connect
-          .patch(props.url, {
-            id: data.id,
-            patch,
-            time: data.lastModifiedDate,
-          })
+          .patch(
+            props.url,
+            {
+              id: data.id,
+              patch,
+              time: data.lastModifiedDate,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json-patch+json",
+              },
+            },
+          )
           .then((res) => {
             if (res.status == HttpStatusCode.Ok) {
               setIsOpening(false);

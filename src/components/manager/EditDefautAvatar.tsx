@@ -1,20 +1,44 @@
 "use client";
 
 import { UserOutlined } from "@ant-design/icons";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-export default function EditDefaultAvatar() {
+export default function EditDefaultAvatar(
+  props: Readonly<{ className?: string }>,
+) {
   const divRef = useRef<HTMLDivElement>(null);
-  const iconRef = useRef<HTMLSpanElement>(null);
+  const [size, setSize] = useState({ height: 0, width: 0 });
+
   useLayoutEffect(() => {
-    if (divRef.current && iconRef.current) {
-      iconRef.current.style.height = divRef.current.clientHeight + "px";
-      iconRef.current.style.width = divRef.current.clientWidth + "px";
+    if (divRef.current) {
+      setSize({
+        height: divRef.current.clientHeight,
+        width: divRef.current.clientWidth,
+      });
     }
   }, []);
+
+  useEffect(() => {
+    const div = divRef.current;
+    const resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((i) => {
+        setSize({ width: i.contentRect.width, height: i.contentRect.height });
+      });
+    });
+    if (div) {
+      resizeObserver.observe(divRef.current);
+    }
+    return () => {
+      if (div) {
+        resizeObserver.unobserve(div);
+        resizeObserver.disconnect();
+      }
+    };
+  }, []);
+
   return (
-    <div ref={divRef} className="w-full h-full">
-      <UserOutlined ref={iconRef} />
+    <div ref={divRef} className={["w-full h-full", props.className].join(" ")}>
+      <UserOutlined style={{ fontSize: size.height }} />
     </div>
   );
 }
