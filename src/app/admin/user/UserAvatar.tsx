@@ -1,13 +1,5 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import {
-  Upload,
-  UploadProps,
-  message,
-  Image,
-  Input,
-  InputProps,
-  Form,
-} from "antd";
+import { Upload, UploadProps, message, Image, Form } from "antd";
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
 import { useCallback, useEffect, useId, useState } from "react";
 import { connect } from "@/lib/Axios";

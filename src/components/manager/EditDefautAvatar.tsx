@@ -1,10 +1,19 @@
 "use client";
 
 import { UserOutlined } from "@ant-design/icons";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  MouseEventHandler,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 export default function EditDefaultAvatar(
-  props: Readonly<{ className?: string }>,
+  props: Readonly<{
+    className?: string;
+    onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  }>,
 ) {
   const divRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ height: 0, width: 0 });
@@ -37,7 +46,11 @@ export default function EditDefaultAvatar(
   }, []);
 
   return (
-    <div ref={divRef} className={["w-full h-full", props.className].join(" ")}>
+    <div
+      ref={divRef}
+      onMouseEnter={props.onMouseEnter}
+      className={["w-full h-full", props.className].join(" ")}
+    >
       <UserOutlined style={{ fontSize: size.height }} />
     </div>
   );

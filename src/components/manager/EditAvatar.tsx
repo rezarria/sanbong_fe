@@ -1,28 +1,37 @@
 "use client";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { connect } from "@/lib/Axios";
 import { Button, Card, Col, Image, Popconfirm, Row, Space } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import EditDefaultAvatar from "./EditDefautAvatar";
+import EditAvatarUploadButton from "./EditAvatarUploadButton";
 
 export function EditAvatar(
   props: Readonly<{ value?: string; onChange?: (value: string) => void }>,
 ) {
-  const [url, setUrl] = useState(props.value);
+  const [imageUrl, setImageUrl] = useState(props.value);
   const [lock, setLock] = useState(false);
   const [preview, setPreview] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    preview: props.value != null && props.value.length != 0,
+    delete: props.value != null && props.value.length != 0,
+    upload: !(props.value != null && props.value.length != 0),
+  });
   const card = useRef<HTMLDivElement>(null);
+  const handleMouseEnter = useCallback(() => {
+    if (!lock) card.current?.classList.remove("hidden");
+  }, [lock]);
   return (
     <Card
       className="w-full h-full aspect-square overflow-hidden"
       bodyStyle={{ padding: 0, width: "100%", height: "100%" }}
     >
-      {url != null && url.length != 0 ? (
+      {imageUrl != null && imageUrl.length != 0 ? (
         <Image
           width={"100%"}
           height={"100%"}
           alt={"avatar"}
-          src={connect.defaults.baseURL + url}
+          src={connect.defaults.baseURL + imageUrl}
           className="aspect-square object-cover"
           preview={
             preview
@@ -34,12 +43,10 @@ export function EditAvatar(
                 }
               : false
           }
-          onMouseEnter={() => {
-            if (!lock) card.current?.classList.remove("hidden");
-          }}
+          onMouseEnter={handleMouseEnter}
         />
       ) : (
-        <EditDefaultAvatar />
+        <EditDefaultAvatar onMouseEnter={handleMouseEnter} />
       )}
       <Card
         ref={card}
@@ -50,41 +57,68 @@ export function EditAvatar(
         }}
       >
         <Row className="w-full h-full" justify={"center"} align={"middle"}>
-          <Col>
+          <Col className="max-w-fit">
             <Space>
-              <Popconfirm
-                title={"bạn có chắc xoá ảnh này?"}
-                onConfirm={() => {
-                  card.current?.classList.add("hidden");
-                  setLock(true);
-                  setUrl("");
-                  props.onChange?.("");
-                }}
-                onOpenChange={(e) => {
-                  if (!e) setLock(false);
-                }}
-                onCancel={() => {
-                  setLock(false);
-                }}
-              >
-                <Button
-                  type={"primary"}
-                  danger
-                  onClick={() => {
+              {modalConfig.upload && (
+                <EditAvatarUploadButton
+                  url="api/files"
+                  onChange={(url) => {
+                    if (url) {
+                      props.onChange?.(url);
+                      setImageUrl(url);
+                      setModalConfig({
+                        upload: false,
+                        delete: true,
+                        preview: true,
+                      });
+                    }
+                  }}
+                />
+              )}
+              {modalConfig.delete && (
+                <Popconfirm
+                  title={"bạn có chắc xoá ảnh này?"}
+                  onConfirm={() => {
+                    card.current?.classList.add("hidden");
                     setLock(true);
+                    setImageUrl("");
+                    props.onChange?.("");
+                  }}
+                  onOpenChange={(e) => {
+                    if (!e) {
+                      setLock(false);
+                      setModalConfig({
+                        upload: true,
+                        delete: false,
+                        preview: false,
+                      });
+                    }
+                  }}
+                  onCancel={() => {
+                    setLock(false);
                   }}
                 >
-                  <DeleteOutlined /> xoá ảnh
+                  <Button
+                    type={"primary"}
+                    danger
+                    onClick={() => {
+                      setLock(true);
+                    }}
+                  >
+                    <DeleteOutlined /> xoá ảnh
+                  </Button>
+                </Popconfirm>
+              )}
+              {modalConfig.preview && (
+                <Button
+                  type={"primary"}
+                  onClick={() => {
+                    setPreview(true);
+                  }}
+                >
+                  <EyeOutlined /> xem ảnh
                 </Button>
-              </Popconfirm>
-              <Button
-                type={"primary"}
-                onClick={() => {
-                  setPreview(true);
-                }}
-              >
-                <EyeOutlined /> xem ảnh
-              </Button>
+              )}
             </Space>
           </Col>
         </Row>
