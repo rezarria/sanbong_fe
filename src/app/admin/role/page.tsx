@@ -4,12 +4,11 @@ import { Button, Flex, Space } from "antd";
 import { useRef } from "react";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import ViewComponent, { ViewRef } from "@/components/manager/View";
-import ViewModel from "./ViewModel";
 import Edit, { EditRef } from "@/components/manager/Edit";
-import EditModel from "./EditModel";
 import List, { Ref as ListRef } from "@/components/manager/List";
 import Add from "@/components/manager/Add";
 import DeleteButton from "@/components/manager/DeleteButton";
+import { EditModel, ViewModel } from "./type";
 
 type AddType = {
   name: string;
