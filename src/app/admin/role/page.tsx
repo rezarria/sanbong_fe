@@ -95,19 +95,32 @@ export default function Page() {
         modalTitle="Thông tin về quyền"
         sections={[
           {
-            id: "name",
             label: "Tên quyền",
             title: "name",
             name: "name",
           },
         ]}
+        button={(id) => (
+          <Button
+            type="dashed"
+            onClick={() => {
+              viewRef.current?.hide();
+              editRef.current?.show(id);
+            }}
+          >
+            <EditOutlined />
+            sửa
+          </Button>
+        )}
       />
       <MyEdit
+        url="api/role"
+        name="quyền"
         ref={editRef}
         onComplete={() => {
           listRef.current?.reload();
         }}
-        sections={[{ id: "name", name: "name", label: "Tên quyền" }]}
+        sections={[{ name: "name", label: "Tên quyền" }]}
       />
     </Flex>
   );
