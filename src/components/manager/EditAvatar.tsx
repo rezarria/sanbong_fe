@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { connect } from "@/lib/Axios";
 import { Button, Card, Col, Image, Popconfirm, Row, Space } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import EditDefaultAvatar from "./EditDefautAvatar";
 
 export function EditAvatar(
   props: Readonly<{ value?: string; onChange?: (value: string) => void }>,
@@ -14,10 +15,11 @@ export function EditAvatar(
   return (
     <>
       <Card className="w-fit overflow-hidden" bodyStyle={{ padding: 0 }}>
+        <EditDefaultAvatar />
         <Image
           width={"100%"}
           src={url}
-          className="aspect-square object-cover"
+          className="aspect-square object-cover hidden"
           preview={
             preview
               ? {
