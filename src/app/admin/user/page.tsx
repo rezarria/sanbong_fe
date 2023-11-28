@@ -140,6 +140,17 @@ export default function Page() {
             ),
           },
         ]}
+        button={(id) => (
+          <Button
+            type="dashed"
+            onClick={() => {
+              viewRef.current?.hide();
+              editRef.current?.show(id);
+            }}
+          >
+            <EditOutlined /> Sửa
+          </Button>
+        )}
       />
       <MyEdit
         url="api/user"

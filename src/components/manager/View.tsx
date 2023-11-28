@@ -26,6 +26,7 @@ type Props<T> = {
   modalTitle: string;
   sections?: Section<T>[];
   children?: ReactNode;
+  button?: (id: string) => ReactNode;
 };
 
 function View<T extends { id: string }>(
@@ -80,9 +81,16 @@ function View<T extends { id: string }>(
       title={props.modalTitle}
       onCancel={() => setIsShowing(false)}
       footer={
-        <Button title="đóng" type="primary" onClick={() => setIsShowing(false)}>
-          ĐÓNG
-        </Button>
+        <>
+          {info && props.button?.(info?.id)}
+          <Button
+            title="đóng"
+            type="primary"
+            onClick={() => setIsShowing(false)}
+          >
+            ĐÓNG
+          </Button>
+        </>
       }
     >
       {info && (
