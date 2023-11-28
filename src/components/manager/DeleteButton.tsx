@@ -1,5 +1,5 @@
 import { Button, Popconfirm } from "antd";
-import { connect } from "../../lib/Axios";
+import { connect } from "@/lib/Axios";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useState } from "react";
 

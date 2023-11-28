@@ -1,17 +1,14 @@
 "use client";
 
 import { connect } from "@/lib/Axios";
-import { Flex, Pagination, Space, Table, TableColumnProps } from "antd";
+import { Flex, Pagination, Table } from "antd";
 import { AnyObject } from "antd/es/_util/type";
-import { ColumnsType, TablePaginationConfig, TableProps } from "antd/es/table";
+import { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { AxiosRequestConfig, HttpStatusCode } from "axios";
 import { resolve } from "url";
-import path from "path";
 import {
   CSSProperties,
   ForwardedRef,
-  PropsWithChildren,
-  ReactEventHandler,
   ReactNode,
   RefObject,
   forwardRef,
@@ -22,7 +19,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { RefTable } from "antd/es/table/interface";
 
 type Pagination = {
   current: number;
