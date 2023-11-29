@@ -31,7 +31,6 @@ export default function UserAvatar(props: Readonly<Props>) {
   const [list, setList] = useState<UploadFile[]>([]);
   const form = Form.useFormInstance();
   const id = useId();
-  console.log(props.value);
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
       setLoading(info.file.status == "uploading");
