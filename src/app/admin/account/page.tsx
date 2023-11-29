@@ -10,6 +10,7 @@ import Add from "@/components/manager/Add";
 import DeleteButton from "@/components/manager/DeleteButton";
 import { AddModel, EditModel, ListModel, ViewModel } from "./type";
 import { ChangePasswordButton } from "./ChangePasswordButton";
+import RoleSelectInput, { RoleSelectInputProps } from "./RoleSelectInput";
 
 const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
@@ -71,6 +72,19 @@ export default function Page() {
                   return Promise.reject(new Error("Mật khẩu không trùng!"));
                 },
               }),
+            ],
+          },
+          {
+            label: "Quyền",
+            name: "roles",
+            required: true,
+            validateFirst: true,
+            input: <WrapRoleSelectInput />,
+            rules: [
+              {
+                required: true,
+                message: "Hãy chọn tối thiểu một quyền",
+              },
             ],
           },
         ]}
@@ -162,5 +176,16 @@ export default function Page() {
         button={(id) => <ChangePasswordButton accountId={id} />}
       />
     </Flex>
+  );
+}
+
+function WrapRoleSelectInput(props: RoleSelectInputProps) {
+  const form = Form.useFormInstance();
+  return (
+    <RoleSelectInput
+      onChange={(data) => {
+        form.setFieldValue("roles", data);
+      }}
+    />
   );
 }

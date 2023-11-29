@@ -25,7 +25,7 @@ type Props<T extends Record<string, any>> = Readonly<{
     label: string;
     name: NamePath<T>;
     type?: InputProps["type"];
-    input?: (data: FormInstance<T>) => ReactNode;
+    input?: ReactNode;
     required?: FormItemProps["required"];
     tooltip?: FormItemProps["tooltip"];
     dependencies?: FormItemProps["dependencies"];
@@ -108,6 +108,7 @@ type SelectInput<T extends Record<string, any>> =
   Props<T>["sections"] extends readonly (infer T)[] ? T : never;
 
 function selectInput<T extends Record<string, any>>(section: SelectInput<T>) {
+  if (section.input) return section.input;
   if (!section.type) return <Input />;
   switch (section.type) {
     case "avatar":

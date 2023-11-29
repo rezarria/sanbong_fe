@@ -2,6 +2,7 @@ export type AddModel = {
   username: string;
   password: string;
   password2: string;
+  roles: string[];
 };
 
 export type EditModel = {

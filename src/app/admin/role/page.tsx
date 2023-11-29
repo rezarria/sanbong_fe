@@ -8,16 +8,7 @@ import Edit, { EditRef } from "@/components/manager/Edit";
 import List, { Ref as ListRef } from "@/components/manager/List";
 import Add from "@/components/manager/Add";
 import DeleteButton from "@/components/manager/DeleteButton";
-import { EditModel, ViewModel } from "./type";
-
-type AddType = {
-  name: string;
-};
-
-type ListType = {
-  id: string;
-  name: string;
-};
+import { AddType, EditModel, ListType, ViewModel } from "./type";
 
 const MyList = List<ListType>();
 const MyView = ViewComponent<ViewModel>();
@@ -33,7 +24,10 @@ export default function Page() {
       <Add<AddType>
         title={"Thêm quyền"}
         url={"api/role"}
-        sections={[{ label: "Tên quyền", name: "name" }]}
+        sections={[
+          { label: "Tên quyền", name: "name" },
+          { label: "Tên hiển thị", name: "displayName" },
+        ]}
         onClose={() => {
           listRef.current?.reload();
         }}
@@ -47,8 +41,8 @@ export default function Page() {
             render: (_v, _d, i) => <span>{i + 1}</span>,
           },
           {
-            key: "name",
-            dataIndex: "name",
+            key: "displayName",
+            dataIndex: "displayName",
             title: "Tên quyền",
           },
           {
