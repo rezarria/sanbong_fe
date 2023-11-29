@@ -19,3 +19,10 @@ export type ListModel = {
   id: string;
   username: string;
 };
+
+export type ChangePasswordModel = {
+  id: string;
+  oldPassword: string;
+  newPassword: string;
+  newPassword2?: string;
+};

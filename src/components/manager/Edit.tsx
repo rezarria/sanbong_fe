@@ -11,10 +11,11 @@ import {
 } from "react";
 import { connect } from "@/lib/Axios";
 import { HttpStatusCode } from "axios";
-import { DatePicker, Form, FormInstance, Input, Modal } from "antd";
+import { DatePicker, Form, FormInstance, Input, Modal, Space } from "antd";
 import * as jsonpatch from "fast-json-patch";
 import dayjs from "dayjs";
 import { EditAvatar } from "./EditAvatar";
+import { ModalFooterRender } from "antd/es/modal/interface";
 
 interface TrackerModel {
   lastModifiedDate: string;
@@ -36,6 +37,7 @@ type Props<T extends { id: string; lastModifiedDate: string }> = {
   name: string;
   url: string;
   children?: ReactNode;
+  button?: (id: string) => ReactNode;
 };
 
 function Edit<T extends { id: string; lastModifiedDate: string }>(
@@ -162,14 +164,25 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
       form.resetFields();
     };
   }, [data, form]);
+  const footer = useCallback<ModalFooterRender>(
+    (o, e) => (
+      <Space>
+        {data && props.button?.(data.id)}
+        {o}
+      </Space>
+    ),
+    [data, props],
+  );
   return (
     <Modal
       open={isOpening}
       onCancel={() => setIsOpening(false)}
       onOk={() => form.submit()}
       title={"Sửa thông tin " + props.name}
+      footer={footer}
     >
       <Form
+        autoComplete="false"
         name="edit"
         labelAlign="left"
         labelCol={{ span: 6 }}

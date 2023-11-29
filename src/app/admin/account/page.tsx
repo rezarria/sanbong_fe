@@ -9,6 +9,7 @@ import List, { Ref as ListRef } from "@/components/manager/List";
 import Add from "@/components/manager/Add";
 import DeleteButton from "@/components/manager/DeleteButton";
 import { AddModel, EditModel, ListModel, ViewModel } from "./type";
+import { ChangePasswordButton } from "./ChangePasswordButton";
 
 const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
@@ -151,13 +152,14 @@ export default function Page() {
         )}
       />
       <MyEdit
-        url="api/user"
+        url="api/account"
         name="người dùng"
         ref={editRef}
         onComplete={() => {
           listRef.current?.reload();
         }}
         sections={[{ name: "username", label: "Tài khoản" }]}
+        button={(id) => <ChangePasswordButton accountId={id} />}
       />
     </Flex>
   );
