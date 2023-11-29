@@ -171,7 +171,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
         {o}
       </Space>
     ),
-    [data, props],
+    [data, props.button],
   );
   return (
     <Modal

@@ -44,7 +44,7 @@ export default function UserAvatar(props: Readonly<Props>) {
       }
       setList(info.fileList);
     },
-    [form],
+    [form, props],
   );
 
   const onPreview: UploadProps["onPreview"] = useCallback(
