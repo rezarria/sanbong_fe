@@ -11,6 +11,7 @@ import DeleteButton from "@/components/manager/DeleteButton";
 import { AddModel, EditModel, ListModel, ViewModel } from "./type";
 import { ChangePasswordButton } from "./ChangePasswordButton";
 import RoleSelectInput, { RoleSelectInputProps } from "./RoleSelectInput";
+import UserSelectInput, { UserSelectInputProps } from "./UserSelectInput";
 
 const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
@@ -84,6 +85,19 @@ export default function Page() {
               {
                 required: true,
                 message: "Hãy chọn tối thiểu một quyền",
+              },
+            ],
+          },
+          {
+            label: "Người dùng",
+            name: "user",
+            required: true,
+            validateFirst: true,
+            input: <WrapUserSelectInput />,
+            rules: [
+              {
+                required: true,
+                message: "Hãy chọn người dùng",
               },
             ],
           },
@@ -185,6 +199,17 @@ function WrapRoleSelectInput(props: RoleSelectInputProps) {
     <RoleSelectInput
       onChange={(data) => {
         form.setFieldValue("roles", data);
+      }}
+    />
+  );
+}
+
+function WrapUserSelectInput(props: UserSelectInputProps) {
+  const form = Form.useFormInstance();
+  return (
+    <UserSelectInput
+      onChange={(data) => {
+        form.setFieldValue("user", data);
       }}
     />
   );
