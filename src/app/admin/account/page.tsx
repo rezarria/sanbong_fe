@@ -9,7 +9,6 @@ import List, { Ref as ListRef } from "@/components/manager/List";
 import Add from "@/components/manager/Add";
 import DeleteButton from "@/components/manager/DeleteButton";
 import { AddModel, EditModel, ListModel, ViewModel } from "./type";
-import { connect } from "@/lib/Axios";
 
 const MyList = List<ListModel>();
 const MyView = ViewComponent<ViewModel>();
@@ -26,8 +25,53 @@ export default function Page() {
         title={"Thêm Người dùng mới"}
         url={"api/account"}
         sections={[
-          { label: "Tài khoản", name: "username" },
-          { label: "Mật khẩu", name: "password", type: "password" },
+          {
+            label: "Tài khoản",
+            name: "username",
+            required: true,
+            validateFirst: true,
+            rules: [
+              {
+                required: true,
+                message: "Hãy nhập mật khẩu!",
+              },
+            ],
+          },
+          {
+            label: "Mật khẩu",
+            name: "password",
+            type: "password",
+            required: true,
+            validateFirst: true,
+            rules: [
+              {
+                required: true,
+                message: "Hãy nhập mật khẩu!",
+              },
+            ],
+          },
+          {
+            name: "password2",
+            ignore: true,
+            label: "Nhập lại mật khẩu",
+            type: "password",
+            validateFirst: true,
+            dependencies: ["password"],
+            rules: [
+              {
+                required: true,
+                message: "Hãy nhập mật khẩu!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error("Mật khẩu không trùng!"));
+                },
+              }),
+            ],
+          },
         ]}
         onClose={() => {
           listRef.current?.reload();
