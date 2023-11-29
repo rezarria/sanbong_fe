@@ -112,9 +112,9 @@ export default function Page() {
                     }}
                   />
                   <DeleteButton
-                    title="Xoá quyền"
-                    description="Bạn có chắc chắn xoá quyền này"
-                    url="api/user"
+                    title="Xoá tài khoản"
+                    description="Bạn có chắc chắn xoá tài khoản này"
+                    url="api/account"
                     id={[record.id]}
                     onFinish={() => {
                       listRef.current?.reload();

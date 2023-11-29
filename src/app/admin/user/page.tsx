@@ -74,8 +74,8 @@ export default function Page() {
                     }}
                   />
                   <DeleteButton
-                    title="Xoá quyền"
-                    description="Bạn có chắc chắn xoá quyền này"
+                    title="Xoá người dùng"
+                    description="Bạn có chắc chắn xoá người dùng này"
                     url="api/user"
                     id={[record.id]}
                     onFinish={() => {
