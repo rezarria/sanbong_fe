@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Struct } from "@/app/admin/MenuItem";
+import { Struct } from "@/components/AppBreadcrumb/type";
 
 interface State {
   path: Struct[];
