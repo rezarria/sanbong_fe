@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import PublicSession from "../../session/PublicSession";
+import { ReactNode } from "react"
+import PublicSession from "../../session/PublicSession"
 
 export default function Layout(props: { children: ReactNode }) {
-  return <PublicSession>{props.children}</PublicSession>;
+  return <PublicSession>{props.children}</PublicSession>
 }

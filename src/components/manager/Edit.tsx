@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   ForwardedRef,
@@ -8,14 +8,14 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
-} from "react";
-import { connect } from "@/lib/Axios";
-import { HttpStatusCode } from "axios";
-import { DatePicker, Form, FormInstance, Input, Modal, Space } from "antd";
-import * as jsonpatch from "fast-json-patch";
-import dayjs from "dayjs";
-import { EditAvatar } from "./EditAvatar";
-import { ModalFooterRender } from "antd/es/modal/interface";
+} from "react"
+import { connect } from "@/lib/Axios"
+import { HttpStatusCode } from "axios"
+import { DatePicker, Form, FormInstance, Input, Modal, Space } from "antd"
+import * as jsonpatch from "fast-json-patch"
+import dayjs from "dayjs"
+import { EditAvatar } from "./EditAvatar"
+import { ModalFooterRender } from "antd/es/modal/interface"
 
 interface TrackerModel {
   lastModifiedDate: string;
@@ -44,28 +44,28 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
   props: Props<T>,
   ref: ForwardedRef<Ref>,
 ) {
-  const [isOpening, setIsOpening] = useState(false);
-  const [data, setData] = useState<T>();
-  const [form] = Form.useForm<T>();
+  const [isOpening, setIsOpening] = useState(false)
+  const [data, setData] = useState<T>()
+  const [form] = Form.useForm<T>()
   const fetch = useCallback(
     (id: string) =>
       connect.get(props.url, { params: { id } }).then((res) => {
         if (res.status == HttpStatusCode.Ok) {
-          setData(res.data);
+          setData(res.data)
         }
       }),
     [props.url],
-  );
+  )
   const onFinish = useCallback(
     (newData: T) => {
       if (data != null) {
-        const d = structuredClone(newData);
+        const d = structuredClone(newData)
 
         Object.keys(d).forEach((key) => {
-          d[key as keyof T] = data[key as keyof T];
-        });
+          d[key as keyof T] = data[key as keyof T]
+        })
 
-        const patch = jsonpatch.compare(d, newData);
+        const patch = jsonpatch.compare(d, newData)
         connect
           .patch(
             props.url,
@@ -82,26 +82,26 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
           )
           .then((res) => {
             if (res.status == HttpStatusCode.Ok) {
-              setIsOpening(false);
-              props.onComplete?.();
+              setIsOpening(false)
+              props.onComplete?.()
             }
-          });
+          })
       }
     },
     [data, props],
-  );
+  )
   useImperativeHandle(
     ref,
     () => ({
       show: (id) => {
         fetch(id).then(() => {
-          setIsOpening(true);
-        });
+          setIsOpening(true)
+        })
       },
       hide: () => {},
     }),
     [fetch],
-  );
+  )
   const selectType = useCallback(
     (index: number, section: Section<T>, form: FormInstance) => {
       if (section.type == null)
@@ -113,7 +113,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
           >
             <Input contentEditable={true} name={section.name} />
           </Form.Item>
-        );
+        )
       switch (section.type) {
         case "datepicker":
           return (
@@ -127,7 +127,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
             >
               <DatePicker className="!w-full" format="DD-MM-YYYY" />
             </Form.Item>
-          );
+          )
         case "avatar":
           return (
             <Form.Item
@@ -137,7 +137,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
             >
               <EditAvatar />
             </Form.Item>
-          );
+          )
         default:
           return (
             <Form.Item
@@ -151,19 +151,19 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
                 name={section.name}
               />
             </Form.Item>
-          );
+          )
       }
     },
     [],
-  );
+  )
   useEffect(() => {
     if (data != null) {
-      form.setFieldsValue(data as NonNullable<T>);
+      form.setFieldsValue(data as NonNullable<T>)
     }
     return () => {
-      form.resetFields();
-    };
-  }, [data, form]);
+      form.resetFields()
+    }
+  }, [data, form])
   const footer = useCallback<ModalFooterRender>(
     (o, e) => (
       <Space>
@@ -172,7 +172,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
       </Space>
     ),
     [data, props.button],
-  );
+  )
   return (
     <Modal
       open={isOpening}
@@ -205,11 +205,11 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
         </Form.Item>
       </Form>
     </Modal>
-  );
+  )
 }
 
-export { type Ref as EditRef };
+export { type Ref as EditRef }
 const ForwardedRefEdit = <
   T extends { id: string; lastModifiedDate: string },
->() => forwardRef(Edit<T>);
-export default ForwardedRefEdit;
+>() => forwardRef(Edit<T>)
+export default ForwardedRefEdit

@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import { Button, Flex, Form, Image, Space } from "antd";
-import { useRef } from "react";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import ViewComponent, { ViewRef } from "@/components/manager/View";
-import Edit, { EditRef } from "@/components/manager/Edit";
-import List, { Ref as ListRef } from "@/components/manager/List";
-import Add from "@/components/manager/Add";
-import DeleteButton from "@/components/manager/DeleteButton";
-import { AddModel, EditModel, ListModel, ViewModel } from "./type";
-import UserAvatar from "./UserAvatar";
-import { connect } from "@/lib/Axios";
+import { Button, Flex, Form, Image, Space } from "antd"
+import { useRef } from "react"
+import { EditOutlined, EyeOutlined } from "@ant-design/icons"
+import ViewComponent, { ViewRef } from "@/components/manager/View"
+import Edit, { EditRef } from "@/components/manager/Edit"
+import List, { Ref as ListRef } from "@/components/manager/List"
+import Add from "@/components/manager/Add"
+import DeleteButton from "@/components/manager/DeleteButton"
+import { AddModel, EditModel, ListModel, ViewModel } from "./type"
+import UserAvatar from "./UserAvatar"
+import { connect } from "@/lib/Axios"
 
-const MyList = List<ListModel>();
-const MyView = ViewComponent<ViewModel>();
-const MyEdit = Edit<EditModel>();
+const MyList = List<ListModel>()
+const MyView = ViewComponent<ViewModel>()
+const MyEdit = Edit<EditModel>()
 
 export default function Page() {
-  const listRef = useRef<ListRef>(null);
-  const viewRef = useRef<ViewRef>(null);
-  const editRef = useRef<EditRef>(null);
+  const listRef = useRef<ListRef>(null)
+  const viewRef = useRef<ViewRef>(null)
+  const editRef = useRef<EditRef>(null)
 
   return (
     <Flex vertical={true} className="h-full">
@@ -36,7 +36,7 @@ export default function Page() {
           },
         ]}
         onClose={() => {
-          listRef.current?.reload();
+          listRef.current?.reload()
         }}
       />
       <MyList
@@ -63,14 +63,14 @@ export default function Page() {
                     type="primary"
                     icon={<EyeOutlined />}
                     onClick={() => {
-                      viewRef.current?.show(record.id);
+                      viewRef.current?.show(record.id)
                     }}
                   />
                   <Button
                     title="sửa"
                     icon={<EditOutlined />}
                     onClick={() => {
-                      editRef.current?.show(record.id);
+                      editRef.current?.show(record.id)
                     }}
                   />
                   <DeleteButton
@@ -79,11 +79,11 @@ export default function Page() {
                     url="api/user"
                     id={[record.id]}
                     onFinish={() => {
-                      listRef.current?.reload();
+                      listRef.current?.reload()
                     }}
                   />
                 </Space>
-              );
+              )
             },
           },
         ]}
@@ -122,8 +122,8 @@ export default function Page() {
           <Button
             type="dashed"
             onClick={() => {
-              viewRef.current?.hide();
-              editRef.current?.show(id);
+              viewRef.current?.hide()
+              editRef.current?.show(id)
             }}
           >
             <EditOutlined /> Sửa
@@ -135,7 +135,7 @@ export default function Page() {
         name="người dùng"
         ref={editRef}
         onComplete={() => {
-          listRef.current?.reload();
+          listRef.current?.reload()
         }}
         sections={[
           { name: "name", label: "Tên" },
@@ -154,14 +154,14 @@ export default function Page() {
         <EditAvatar />
       </MyEdit>
     </Flex>
-  );
+  )
 }
 
 function EditAvatar() {
-  const avatar = Form.useWatch("avatar", Form.useFormInstance<EditModel>());
+  const avatar = Form.useWatch("avatar", Form.useFormInstance<EditModel>())
   return (
     <Form.Item>
       <UserAvatar url="api/files" value={avatar} />
     </Form.Item>
-  );
+  )
 }

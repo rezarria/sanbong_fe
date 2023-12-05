@@ -1,11 +1,12 @@
 {
   "extends": [
     "next/core-web-vitals",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "plugin:react/recommended"
+    // "plugin:prettier/recommended"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "linebreak-style":"error"
+    "linebreak-style":"error",
+    "semi":["error", "never"]
   }
 }

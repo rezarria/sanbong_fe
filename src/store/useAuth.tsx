@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { create } from "zustand";
-import { JwtPayload, jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react"
+import { create } from "zustand"
+import { JwtPayload, jwtDecode } from "jwt-decode"
 
 interface User {
   id: string;
@@ -27,22 +27,22 @@ export type MyPayloadType = JwtPayload & {
 const useAuth = create<State>()((set) => {
   return {
     update: (user: User) => {
-      set({ user });
+      set({ user })
     },
     updateJwt: (jwt) => {
-      localStorage.setItem("jwt", jwt);
+      localStorage.setItem("jwt", jwt)
     },
     parseFromLocal: () => {
-      const jwt = localStorage.getItem("jwt");
+      const jwt = localStorage.getItem("jwt")
       if (jwt != null) {
-        const jwtObject: MyPayloadType = jwtDecode(jwt);
+        const jwtObject: MyPayloadType = jwtDecode(jwt)
         set({
           accountId: jwtObject.details__accountId,
           userId: jwtObject.details__userId,
-        });
+        })
       }
     },
-  };
-});
+  }
+})
 
-export default useAuth;
+export default useAuth

@@ -1,25 +1,25 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Upload, message } from "antd";
-import { useCallback, useRef } from "react";
-import { connect } from "@/lib/Axios";
+import { UploadOutlined } from "@ant-design/icons"
+import { Button, Upload, message } from "antd"
+import { useCallback, useRef } from "react"
+import { connect } from "@/lib/Axios"
 import {
   RcFile,
   UploadChangeParam,
   UploadFile,
   UploadProps,
-} from "antd/es/upload";
+} from "antd/es/upload"
 
 const beforeUpload = (file: RcFile) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png"
   if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
+    message.error("You can only upload JPG/PNG file!")
   }
-  const isLt2M = file.size / 1024 / 1024 < 2;
+  const isLt2M = file.size / 1024 / 1024 < 2
   if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
+    message.error("Image must smaller than 2MB!")
   }
-  return isJpgOrPng && isLt2M;
-};
+  return isJpgOrPng && isLt2M
+}
 
 export default function EditAvatarUploadButton(
   props: Readonly<{
@@ -29,19 +29,19 @@ export default function EditAvatarUploadButton(
     onChange?: (url?: string) => void;
   }>,
 ) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
       if (info.file.status == "done") {
         info.fileList.forEach(
           (i) => (i.url = connect.defaults.baseURL! + i.response[0].url),
-        );
-        const fileUrl = info.fileList[0].response[0].url;
-        props.onChange?.(fileUrl);
+        )
+        const fileUrl = info.fileList[0].response[0].url
+        props.onChange?.(fileUrl)
       }
     },
     [props],
-  );
+  )
   return (
     <Upload
       method="POST"
@@ -58,13 +58,13 @@ export default function EditAvatarUploadButton(
       <Button
         type="primary"
         onClick={() => {
-          inputRef.current?.click();
-          props.onClick?.();
+          inputRef.current?.click()
+          props.onClick?.()
         }}
       >
         <UploadOutlined />
         tải ảnh
       </Button>
     </Upload>
-  );
+  )
 }

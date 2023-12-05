@@ -1,4 +1,4 @@
-import { Button, Col, DatePicker, Input, Modal, Row, Space } from "antd";
+import { Button, Col, DatePicker, Input, Modal, Row, Space } from "antd"
 import {
   ForwardedRef,
   ReactNode,
@@ -6,10 +6,10 @@ import {
   useImperativeHandle,
   useMemo,
   useState,
-} from "react";
-import { connect } from "@/lib/Axios";
-import { AxiosError, HttpStatusCode } from "axios";
-import dayjs from "dayjs";
+} from "react"
+import { connect } from "@/lib/Axios"
+import { AxiosError, HttpStatusCode } from "axios"
+import dayjs from "dayjs"
 type Section<T> = {
   name: Extract<keyof T, string>;
   title: string;
@@ -33,8 +33,8 @@ function View<T extends { id: string }>(
   props: Props<T>,
   ref: ForwardedRef<Ref>,
 ) {
-  const [isShowing, setIsShowing] = useState(false);
-  const [info, setInfo] = useState<T>();
+  const [isShowing, setIsShowing] = useState(false)
+  const [info, setInfo] = useState<T>()
   const data: Section<T>[] = useMemo(() => {
     const arr: Section<T>[] = [
       {
@@ -42,11 +42,11 @@ function View<T extends { id: string }>(
         label: "Id",
         name: "id" as Extract<keyof T, string>,
       },
-    ];
+    ]
     if (props.sections != null && props.sections.length != 0) {
-      return arr.concat(props.sections);
-    } else return arr;
-  }, [props.sections]);
+      return arr.concat(props.sections)
+    } else return arr
+  }, [props.sections])
   useImperativeHandle(
     ref,
     () => ({
@@ -59,21 +59,21 @@ function View<T extends { id: string }>(
           })
           .then((res) => {
             if (res.status == HttpStatusCode.Ok) {
-              setInfo(res.data);
-              setIsShowing(true);
+              setInfo(res.data)
+              setIsShowing(true)
             }
           })
           .catch((err: AxiosError) => {
-            console.error(err.message);
-          });
+            console.error(err.message)
+          })
       },
       hide: () => {
-        setInfo(undefined);
-        setIsShowing(false);
+        setInfo(undefined)
+        setIsShowing(false)
       },
     }),
     [props.url],
-  );
+  )
 
   return (
     <Modal
@@ -111,7 +111,7 @@ function View<T extends { id: string }>(
         </Row>
       )}
     </Modal>
-  );
+  )
 }
 
 function selectType<T>(section: Section<T>, data: T): ReactNode {
@@ -124,7 +124,7 @@ function selectType<T>(section: Section<T>, data: T): ReactNode {
         name={section.name}
         readOnly
       />
-    );
+    )
   switch (section.type) {
     case "datepicker":
       return (
@@ -134,7 +134,7 @@ function selectType<T>(section: Section<T>, data: T): ReactNode {
           value={dayjs(data[section.name] as string)}
           className="!w-full"
         />
-      );
+      )
     default:
       return (
         <Input
@@ -145,10 +145,10 @@ function selectType<T>(section: Section<T>, data: T): ReactNode {
           name={section.name}
           readOnly
         />
-      );
+      )
   }
 }
 
-export { type Ref as ViewRef };
-const ForwardedRefView = <T extends { id: string }>() => forwardRef(View<T>);
-export default ForwardedRefView;
+export { type Ref as ViewRef }
+const ForwardedRefView = <T extends { id: string }>() => forwardRef(View<T>)
+export default ForwardedRefView

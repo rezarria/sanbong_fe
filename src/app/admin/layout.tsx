@@ -1,27 +1,27 @@
-"use client";
+"use client"
 
-import React, { ReactNode, useEffect, useState } from "react";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Button, Layout, theme } from "antd";
-import AppBreadcrumb from "@/components/AppBreadcrumb/AppBreadcrumb";
-import AppMenu from "./AppMenu";
-import { usePathname } from "next/navigation";
-import useAppStore from "@/store/useAppStore";
+import React, { ReactNode, useEffect, useState } from "react"
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons"
+import { Button, Layout, theme } from "antd"
+import AppBreadcrumb from "@/components/AppBreadcrumb/AppBreadcrumb"
+import AppMenu from "./AppMenu"
+import { usePathname } from "next/navigation"
+import useAppStore from "@/store/useAppStore"
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout
 
 interface AppProps {
   children: ReactNode;
 }
 
 const App: React.FC<AppProps> = (props) => {
-  const [change] = useAppStore((s) => [s.change]);
-  const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const [change] = useAppStore((s) => [s.change])
+  const pathname = usePathname()
+  const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer },
-  } = theme.useToken();
-  useEffect(() => {}, [pathname]);
+  } = theme.useToken()
+  useEffect(() => {}, [pathname])
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider
@@ -65,7 +65,7 @@ const App: React.FC<AppProps> = (props) => {
         </Footer>
       </Layout>
     </Layout>
-  );
-};
+  )
+}
 
-export default App;
+export default App

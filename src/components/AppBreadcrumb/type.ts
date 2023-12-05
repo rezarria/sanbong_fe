@@ -1,9 +1,9 @@
-import { MenuProps } from "antd";
+import { MenuProps } from "antd"
 import {
   MenuDividerType,
   MenuItemGroupType,
-} from "antd/es/menu/hooks/useItems";
-import { ReactNode } from "react";
+} from "antd/es/menu/hooks/useItems"
+import { ReactNode } from "react"
 
 enum Routers {
   Role,
@@ -25,4 +25,4 @@ export interface Struct {
   children?: RouterItems[];
 }
 
-export { Routers as RouterEnum };
+export { Routers as RouterEnum }

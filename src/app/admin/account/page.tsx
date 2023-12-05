@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { Button, Flex, Form, Image, Space } from "antd";
-import { useRef } from "react";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import ViewComponent, { ViewRef } from "@/components/manager/View";
-import Edit, { EditRef } from "@/components/manager/Edit";
-import List, { Ref as ListRef } from "@/components/manager/List";
-import Add from "@/components/manager/Add";
-import DeleteButton from "@/components/manager/DeleteButton";
-import { AddModel, EditModel, ListModel, ViewModel } from "./type";
-import { ChangePasswordButton } from "./ChangePasswordButton";
-import RoleSelectInput, { RoleSelectInputProps } from "./RoleSelectInput";
-import UserSelectInput, { UserSelectInputProps } from "./UserSelectInput";
+import { Button, Flex, Form, Image, Space } from "antd"
+import { useRef } from "react"
+import { EditOutlined, EyeOutlined } from "@ant-design/icons"
+import ViewComponent, { ViewRef } from "@/components/manager/View"
+import Edit, { EditRef } from "@/components/manager/Edit"
+import List, { Ref as ListRef } from "@/components/manager/List"
+import Add from "@/components/manager/Add"
+import DeleteButton from "@/components/manager/DeleteButton"
+import { AddModel, EditModel, ListModel, ViewModel } from "./type"
+import { ChangePasswordButton } from "./ChangePasswordButton"
+import RoleSelectInput, { RoleSelectInputProps } from "./RoleSelectInput"
+import UserSelectInput, { UserSelectInputProps } from "./UserSelectInput"
 
-const MyList = List<ListModel>();
-const MyView = ViewComponent<ViewModel>();
-const MyEdit = Edit<EditModel>();
+const MyList = List<ListModel>()
+const MyView = ViewComponent<ViewModel>()
+const MyEdit = Edit<EditModel>()
 
 export default function Page() {
-  const listRef = useRef<ListRef>(null);
-  const viewRef = useRef<ViewRef>(null);
-  const editRef = useRef<EditRef>(null);
+  const listRef = useRef<ListRef>(null)
+  const viewRef = useRef<ViewRef>(null)
+  const editRef = useRef<EditRef>(null)
 
   return (
     <Flex vertical={true} className="h-full">
@@ -68,9 +68,9 @@ export default function Page() {
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
+                    return Promise.resolve()
                   }
-                  return Promise.reject(new Error("Mật khẩu không trùng!"));
+                  return Promise.reject(new Error("Mật khẩu không trùng!"))
                 },
               }),
             ],
@@ -103,7 +103,7 @@ export default function Page() {
           },
         ]}
         onClose={() => {
-          listRef.current?.reload();
+          listRef.current?.reload()
         }}
       />
       <MyList
@@ -130,14 +130,14 @@ export default function Page() {
                     type="primary"
                     icon={<EyeOutlined />}
                     onClick={() => {
-                      viewRef.current?.show(record.id);
+                      viewRef.current?.show(record.id)
                     }}
                   />
                   <Button
                     title="sửa"
                     icon={<EditOutlined />}
                     onClick={() => {
-                      editRef.current?.show(record.id);
+                      editRef.current?.show(record.id)
                     }}
                   />
                   <DeleteButton
@@ -146,11 +146,11 @@ export default function Page() {
                     url="api/account"
                     id={[record.id]}
                     onFinish={() => {
-                      listRef.current?.reload();
+                      listRef.current?.reload()
                     }}
                   />
                 </Space>
-              );
+              )
             },
           },
         ]}
@@ -171,8 +171,8 @@ export default function Page() {
           <Button
             type="dashed"
             onClick={() => {
-              viewRef.current?.hide();
-              editRef.current?.show(id);
+              viewRef.current?.hide()
+              editRef.current?.show(id)
             }}
           >
             <EditOutlined /> Sửa
@@ -184,33 +184,33 @@ export default function Page() {
         name="người dùng"
         ref={editRef}
         onComplete={() => {
-          listRef.current?.reload();
+          listRef.current?.reload()
         }}
         sections={[{ name: "username", label: "Tài khoản" }]}
         button={(id) => <ChangePasswordButton accountId={id} />}
       />
     </Flex>
-  );
+  )
 }
 
 function WrapRoleSelectInput(props: RoleSelectInputProps) {
-  const form = Form.useFormInstance();
+  const form = Form.useFormInstance()
   return (
     <RoleSelectInput
       onChange={(data) => {
-        form.setFieldValue("roles", data);
+        form.setFieldValue("roles", data)
       }}
     />
-  );
+  )
 }
 
 function WrapUserSelectInput(props: UserSelectInputProps) {
-  const form = Form.useFormInstance();
+  const form = Form.useFormInstance()
   return (
     <UserSelectInput
       onChange={(data) => {
-        form.setFieldValue("user", data);
+        form.setFieldValue("user", data)
       }}
     />
-  );
+  )
 }

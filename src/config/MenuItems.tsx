@@ -1,11 +1,18 @@
-import { RouterItems } from "@/components/AppBreadcrumb/type";
+import { RouterItems } from "@/components/AppBreadcrumb/type"
 import {
   LockOutlined,
   ThunderboltOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from "@ant-design/icons"
+import FootballIcon from "@/icon/FootballIcon"
 
 const routerItems: RouterItems[] = [
+  {
+    name: "field",
+    src: "/admin/field",
+    title: "Sân",
+    icon: <FootballIcon />,
+  },
   {
     name: "role",
     src: "/admin/role",
@@ -45,6 +52,6 @@ const routerItems: RouterItems[] = [
     title: "Đăng nhập",
     icon: <UserOutlined />,
   },
-];
+]
 
-export default routerItems;
+export default routerItems

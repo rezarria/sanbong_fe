@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons"
 import {
   MouseEventHandler,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-} from "react";
+} from "react"
 
 export default function EditDefaultAvatar(
   props: Readonly<{
@@ -15,35 +15,35 @@ export default function EditDefaultAvatar(
     onMouseEnter?: MouseEventHandler<HTMLDivElement>;
   }>,
 ) {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ height: 0, width: 0 });
+  const divRef = useRef<HTMLDivElement>(null)
+  const [size, setSize] = useState({ height: 0, width: 0 })
 
   useLayoutEffect(() => {
     if (divRef.current) {
       setSize({
         height: divRef.current.clientHeight,
         width: divRef.current.clientWidth,
-      });
+      })
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    const div = divRef.current;
+    const div = divRef.current
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((i) => {
-        setSize({ width: i.contentRect.width, height: i.contentRect.height });
-      });
-    });
+        setSize({ width: i.contentRect.width, height: i.contentRect.height })
+      })
+    })
     if (div) {
-      resizeObserver.observe(divRef.current);
+      resizeObserver.observe(divRef.current)
     }
     return () => {
       if (div) {
-        resizeObserver.unobserve(div);
-        resizeObserver.disconnect();
+        resizeObserver.unobserve(div)
+        resizeObserver.disconnect()
       }
-    };
-  }, []);
+    }
+  }, [])
 
   return (
     <div
@@ -53,5 +53,5 @@ export default function EditDefaultAvatar(
     >
       <UserOutlined style={{ fontSize: size.height }} />
     </div>
-  );
+  )
 }

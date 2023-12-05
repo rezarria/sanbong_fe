@@ -1,7 +1,7 @@
-import { Button, Popconfirm } from "antd";
-import { connect } from "@/lib/Axios";
-import { DeleteOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { Button, Popconfirm } from "antd"
+import { connect } from "@/lib/Axios"
+import { DeleteOutlined } from "@ant-design/icons"
+import { useState } from "react"
 
 type Props = {
   id: string[];
@@ -12,8 +12,8 @@ type Props = {
 };
 
 export default function DeleteButton(props: Readonly<Props>) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   return (
     <Popconfirm
       open={open}
@@ -22,16 +22,16 @@ export default function DeleteButton(props: Readonly<Props>) {
       okButtonProps={{ loading }}
       onCancel={() => setOpen(false)}
       onConfirm={() => {
-        setLoading(true);
+        setLoading(true)
         connect
           .delete<string[]>(props.url, {
             data: props.id,
           })
           .then(() => {
-            setOpen(false);
-            setLoading(false);
-            props.onFinish?.();
-          });
+            setOpen(false)
+            setLoading(false)
+            props.onFinish?.()
+          })
       }}
     >
       <Button
@@ -42,5 +42,5 @@ export default function DeleteButton(props: Readonly<Props>) {
         onClick={() => setOpen(true)}
       />
     </Popconfirm>
-  );
+  )
 }

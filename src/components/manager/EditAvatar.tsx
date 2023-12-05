@@ -1,26 +1,26 @@
-"use client";
-import { useCallback, useRef, useState } from "react";
-import { connect } from "@/lib/Axios";
-import { Button, Card, Col, Image, Popconfirm, Row, Space } from "antd";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import EditDefaultAvatar from "./EditDefautAvatar";
-import EditAvatarUploadButton from "./EditAvatarUploadButton";
+"use client"
+import { useCallback, useRef, useState } from "react"
+import { connect } from "@/lib/Axios"
+import { Button, Card, Col, Image, Popconfirm, Row, Space } from "antd"
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons"
+import EditDefaultAvatar from "./EditDefautAvatar"
+import EditAvatarUploadButton from "./EditAvatarUploadButton"
 
 export function EditAvatar(
   props: Readonly<{ value?: string; onChange?: (value: string) => void }>,
 ) {
-  const [imageUrl, setImageUrl] = useState(props.value);
-  const [lock, setLock] = useState(false);
-  const [preview, setPreview] = useState(false);
+  const [imageUrl, setImageUrl] = useState(props.value)
+  const [lock, setLock] = useState(false)
+  const [preview, setPreview] = useState(false)
   const [modalConfig, setModalConfig] = useState({
     preview: props.value != null && props.value.length != 0,
     delete: props.value != null && props.value.length != 0,
     upload: !(props.value != null && props.value.length != 0),
-  });
-  const card = useRef<HTMLDivElement>(null);
+  })
+  const card = useRef<HTMLDivElement>(null)
   const handleMouseEnter = useCallback(() => {
-    if (!lock) card.current?.classList.remove("hidden");
-  }, [lock]);
+    if (!lock) card.current?.classList.remove("hidden")
+  }, [lock])
   return (
     <Card
       className="w-full h-full aspect-square overflow-hidden"
@@ -38,7 +38,7 @@ export function EditAvatar(
               ? {
                   visible: true,
                   onVisibleChange: (e) => {
-                    if (!e) setPreview(false);
+                    if (!e) setPreview(false)
                   },
                 }
               : false
@@ -53,7 +53,7 @@ export function EditAvatar(
         className="absolute w-full h-full hidden bg-black/50 z-10 top-0 duration-700"
         bodyStyle={{ width: "100%", height: "100%" }}
         onMouseLeave={() => {
-          if (!lock) card.current?.classList.add("hidden");
+          if (!lock) card.current?.classList.add("hidden")
         }}
       >
         <Row className="w-full h-full" justify={"center"} align={"middle"}>
@@ -64,13 +64,13 @@ export function EditAvatar(
                   url="api/files"
                   onChange={(url) => {
                     if (url) {
-                      props.onChange?.(url);
-                      setImageUrl(url);
+                      props.onChange?.(url)
+                      setImageUrl(url)
                       setModalConfig({
                         upload: false,
                         delete: true,
                         preview: true,
-                      });
+                      })
                     }
                   }}
                 />
@@ -79,30 +79,30 @@ export function EditAvatar(
                 <Popconfirm
                   title={"bạn có chắc xoá ảnh này?"}
                   onConfirm={() => {
-                    card.current?.classList.add("hidden");
-                    setLock(true);
-                    setImageUrl("");
-                    props.onChange?.("");
+                    card.current?.classList.add("hidden")
+                    setLock(true)
+                    setImageUrl("")
+                    props.onChange?.("")
                   }}
                   onOpenChange={(e) => {
                     if (!e) {
-                      setLock(false);
+                      setLock(false)
                       setModalConfig({
                         upload: true,
                         delete: false,
                         preview: false,
-                      });
+                      })
                     }
                   }}
                   onCancel={() => {
-                    setLock(false);
+                    setLock(false)
                   }}
                 >
                   <Button
                     type={"primary"}
                     danger
                     onClick={() => {
-                      setLock(true);
+                      setLock(true)
                     }}
                   >
                     <DeleteOutlined /> xoá ảnh
@@ -113,7 +113,7 @@ export function EditAvatar(
                 <Button
                   type={"primary"}
                   onClick={() => {
-                    setPreview(true);
+                    setPreview(true)
                   }}
                 >
                   <EyeOutlined /> xem ảnh
@@ -124,5 +124,5 @@ export function EditAvatar(
         </Row>
       </Card>
     </Card>
-  );
+  )
 }

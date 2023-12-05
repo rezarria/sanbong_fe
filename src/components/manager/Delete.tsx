@@ -1,10 +1,10 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef } from "react"
 
 type Ref = {};
 type Props = {};
 
 function Delete(props: Props, ref: ForwardedRef<Ref>) {
-  return <></>;
+  return <></>
 }
 
-export default forwardRef(Delete);
+export default forwardRef(Delete)

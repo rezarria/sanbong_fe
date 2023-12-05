@@ -1,5 +1,5 @@
-"use client";
-import { Form, Input, Modal } from "antd";
+"use client"
+import { Form, Input, Modal } from "antd"
 import {
   ForwardedRef,
   forwardRef,
@@ -7,53 +7,53 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
-} from "react";
-import { ChangePasswordModel } from "./type";
-import { connect } from "@/lib/Axios";
+} from "react"
+import { ChangePasswordModel } from "./type"
+import { connect } from "@/lib/Axios"
 type Ref = {
   show(id: string): void;
   hide(): void;
 };
-export { type Ref as ChangePasswordRef };
-export default forwardRef(ChangePasswordForm);
+export { type Ref as ChangePasswordRef }
+export default forwardRef(ChangePasswordForm)
 function ChangePasswordForm(props: Readonly<{}>, ref: ForwardedRef<Ref>) {
-  const [open, setOpen] = useState(false);
-  const [id, setId] = useState<string>();
-  const [form] = Form.useForm<ChangePasswordModel>();
+  const [open, setOpen] = useState(false)
+  const [id, setId] = useState<string>()
+  const [form] = Form.useForm<ChangePasswordModel>()
   useImperativeHandle(
     ref,
     () => ({
       show(id) {
-        setId(id);
-        setOpen(true);
+        setId(id)
+        setOpen(true)
       },
       hide() {
-        setOpen(false);
+        setOpen(false)
       },
     }),
     [],
-  );
+  )
   useEffect(() => {
     if (id != null) {
-      form.resetFields();
-      form.setFieldsValue({});
+      form.resetFields()
+      form.setFieldsValue({})
     }
-  }, [form, id]);
+  }, [form, id])
   const handleFinish = useCallback((data: ChangePasswordModel) => {
-    delete data["newPassword2"];
+    delete data["newPassword2"]
     connect.post("api/account/changePassword", data).then((res) => {
-      setOpen(false);
-    });
-  }, []);
+      setOpen(false)
+    })
+  }, [])
   return (
     <Modal
       open={open}
       title="Đổi mật khẩu"
       onCancel={() => {
-        setOpen(false);
+        setOpen(false)
       }}
       onOk={() => {
-        form.submit();
+        form.submit()
       }}
     >
       <Form<ChangePasswordModel>
@@ -104,9 +104,9 @@ function ChangePasswordForm(props: Readonly<{}>, ref: ForwardedRef<Ref>) {
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("newPassword2") === value) {
-                  return Promise.resolve();
+                  return Promise.resolve()
                 }
-                return Promise.reject(new Error("Mật khẩu không trùng!"));
+                return Promise.reject(new Error("Mật khẩu không trùng!"))
               },
             }),
           ]}
@@ -115,5 +115,5 @@ function ChangePasswordForm(props: Readonly<{}>, ref: ForwardedRef<Ref>) {
         </Form.Item>
       </Form>
     </Modal>
-  );
+  )
 }

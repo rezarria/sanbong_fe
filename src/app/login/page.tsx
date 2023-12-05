@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import LoginPage from "@/components/page/LoginPage";
-import { Card, Col, Layout, Row } from "antd";
+import LoginPage from "@/components/page/LoginPage"
+import { Card, Col, Layout, Row } from "antd"
 
 export default function Page() {
   return (
@@ -14,5 +14,5 @@ export default function Page() {
         </Col>
       </Row>
     </Layout>
-  );
+  )
 }

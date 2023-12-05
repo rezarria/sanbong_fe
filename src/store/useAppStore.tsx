@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { Struct } from "@/components/AppBreadcrumb/type";
+import { create } from "zustand"
+import { Struct } from "@/components/AppBreadcrumb/type"
 
 interface State {
   path: Struct[];
@@ -9,8 +9,8 @@ interface State {
 const useAppStore = create<State>()((set) => ({
   path: [],
   change: (newPath) => {
-    set(() => ({ path: newPath }));
+    set(() => ({ path: newPath }))
   },
-}));
+}))
 
-export default useAppStore;
+export default useAppStore

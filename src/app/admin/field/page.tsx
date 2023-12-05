@@ -1,24 +1,24 @@
-"use client";
+"use client"
 
-import { Button, Flex, Space } from "antd";
-import { useRef } from "react";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import ViewComponent, { ViewRef } from "@/components/manager/View";
-import Edit, { EditRef } from "@/components/manager/Edit";
-import List, { Ref as ListRef } from "@/components/manager/List";
-import Add from "@/components/manager/Add";
-import DeleteButton from "@/components/manager/DeleteButton";
-import { AddType, EditModel, ListType, ViewModel } from "./type";
-import TextArea from "antd/es/input/TextArea";
+import { Button, Flex, Space } from "antd"
+import { useRef } from "react"
+import { EditOutlined, EyeOutlined } from "@ant-design/icons"
+import ViewComponent, { ViewRef } from "@/components/manager/View"
+import Edit, { EditRef } from "@/components/manager/Edit"
+import List, { Ref as ListRef } from "@/components/manager/List"
+import Add from "@/components/manager/Add"
+import DeleteButton from "@/components/manager/DeleteButton"
+import { AddType, EditModel, ListType, ViewModel } from "./type"
+import TextArea from "antd/es/input/TextArea"
 
-const MyList = List<ListType>();
-const MyView = ViewComponent<ViewModel>();
-const MyEdit = Edit<EditModel>();
+const MyList = List<ListType>()
+const MyView = ViewComponent<ViewModel>()
+const MyEdit = Edit<EditModel>()
 
 export default function Page() {
-  const listRef = useRef<ListRef>(null);
-  const viewRef = useRef<ViewRef>(null);
-  const editRef = useRef<EditRef>(null);
+  const listRef = useRef<ListRef>(null)
+  const viewRef = useRef<ViewRef>(null)
+  const editRef = useRef<EditRef>(null)
 
   return (
     <Flex vertical={true} className="h-full">
@@ -30,7 +30,7 @@ export default function Page() {
           { label: "Mô tả", name: "description", input: <TextArea /> },
         ]}
         onClose={() => {
-          listRef.current?.reload();
+          listRef.current?.reload()
         }}
       />
       <MyList
@@ -57,14 +57,14 @@ export default function Page() {
                     type="primary"
                     icon={<EyeOutlined />}
                     onClick={() => {
-                      viewRef.current?.show(record.id);
+                      viewRef.current?.show(record.id)
                     }}
                   />
                   <Button
                     title="sửa"
                     icon={<EditOutlined />}
                     onClick={() => {
-                      editRef.current?.show(record.id);
+                      editRef.current?.show(record.id)
                     }}
                   />
                   <DeleteButton
@@ -73,11 +73,11 @@ export default function Page() {
                     url="api/role"
                     id={[record.id]}
                     onFinish={() => {
-                      listRef.current?.reload();
+                      listRef.current?.reload()
                     }}
                   />
                 </Space>
-              );
+              )
             },
           },
         ]}
@@ -98,8 +98,8 @@ export default function Page() {
           <Button
             type="dashed"
             onClick={() => {
-              viewRef.current?.hide();
-              editRef.current?.show(id);
+              viewRef.current?.hide()
+              editRef.current?.show(id)
             }}
           >
             <EditOutlined />
@@ -112,10 +112,10 @@ export default function Page() {
         name="quyền"
         ref={editRef}
         onComplete={() => {
-          listRef.current?.reload();
+          listRef.current?.reload()
         }}
         sections={[{ name: "name", label: "Tên quyền" }]}
       />
     </Flex>
-  );
+  )
 }

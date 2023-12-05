@@ -1,7 +1,7 @@
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
-import { connect } from "@/lib/Axios";
-import { useRouter } from "next/navigation";
+import { LockOutlined, UserOutlined } from "@ant-design/icons"
+import { Button, Form, Input } from "antd"
+import { connect } from "@/lib/Axios"
+import { useRouter } from "next/navigation"
 
 type LoginModel = {
   username: string;
@@ -9,13 +9,13 @@ type LoginModel = {
 };
 
 export default function LoginPage() {
-  const router = useRouter();
+  const router = useRouter()
   const onFinish = (data: LoginModel) => {
     connect.post<{ jwt: string }>("api/security/login", data).then((res) => {
-      localStorage.setItem("jwt", res.data.jwt);
-      router.push("/admin/user");
-    });
-  };
+      localStorage.setItem("jwt", res.data.jwt)
+      router.push("/admin/user")
+    })
+  }
 
   return (
     <Form<LoginModel>
@@ -54,5 +54,5 @@ export default function LoginPage() {
         </Button>
       </Form.Item>
     </Form>
-  );
+  )
 }

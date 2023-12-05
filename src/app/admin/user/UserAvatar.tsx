@@ -1,20 +1,20 @@
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Upload, UploadProps, message, Image, Form } from "antd";
-import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload";
-import { useCallback, useEffect, useId, useState } from "react";
-import { connect } from "@/lib/Axios";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"
+import { Upload, UploadProps, message, Image, Form } from "antd"
+import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload"
+import { useCallback, useEffect, useId, useState } from "react"
+import { connect } from "@/lib/Axios"
 
 const beforeUpload = (file: RcFile) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png"
   if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
+    message.error("You can only upload JPG/PNG file!")
   }
-  const isLt2M = file.size / 1024 / 1024 < 2;
+  const isLt2M = file.size / 1024 / 1024 < 2
   if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
+    message.error("Image must smaller than 2MB!")
   }
-  return isJpgOrPng && isLt2M;
-};
+  return isJpgOrPng && isLt2M
+}
 
 type Props = {
   url: string;
@@ -25,35 +25,35 @@ type Props = {
 };
 
 export default function UserAvatar(props: Readonly<Props>) {
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
-  const [showPreview, setShowPreview] = useState(false);
-  const [list, setList] = useState<UploadFile[]>([]);
-  const form = Form.useFormInstance();
-  const id = useId();
+  const [loading, setLoading] = useState(false)
+  const [imageUrl, setImageUrl] = useState<string>()
+  const [showPreview, setShowPreview] = useState(false)
+  const [list, setList] = useState<UploadFile[]>([])
+  const form = Form.useFormInstance()
+  const id = useId()
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
-      setLoading(info.file.status == "uploading");
+      setLoading(info.file.status == "uploading")
       if (info.file.status == "done") {
         info.fileList.forEach(
           (i) => (i.url = connect.defaults.baseURL! + i.response[0].url),
-        );
-        const fileUrl = info.fileList[0].response[0].url;
-        props.onChange?.(fileUrl);
-        form.setFieldValue(props.name, fileUrl);
+        )
+        const fileUrl = info.fileList[0].response[0].url
+        props.onChange?.(fileUrl)
+        form.setFieldValue(props.name, fileUrl)
       }
-      setList(info.fileList);
+      setList(info.fileList)
     },
     [form, props],
-  );
+  )
 
   const onPreview: UploadProps["onPreview"] = useCallback(
     (file: UploadFile) => {
-      setImageUrl(file.url);
-      setShowPreview(true);
+      setImageUrl(file.url)
+      setShowPreview(true)
     },
     [],
-  );
+  )
 
   useEffect(() => {
     if (props.value != null) {
@@ -63,9 +63,9 @@ export default function UserAvatar(props: Readonly<Props>) {
           name: props.value,
           url: connect.defaults.baseURL + props.value,
         },
-      ]);
+      ])
     }
-  }, [id, props.value]);
+  }, [id, props.value])
 
   const uploadButton =
     list.length != 1 ? (
@@ -73,7 +73,7 @@ export default function UserAvatar(props: Readonly<Props>) {
         {loading ? <LoadingOutlined /> : <PlusOutlined />}
         <div style={{ marginTop: 8 }}>Upload</div>
       </div>
-    ) : undefined;
+    ) : undefined
   return (
     <>
       {imageUrl && (
@@ -83,7 +83,7 @@ export default function UserAvatar(props: Readonly<Props>) {
             src: imageUrl,
             visible: showPreview,
             onVisibleChange: (e) => {
-              if (!e) setShowPreview(false);
+              if (!e) setShowPreview(false)
             },
           }}
         />
@@ -113,5 +113,5 @@ export default function UserAvatar(props: Readonly<Props>) {
         value={props.initalurl}
       /> */}
     </>
-  );
+  )
 }
