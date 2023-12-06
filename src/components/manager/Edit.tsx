@@ -188,7 +188,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
         form={form}
         initialValues={data}
       >
-        <Form.Item name={"id"} hidden>
+        <Form.Item name={"id"} key={"id"} hidden>
           <Input />
         </Form.Item>
         {props.sections?.map((section, index) =>

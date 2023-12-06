@@ -1,11 +1,12 @@
 import { PlusOutlined } from "@ant-design/icons"
 import { Upload, UploadFile, message } from "antd"
-import { useCallback, useEffect, useState } from "react"
-import { connect } from "../../lib/Axios"
+import { useCallback, useReducer, useState } from "react"
+import { connect } from "@/lib/Axios"
 import { RcFile, UploadChangeParam, UploadProps } from "antd/es/upload"
+import { uploadMultiImageReducer } from "./UploadMultiImageReducer"
+import { StateType } from "./type"
 
 type Props = {
-  imageUrls?: string[]
   value?: string[]
   onChange?: (data: string[]) => void
   url: string
@@ -23,35 +24,26 @@ const beforeUpload = (file: RcFile) => {
   return isJpgOrPng && isLt2M
 }
 
-type Response = {
-  url: string
-}
-
 export default function UploadMultiImage(props: Readonly<Props>) {
-  const [value, setValue] = useState(props.value)
-  const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [fileList, setFileList] = useState<UploadFile<Response[]>[]>([])
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile<Response[]>>) => {
       if (info.file.status == "done") {
         info.file.url = connect.defaults.baseURL! + info.file.response![0].url
+        props.onChange?.(
+          info.fileList
+            .filter((i) => i.url != null)
+            .map((i) => i.response![0].url),
+        )
       }
-      props.onChange?.(
-        info.fileList
-          .filter((i) => i.url != null)
-          .map((i) => i.response![0].url),
-      )
       setFileList(info.fileList)
     },
     [props],
   )
-  useEffect(() => {
-    setValue(props.value)
-  }, [props.value])
-  useEffect(() => {
-    if (props.imageUrls) {
-      setFileList(props.imageUrls.map((i) => ({}) as UploadFile))
-    }
-  }, [props.imageUrls])
+  const stateReducer = useReducer(uploadMultiImageReducer, {
+    url: [],
+    file: [],
+  })
   return (
     <Upload
       onChange={handleChange}

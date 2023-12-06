@@ -1,7 +1,7 @@
 export type EditModel = {
   id: string
   name: string
-  picture: string
+  pictures: string
   description: string
   price: number
   lastModifiedDate: string
@@ -25,5 +25,5 @@ export type AddType = {
 export type ListType = {
   id: string
   name: string
-  picture: string
+  pictures: string
 }

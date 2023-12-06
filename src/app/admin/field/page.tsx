@@ -10,7 +10,7 @@ import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
-import UploadMultiImage from "@/components/manager/UploadMultiImage"
+import UploadMultiImage from "@/components/manager/UploadMultiImage/UploadMultiImage"
 import ImageViews from "@/components/manager/ImageViews"
 
 const MyList = List<ListType>()
@@ -106,6 +106,14 @@ export default function Page() {
             name: "name",
           },
           {
+            label: "Giá",
+            title: "price",
+            name: "price",
+            input: (data) => (
+              <Input readOnly value={data.price} suffix={"vnđ"} />
+            ),
+          },
+          {
             label: "Hình ảnh",
             title: "pictures",
             name: "pictures",
@@ -140,6 +148,11 @@ export default function Page() {
         }}
         sections={[
           { name: "name", label: "Tên sân" },
+          {
+            name: "pictures",
+            label: "Hình ảnh",
+            input: <UploadMultiImage url={"api/files"} />,
+          },
           {
             name: "description",
             label: "Mô tả",
