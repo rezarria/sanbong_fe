@@ -4,16 +4,16 @@ import { connect } from "@/lib/Axios"
 import { DefaultOptionType } from "antd/es/select"
 
 type Props = {
-  value?: string[];
+  value?: string[]
   onChange?(
     data: string[],
     option: DefaultOptionType | DefaultOptionType[],
-  ): void;
-};
+  ): void
+}
 
 export { type Props as RoleSelectInputProps }
 
-type RoleType = { id: string; name: string; displayName: string };
+type RoleType = { id: string; name: string; displayName: string }
 
 async function fetch(name?: string) {
   return (await connect.get<RoleType[]>("api/role", { params: { name } })).data

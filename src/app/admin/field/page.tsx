@@ -10,6 +10,7 @@ import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
+import UploadMultiImage from "@/components/manager/UploadMultiImage"
 
 const MyList = List<ListType>()
 const MyView = ViewComponent<ViewModel>()
@@ -27,6 +28,11 @@ export default function Page() {
         url={"api/field"}
         sections={[
           { label: "Tên sân", name: "name" },
+          {
+            label: "Hình ảnh",
+            name: "images",
+            input: <UploadMultiImage url="api/files" />,
+          },
           { label: "Mô tả", name: "description", input: <TextArea /> },
         ]}
         onClose={() => {

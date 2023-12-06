@@ -11,7 +11,7 @@ import useAppStore from "@/store/useAppStore"
 const { Header, Content, Footer, Sider } = Layout
 
 interface AppProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 const App: React.FC<AppProps> = (props) => {

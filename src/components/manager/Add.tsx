@@ -19,22 +19,22 @@ import { ReactNode, useState } from "react"
 import UserAvatar from "../../app/admin/user/UserAvatar"
 
 type Props<T extends Record<string, any>> = Readonly<{
-  title: string;
-  url: string;
+  title: string
+  url: string
   sections: {
-    label: string;
-    name: NamePath<T>;
-    type?: InputProps["type"];
-    input?: ReactNode;
-    required?: FormItemProps["required"];
-    tooltip?: FormItemProps["tooltip"];
-    dependencies?: FormItemProps["dependencies"];
-    validateFirst?: FormItemProps["validateFirst"];
-    rules?: FormItemProps["rules"];
-    ignore?: boolean;
-  }[];
-  onClose?: () => void;
-}>;
+    label: string
+    name: NamePath<T>
+    type?: InputProps["type"]
+    input?: ReactNode
+    required?: FormItemProps["required"]
+    tooltip?: FormItemProps["tooltip"]
+    dependencies?: FormItemProps["dependencies"]
+    validateFirst?: FormItemProps["validateFirst"]
+    rules?: FormItemProps["rules"]
+    ignore?: boolean
+  }[]
+  onClose?: () => void
+}>
 
 export default function Add<T extends Record<string, any>>(props: Props<T>) {
   const [isSpining, setIsSpining] = useState(false)
@@ -105,7 +105,7 @@ export default function Add<T extends Record<string, any>>(props: Props<T>) {
 }
 
 type SelectInput<T extends Record<string, any>> =
-  Props<T>["sections"] extends readonly (infer T)[] ? T : never;
+  Props<T>["sections"] extends readonly (infer T)[] ? T : never
 
 function selectInput<T extends Record<string, any>>(section: SelectInput<T>) {
   if (section.input) return section.input

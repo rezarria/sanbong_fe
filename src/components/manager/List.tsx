@@ -21,17 +21,17 @@ import {
 } from "react"
 
 type Pagination = {
-  current: number;
-  pageSize: number;
-};
+  current: number
+  pageSize: number
+}
 
 type Ref = {
-  reload: () => void;
-};
+  reload: () => void
+}
 type Props<T> = Readonly<{
-  url: string;
-  columnsDef: ColumnsType<T>;
-}>;
+  url: string
+  columnsDef: ColumnsType<T>
+}>
 
 function ListFC<T extends AnyObject & { id: string }>(
   props: Props<T>,
@@ -45,8 +45,8 @@ function ListFC<T extends AnyObject & { id: string }>(
     (
       limit: number = 300,
       paginationPostion?: {
-        current: number;
-        pageSize: number;
+        current: number
+        pageSize: number
       },
     ) => {
       const config: AxiosRequestConfig = {
@@ -139,8 +139,8 @@ function TableWrapper<T extends AnyObject & { id: string }>(
 
 function HeaderComponent(ref: RefObject<HTMLTableSectionElement>) {
   return function HeaderComponentTemplate(props: {
-    style: CSSProperties;
-    children: ReactNode[];
+    style: CSSProperties
+    children: ReactNode[]
   }) {
     return (
       <thead className="ant-table-thead" ref={ref} style={props.style}>

@@ -11,23 +11,23 @@ import { connect } from "@/lib/Axios"
 import { AxiosError, HttpStatusCode } from "axios"
 import dayjs from "dayjs"
 type Section<T> = {
-  name: Extract<keyof T, string>;
-  title: string;
-  label: string;
-  type?: string;
-  input?: (data: T) => ReactNode;
-};
+  name: Extract<keyof T, string>
+  title: string
+  label: string
+  type?: string
+  input?: (data: T) => ReactNode
+}
 type Ref = {
-  show: (id: string) => void;
-  hide: () => void;
-};
+  show: (id: string) => void
+  hide: () => void
+}
 type Props<T> = {
-  url: string;
-  modalTitle: string;
-  sections?: Section<T>[];
-  children?: ReactNode;
-  button?: (id: string) => ReactNode;
-};
+  url: string
+  modalTitle: string
+  sections?: Section<T>[]
+  children?: ReactNode
+  button?: (id: string) => ReactNode
+}
 
 function View<T extends { id: string }>(
   props: Props<T>,

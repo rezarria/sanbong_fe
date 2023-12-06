@@ -11,8 +11,8 @@ import {
 
 export default function EditDefaultAvatar(
   props: Readonly<{
-    className?: string;
-    onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+    className?: string
+    onMouseEnter?: MouseEventHandler<HTMLDivElement>
   }>,
 ) {
   const divRef = useRef<HTMLDivElement>(null)

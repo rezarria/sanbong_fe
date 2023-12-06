@@ -2,8 +2,8 @@ import { create } from "zustand"
 import { Struct } from "@/components/AppBreadcrumb/type"
 
 interface State {
-  path: Struct[];
-  change: (newPath: Struct[]) => void;
+  path: Struct[]
+  change: (newPath: Struct[]) => void
 }
 
 const useAppStore = create<State>()((set) => ({

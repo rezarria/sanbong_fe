@@ -17,12 +17,12 @@ const beforeUpload = (file: RcFile) => {
 }
 
 type Props = {
-  url: string;
-  callback?: (uploadFile: UploadFile) => void;
-  name?: string;
-  value?: string;
-  onChange?: (value: string) => void;
-};
+  url: string
+  callback?: (uploadFile: UploadFile) => void
+  name?: string
+  value?: string
+  onChange?: (value: string) => void
+}
 
 export default function UserAvatar(props: Readonly<Props>) {
   const [loading, setLoading] = useState(false)

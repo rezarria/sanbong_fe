@@ -11,9 +11,9 @@ import {
 import { ChangePasswordModel } from "./type"
 import { connect } from "@/lib/Axios"
 type Ref = {
-  show(id: string): void;
-  hide(): void;
-};
+  show(id: string): void
+  hide(): void
+}
 export { type Ref as ChangePasswordRef }
 export default forwardRef(ChangePasswordForm)
 function ChangePasswordForm(props: Readonly<{}>, ref: ForwardedRef<Ref>) {

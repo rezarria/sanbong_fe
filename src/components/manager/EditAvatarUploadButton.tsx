@@ -23,10 +23,10 @@ const beforeUpload = (file: RcFile) => {
 
 export default function EditAvatarUploadButton(
   props: Readonly<{
-    url: string;
-    onClick?: () => void;
-    onCancel?: () => void;
-    onChange?: (url?: string) => void;
+    url: string
+    onClick?: () => void
+    onCancel?: () => void
+    onChange?: (url?: string) => void
   }>,
 ) {
   const inputRef = useRef<HTMLInputElement>(null)

@@ -4,9 +4,9 @@ import { connect } from "@/lib/Axios"
 import { useRouter } from "next/navigation"
 
 type LoginModel = {
-  username: string;
-  password: string;
-};
+  username: string
+  password: string
+}
 
 export default function LoginPage() {
   const router = useRouter()

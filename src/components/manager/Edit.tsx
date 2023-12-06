@@ -18,27 +18,27 @@ import { EditAvatar } from "./EditAvatar"
 import { ModalFooterRender } from "antd/es/modal/interface"
 
 interface TrackerModel {
-  lastModifiedDate: string;
+  lastModifiedDate: string
 }
 
 type Section<T extends TrackerModel> = {
-  name?: Extract<keyof T, string>;
-  label?: string;
-  input?: (index: number, data: T) => ReactNode;
-  type?: string;
-};
+  name?: Extract<keyof T, string>
+  label?: string
+  input?: (index: number, data: T) => ReactNode
+  type?: string
+}
 type Ref = {
-  show: (id: string) => void;
-  hide: () => void;
-};
+  show: (id: string) => void
+  hide: () => void
+}
 type Props<T extends { id: string; lastModifiedDate: string }> = {
-  onComplete?: () => void;
-  sections?: Section<T>[];
-  name: string;
-  url: string;
-  children?: ReactNode;
-  button?: (id: string) => ReactNode;
-};
+  onComplete?: () => void
+  sections?: Section<T>[]
+  name: string
+  url: string
+  children?: ReactNode
+  button?: (id: string) => ReactNode
+}
 
 function Edit<T extends { id: string; lastModifiedDate: string }>(
   props: Props<T>,

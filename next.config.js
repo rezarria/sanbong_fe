@@ -13,24 +13,26 @@ const nextConfig = {
     ],
   },
   webpack(config) {
-    const fileLoaderRule = config.module.rules.find(rule=> rule.test?.test?.('.svg'),)
+    const fileLoaderRule = config.module.rules.find((rule) =>
+      rule.test?.test?.(".svg"),
+    )
     config.module.rules.push(
       {
         ...fileLoaderRule,
         test: /\.svg$/i,
-        resourceQuery: /url/
+        resourceQuery: /url/,
       },
       {
         test: /\.svg$/i,
         issuer: fileLoaderRule.issuer,
         resourceQuery: {
-          not: [...fileLoaderRule.resourceQuery.not, /url/]
+          not: [...fileLoaderRule.resourceQuery.not, /url/],
         },
-        use: ['@svgr/webpack']
-      }
+        use: ["@svgr/webpack"],
+      },
     )
     return config
-  }
+  },
 }
 
 module.exports = nextConfig

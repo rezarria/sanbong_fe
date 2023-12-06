@@ -8,6 +8,6 @@ export const structFlated = flat(structFillter(routerItems))
 const items: MenuProps["items"] = convertItems(routerItems)
 
 export { items, routerItems }
-export type AppRouterItems = typeof routerItems;
+export type AppRouterItems = typeof routerItems
 
 export default MenuItem

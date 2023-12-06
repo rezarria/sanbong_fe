@@ -4,12 +4,12 @@ import { DeleteOutlined } from "@ant-design/icons"
 import { useState } from "react"
 
 type Props = {
-  id: string[];
-  title: string;
-  description: string;
-  url: string;
-  onFinish?: () => void;
-};
+  id: string[]
+  title: string
+  description: string
+  url: string
+  onFinish?: () => void
+}
 
 export default function DeleteButton(props: Readonly<Props>) {
   const [open, setOpen] = useState(false)
