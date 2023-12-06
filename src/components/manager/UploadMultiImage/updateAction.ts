@@ -22,6 +22,7 @@ export function updateReducer(state: StateType, action: UpdateType) {
         url: [connect.defaults.baseURL, url].join(""),
         uid: url,
         response: [{ url }],
+        status: "done",
       }) as UploadFile<Response[]>,
   )
   return {

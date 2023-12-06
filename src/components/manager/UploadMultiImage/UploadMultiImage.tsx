@@ -1,10 +1,9 @@
 import { PlusOutlined } from "@ant-design/icons"
 import { Upload, UploadFile, message } from "antd"
-import { useCallback, useReducer, useState } from "react"
+import { useCallback, useEffect, useReducer } from "react"
 import { connect } from "@/lib/Axios"
 import { RcFile, UploadChangeParam, UploadProps } from "antd/es/upload"
 import { uploadMultiImageReducer } from "./UploadMultiImageReducer"
-import { StateType } from "./type"
 
 type Props = {
   value?: string[]
@@ -25,25 +24,27 @@ const beforeUpload = (file: RcFile) => {
 }
 
 export default function UploadMultiImage(props: Readonly<Props>) {
-  const [fileList, setFileList] = useState<UploadFile<Response[]>[]>([])
+  const [state, dispatch] = useReducer(uploadMultiImageReducer, {
+    url: [],
+    file: [],
+  })
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile<Response[]>>) => {
       if (info.file.status == "done") {
         info.file.url = connect.defaults.baseURL! + info.file.response![0].url
-        props.onChange?.(
-          info.fileList
-            .filter((i) => i.url != null)
-            .map((i) => i.response![0].url),
-        )
+        dispatch({ type: "addUrl", payload: info.file.response![0].url })
+        props.onChange?.(state.url.concat(info.file.response![0].url))
       }
-      setFileList(info.fileList)
+      dispatch({ type: "updateFile", payload: info.fileList })
     },
-    [props],
+    [props.onChange, state.url],
   )
-  const stateReducer = useReducer(uploadMultiImageReducer, {
-    url: [],
-    file: [],
-  })
+  useEffect(() => {
+    if (props.value != null) {
+      dispatch({ type: "updateUrl", payload: props.value })
+    }
+  }, [props.value])
+
   return (
     <Upload
       onChange={handleChange}
@@ -52,7 +53,7 @@ export default function UploadMultiImage(props: Readonly<Props>) {
       name="file"
       multiple={true}
       listType="picture-card"
-      fileList={fileList}
+      fileList={state.file}
       action={[connect.defaults.baseURL, props.url].join("/")}
       headers={Object.fromEntries(
         Object.entries(connect.defaults.headers).map(

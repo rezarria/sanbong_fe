@@ -11,12 +11,12 @@ export default function updateFileAction(
   action: UpdateFileType,
 ) {
   const oldFiles = state.file.filter((file) => action.payload.includes(file))
-  const urls = oldFiles.map((i) => i.url!)
-  const oldUrls = state.url.filter(urls.includes)
   const newFiles = action.payload.filter((file) => !state.file.includes(file))
-  const newUrls = newFiles.map((i) => i.url!)
   return {
-    url: oldUrls.concat(newUrls),
+    url: oldFiles
+      .concat(newFiles)
+      .filter((i) => i.status == "done")
+      .map((i) => i.response![0].url),
     file: oldFiles.concat(newFiles),
   }
 }

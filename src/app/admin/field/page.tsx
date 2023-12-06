@@ -23,7 +23,7 @@ export default function Page() {
   const editRef = useRef<EditRef>(null)
 
   return (
-    <Flex vertical={true} className="h-full">
+    <Flex vertical={true} className="h-full" gap={15}>
       <Add<AddType>
         title={"Thêm sân"}
         url={"api/field"}
