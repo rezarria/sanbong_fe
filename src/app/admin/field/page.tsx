@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Flex, Space } from "antd"
+import { Button, Flex, Input, Space } from "antd"
 import { useRef } from "react"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import ViewComponent, { ViewRef } from "@/components/manager/View"
@@ -11,6 +11,7 @@ import DeleteButton from "@/components/manager/DeleteButton"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
 import UploadMultiImage from "@/components/manager/UploadMultiImage"
+import ImageViews from "@/components/manager/ImageViews"
 
 const MyList = List<ListType>()
 const MyView = ViewComponent<ViewModel>()
@@ -30,8 +31,13 @@ export default function Page() {
           { label: "Tên sân", name: "name" },
           {
             label: "Hình ảnh",
-            name: "images",
+            name: "pictures",
             input: <UploadMultiImage url="api/files" />,
+          },
+          {
+            label: "Giá",
+            name: "price",
+            input: <Input suffix="vnđ" />,
           },
           { label: "Mô tả", name: "description", input: <TextArea /> },
         ]}
@@ -48,9 +54,9 @@ export default function Page() {
             render: (_v, _d, i) => <span>{i + 1}</span>,
           },
           {
-            key: "displayName",
-            dataIndex: "displayName",
-            title: "Tên quyền",
+            key: "name",
+            dataIndex: "name",
+            title: "Tên sân",
           },
           {
             key: "buttons",
@@ -74,9 +80,9 @@ export default function Page() {
                     }}
                   />
                   <DeleteButton
-                    title="Xoá quyền"
-                    description="Bạn có chắc chắn xoá quyền này"
-                    url="api/role"
+                    title="Xoá sân"
+                    description="Bạn có chắc chắn xoá sân này"
+                    url="api/field"
                     id={[record.id]}
                     onFinish={() => {
                       listRef.current?.reload()
@@ -91,13 +97,25 @@ export default function Page() {
       />
       <MyView
         ref={viewRef}
-        url={"api/role"}
-        modalTitle="Thông tin về quyền"
+        url={"api/field"}
+        modalTitle="Thông tin về sân"
         sections={[
           {
-            label: "Tên quyền",
+            label: "Tên sân",
             title: "name",
             name: "name",
+          },
+          {
+            label: "Hình ảnh",
+            title: "pictures",
+            name: "pictures",
+            input: (data) => <ImageViews value={data.pictures} />,
+          },
+          {
+            label: "Miêu tả",
+            title: "description",
+            name: "description",
+            input: (data) => <TextArea value={data.description} readOnly />,
           },
         ]}
         button={(id) => (
@@ -114,13 +132,20 @@ export default function Page() {
         )}
       />
       <MyEdit
-        url="api/role"
-        name="quyền"
+        url="api/field"
+        name="sân"
         ref={editRef}
         onComplete={() => {
           listRef.current?.reload()
         }}
-        sections={[{ name: "name", label: "Tên quyền" }]}
+        sections={[
+          { name: "name", label: "Tên sân" },
+          {
+            name: "description",
+            label: "Mô tả",
+            input: <TextArea />,
+          },
+        ]}
       />
     </Flex>
   )

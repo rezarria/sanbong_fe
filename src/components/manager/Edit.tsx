@@ -11,7 +11,7 @@ import {
 } from "react"
 import { connect } from "@/lib/Axios"
 import { HttpStatusCode } from "axios"
-import { DatePicker, Form, FormInstance, Input, Modal, Space } from "antd"
+import { DatePicker, Form, Input, Modal, Space } from "antd"
 import * as jsonpatch from "fast-json-patch"
 import dayjs from "dayjs"
 import { EditAvatar } from "./EditAvatar"
@@ -24,7 +24,7 @@ interface TrackerModel {
 type Section<T extends TrackerModel> = {
   name?: Extract<keyof T, string>
   label?: string
-  input?: (index: number, data: T) => ReactNode
+  input?: ReactNode
   type?: string
 }
 type Ref = {
@@ -102,60 +102,57 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
     }),
     [fetch],
   )
-  const selectType = useCallback(
-    (index: number, section: Section<T>, form: FormInstance) => {
-      if (section.type == null)
+  const selectType = useCallback((index: number, section: Section<T>) => {
+    if (section.type == null)
+      return (
+        <Form.Item
+          key={index}
+          name={section.name as string}
+          label={section.label}
+        >
+          <Input />
+        </Form.Item>
+      )
+    switch (section.type) {
+      case "datepicker":
+        return (
+          <Form.Item
+            key={index}
+            name={section.name as string}
+            label={section.label}
+            getValueProps={(i: string) => ({
+              value: i === undefined ? undefined : dayjs(i),
+            })}
+          >
+            <DatePicker className="!w-full" format="DD-MM-YYYY" />
+          </Form.Item>
+        )
+      case "avatar":
+        return (
+          <Form.Item
+            key={index}
+            label={section.label}
+            name={section.name as string}
+          >
+            <EditAvatar />
+          </Form.Item>
+        )
+      default:
         return (
           <Form.Item
             key={index}
             name={section.name as string}
             label={section.label}
           >
-            <Input contentEditable={true} name={section.name} />
+            <Input
+              contentEditable={true}
+              type={section.type}
+              name={section.name}
+            />
           </Form.Item>
         )
-      switch (section.type) {
-        case "datepicker":
-          return (
-            <Form.Item
-              key={index}
-              name={section.name as string}
-              label={section.label}
-              getValueProps={(i) => ({
-                value: i === undefined ? undefined : dayjs(i),
-              })}
-            >
-              <DatePicker className="!w-full" format="DD-MM-YYYY" />
-            </Form.Item>
-          )
-        case "avatar":
-          return (
-            <Form.Item
-              key={index}
-              label={section.label}
-              name={section.name as string}
-            >
-              <EditAvatar />
-            </Form.Item>
-          )
-        default:
-          return (
-            <Form.Item
-              key={index}
-              name={section.name as string}
-              label={section.label}
-            >
-              <Input
-                contentEditable={true}
-                type={section.type}
-                name={section.name}
-              />
-            </Form.Item>
-          )
-      }
-    },
-    [],
-  )
+    }
+  }, [])
   useEffect(() => {
     if (data != null) {
       form.setFieldsValue(data as NonNullable<T>)
@@ -191,13 +188,25 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
         form={form}
         initialValues={data}
       >
-        <Form.Item name={"id"} key={"id"} hidden>
+        <Form.Item name={"id"} hidden>
           <Input />
         </Form.Item>
         {props.sections?.map((section, index) =>
-          data != null
-            ? section.input?.(index, data) ?? selectType(index, section, form)
-            : undefined,
+          data != null ? (
+            <>
+              {section.input ? (
+                <Form.Item
+                  key={index}
+                  name={section.name as string}
+                  label={section.label}
+                >
+                  {section.input}
+                </Form.Item>
+              ) : (
+                selectType(index, section)
+              )}
+            </>
+          ) : undefined,
         )}
         {props.children}
         <Form.Item hidden name={"lastModifiedDate"} key={"lastModifiedDate"}>
