@@ -12,14 +12,11 @@ import {
 import { connect } from "@/lib/Axios"
 import { HttpStatusCode } from "axios"
 import { DatePicker, Form, FormItemProps, Input, Modal, Space } from "antd"
-import * as jsonpatch from "fast-json-patch"
 import dayjs from "dayjs"
 import { EditAvatar } from "./EditAvatar"
 import { ModalFooterRender } from "antd/es/modal/interface"
 
-interface TrackerModel {
-  lastModifiedDate: string
-}
+interface TrackerModel {}
 
 type Section<T extends TrackerModel> = {
   name?: Extract<keyof T, string>
@@ -29,11 +26,11 @@ type Section<T extends TrackerModel> = {
   customGet?: FormItemProps<T>["getValueProps"]
   customGetFromEvent?: FormItemProps<T>["getValueFromEvent"]
 }
-type Ref = {
+export type Ref = {
   show: (id: string) => void
   hide: () => void
 }
-type Props<T extends { id: string; lastModifiedDate: string }> = {
+type Props<T extends { id: string }> = {
   onComplete?: () => void
   sections?: Section<T>[]
   name: string
@@ -42,7 +39,7 @@ type Props<T extends { id: string; lastModifiedDate: string }> = {
   button?: (id: string) => ReactNode
 }
 
-function Edit<T extends { id: string; lastModifiedDate: string }>(
+function Edit<T extends { id: string }>(
   props: Props<T>,
   ref: ForwardedRef<Ref>,
 ) {
@@ -61,33 +58,12 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
   const onFinish = useCallback(
     (newData: T) => {
       if (data != null) {
-        const d = structuredClone(newData)
-
-        Object.keys(d).forEach((key) => {
-          d[key as keyof T] = data[key as keyof T]
+        connect.put(props.url, newData).then((res) => {
+          if (res.status == HttpStatusCode.Ok) {
+            setIsOpening(false)
+            props.onComplete?.()
+          }
         })
-
-        const patch = jsonpatch.compare(d, newData)
-        connect
-          .patch(
-            props.url,
-            {
-              id: data.id,
-              patch,
-              time: data.lastModifiedDate,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json-patch+json",
-              },
-            },
-          )
-          .then((res) => {
-            if (res.status == HttpStatusCode.Ok) {
-              setIsOpening(false)
-              props.onComplete?.()
-            }
-          })
       }
     },
     [data, props],
@@ -228,7 +204,5 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
 }
 
 export { type Ref as EditRef }
-const ForwardedRefEdit = <
-  T extends { id: string; lastModifiedDate: string },
->() => forwardRef(Edit<T>)
+const ForwardedRefEdit = <T extends { id: string }>() => forwardRef(Edit<T>)
 export default ForwardedRefEdit

@@ -9,12 +9,26 @@ export type AddModel = {
 export type EditModel = {
   id: string
   username: string
+  user: string
+  roles: string[]
   lastModifiedDate: string
+}
+
+export type EditModel2 = {
+  id: string
+  username: string
+  userId: string
+  roleIds: string[]
 }
 
 export type ViewModel = {
   id: string
   username: string
+  roles: string[]
+  user: {
+    id: string
+    name: string
+  }
 }
 
 export type ListModel = {

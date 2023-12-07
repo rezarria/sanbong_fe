@@ -1,26 +1,28 @@
 "use client"
 
-import { Button, Flex, Form, Image, Space } from "antd"
+import { Button, Flex, Space } from "antd"
 import { useRef } from "react"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
-import ViewComponent, { ViewRef } from "@/components/manager/View"
-import Edit, { EditRef } from "@/components/manager/Edit"
 import List, { Ref as ListRef } from "@/components/manager/List"
 import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
-import { AddModel, EditModel, ListModel, ViewModel } from "./type"
+import { AddModel, EditModel2, ListModel, ViewModel } from "./type"
 import { ChangePasswordButton } from "./ChangePasswordButton"
 import RoleSelectInput, { RoleSelectInputProps } from "./RoleSelectInput"
 import UserSelectInput, { UserSelectInputProps } from "./UserSelectInput"
+import ForwardedRefCustomDescriptions, {
+  CustomDescriptionRef,
+} from "@/components/CustomDescriptions"
+import EditNoPatch, { Ref as EditRef } from "@/components/manager/EditNoPatch"
 
 const MyList = List<ListModel>()
-const MyView = ViewComponent<ViewModel>()
-const MyEdit = Edit<EditModel>()
+const MyEdit2 = EditNoPatch<EditModel2>()
+const MyDescriptions = ForwardedRefCustomDescriptions<ViewModel>()
 
 export default function Page() {
   const listRef = useRef<ListRef>(null)
-  const viewRef = useRef<ViewRef>(null)
   const editRef = useRef<EditRef>(null)
+  const descriptionRef = useRef<CustomDescriptionRef>(null)
 
   return (
     <Flex vertical={true} className="h-full">
@@ -130,7 +132,7 @@ export default function Page() {
                     type="primary"
                     icon={<EyeOutlined />}
                     onClick={() => {
-                      viewRef.current?.show(record.id)
+                      descriptionRef.current?.show(record.id)
                     }}
                   />
                   <Button
@@ -156,22 +158,33 @@ export default function Page() {
         ]}
         ref={listRef}
       />
-      <MyView
-        ref={viewRef}
+
+      <MyDescriptions
+        column={12}
+        ref={descriptionRef}
         url={"api/account"}
+        layout="vertical"
         modalTitle="Thông tin về người dùng"
         sections={[
           {
+            label: "ID",
+            children: (data) => data.id,
+            span: 12,
+          },
+          {
             label: "Tài khoản",
-            title: "username",
-            name: "username",
+            children: (data) => data.username,
+          },
+          {
+            label: "Người dùng",
+            children: (data) => data.user.name + " | " + data.user.id,
           },
         ]}
         button={(id) => (
           <Button
             type="dashed"
             onClick={() => {
-              viewRef.current?.hide()
+              descriptionRef.current?.hide()
               editRef.current?.show(id)
             }}
           >
@@ -179,38 +192,34 @@ export default function Page() {
           </Button>
         )}
       />
-      <MyEdit
+
+      <MyEdit2
         url="api/account"
-        name="người dùng"
+        name="tài khoản"
         ref={editRef}
         onComplete={() => {
           listRef.current?.reload()
         }}
-        sections={[{ name: "username", label: "Tài khoản" }]}
+        sections={[
+          { name: "username", label: "Tài khoản" },
+          { name: "roleIds", label: "Quyền", input: <WrapRoleSelectInput /> },
+          {
+            name: "userId",
+            label: "Người dùng",
+            input: <WrapUserSelectInput />,
+            customGet: (data: ViewModel["user"]) => ({ value: data.id }),
+          },
+        ]}
         button={(id) => <ChangePasswordButton accountId={id} />}
       />
     </Flex>
   )
 }
 
-function WrapRoleSelectInput(props: RoleSelectInputProps) {
-  const form = Form.useFormInstance()
-  return (
-    <RoleSelectInput
-      onChange={(data) => {
-        form.setFieldValue("roles", data)
-      }}
-    />
-  )
+function WrapRoleSelectInput(props: Readonly<RoleSelectInputProps>) {
+  return <RoleSelectInput value={props.value} onChange={props.onChange} />
 }
 
-function WrapUserSelectInput(props: UserSelectInputProps) {
-  const form = Form.useFormInstance()
-  return (
-    <UserSelectInput
-      onChange={(data) => {
-        form.setFieldValue("user", data)
-      }}
-    />
-  )
+function WrapUserSelectInput(props: Readonly<UserSelectInputProps>) {
+  return <UserSelectInput value={props.value} onChange={props.onChange} />
 }
