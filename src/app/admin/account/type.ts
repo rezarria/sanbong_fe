@@ -25,7 +25,7 @@ export type ViewModel = {
   id: string
   username: string
   roles: string[]
-  user: {
+  user?: {
     id: string
     name: string
   }

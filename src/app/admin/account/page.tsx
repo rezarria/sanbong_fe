@@ -177,7 +177,10 @@ export default function Page() {
           },
           {
             label: "Người dùng",
-            children: (data) => data.user.name + " | " + data.user.id,
+            children: (data) => {
+              if (data.user) return data.user.name + " | " + data.user.id
+              return "không có"
+            },
           },
         ]}
         button={(id) => (
