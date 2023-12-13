@@ -18,5 +18,5 @@ export default function QueryUserInfo(props: Readonly<Props>) {
         })
     }
   }, [props.id])
-  return <>{name ?? <Spin />}</>
+  return <>{props.id ? name ?? <Spin /> : "Không có người dùng"}</>
 }

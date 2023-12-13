@@ -15,6 +15,7 @@ import ForwardedRefCustomDescriptions, {
 } from "@/components/CustomDescriptions"
 import EditNoPatch, { Ref as EditRef } from "@/components/manager/EditNoPatch"
 import QueryUserInfo from "./QueryUserInfo"
+import QueryRoleInfo from "./QueryRoleInfo"
 
 const MyList = List<ListModel>()
 const MyEdit2 = EditNoPatch<EditModel2>()
@@ -174,13 +175,20 @@ export default function Page() {
           },
           {
             label: "Tài khoản",
+            span: 6,
             children: (data) => data.username,
           },
           {
             label: "Người dùng",
+            span: 6,
             children: (data) => {
               return <QueryUserInfo id={data.userId} />
             },
+          },
+          {
+            label: "Quyền",
+            span: 12,
+            children: (data) => <QueryRoleInfo id={data.roleIds} />,
           },
         ]}
         button={(id) => (
