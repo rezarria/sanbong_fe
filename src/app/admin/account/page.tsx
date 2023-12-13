@@ -14,6 +14,7 @@ import ForwardedRefCustomDescriptions, {
   CustomDescriptionRef,
 } from "@/components/CustomDescriptions"
 import EditNoPatch, { Ref as EditRef } from "@/components/manager/EditNoPatch"
+import QueryUserInfo from "./QueryUserInfo"
 
 const MyList = List<ListModel>()
 const MyEdit2 = EditNoPatch<EditModel2>()
@@ -178,8 +179,7 @@ export default function Page() {
           {
             label: "Người dùng",
             children: (data) => {
-              if (data.user) return data.user.name + " | " + data.user.id
-              return "không có"
+              return <QueryUserInfo id={data.userId} />
             },
           },
         ]}
@@ -210,7 +210,6 @@ export default function Page() {
             name: "userId",
             label: "Người dùng",
             input: <WrapUserSelectInput />,
-            customGet: (data: ViewModel["user"]) => ({ value: data.id }),
           },
         ]}
         button={(id) => <ChangePasswordButton accountId={id} />}

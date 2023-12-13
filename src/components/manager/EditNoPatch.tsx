@@ -12,11 +12,14 @@ import {
 import { connect } from "@/lib/Axios"
 import { HttpStatusCode } from "axios"
 import { DatePicker, Form, FormItemProps, Input, Modal, Space } from "antd"
+import * as jsonpatch from "fast-json-patch"
 import dayjs from "dayjs"
 import { EditAvatar } from "./EditAvatar"
 import { ModalFooterRender } from "antd/es/modal/interface"
 
-interface TrackerModel {}
+interface TrackerModel {
+  lastModifiedDate: string
+}
 
 type Section<T extends TrackerModel> = {
   name?: Extract<keyof T, string>
@@ -26,11 +29,11 @@ type Section<T extends TrackerModel> = {
   customGet?: FormItemProps<T>["getValueProps"]
   customGetFromEvent?: FormItemProps<T>["getValueFromEvent"]
 }
-export type Ref = {
+type Ref = {
   show: (id: string) => void
   hide: () => void
 }
-type Props<T extends { id: string }> = {
+type Props<T extends { id: string; lastModifiedDate: string }> = {
   onComplete?: () => void
   sections?: Section<T>[]
   name: string
@@ -39,7 +42,7 @@ type Props<T extends { id: string }> = {
   button?: (id: string) => ReactNode
 }
 
-function Edit<T extends { id: string }>(
+function Edit<T extends { id: string; lastModifiedDate: string }>(
   props: Props<T>,
   ref: ForwardedRef<Ref>,
 ) {
@@ -48,22 +51,45 @@ function Edit<T extends { id: string }>(
   const [form] = Form.useForm<T>()
   const fetch = useCallback(
     (id: string) =>
-      connect.get(props.url, { params: { id } }).then((res) => {
-        if (res.status == HttpStatusCode.Ok) {
-          setData(res.data)
-        }
-      }),
+      connect
+        .get([props.url, "beforeUpdate"].join("/"), { params: { id } })
+        .then((res) => {
+          if (res.status == HttpStatusCode.Ok) {
+            setData(res.data)
+          }
+        }),
     [props.url],
   )
   const onFinish = useCallback(
     (newData: T) => {
       if (data != null) {
-        connect.put(props.url, newData).then((res) => {
-          if (res.status == HttpStatusCode.Ok) {
-            setIsOpening(false)
-            props.onComplete?.()
-          }
+        const d = structuredClone(newData)
+
+        Object.keys(d).forEach((key) => {
+          d[key as keyof T] = data[key as keyof T]
         })
+
+        const patch = jsonpatch.compare(d, newData)
+        connect
+          .patch(
+            props.url,
+            {
+              id: data.id,
+              patch,
+              time: data.lastModifiedDate,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json-patch+json",
+              },
+            },
+          )
+          .then((res) => {
+            if (res.status == HttpStatusCode.Ok) {
+              setIsOpening(false)
+              props.onComplete?.()
+            }
+          })
       }
     },
     [data, props],
@@ -204,5 +230,7 @@ function Edit<T extends { id: string }>(
 }
 
 export { type Ref as EditRef }
-const ForwardedRefEdit = <T extends { id: string }>() => forwardRef(Edit<T>)
+const ForwardedRefEdit = <
+  T extends { id: string; lastModifiedDate: string },
+>() => forwardRef(Edit<T>)
 export default ForwardedRefEdit

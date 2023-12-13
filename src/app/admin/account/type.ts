@@ -17,18 +17,15 @@ export type EditModel = {
 export type EditModel2 = {
   id: string
   username: string
-  userId: string
+  userId?: string
   roleIds: string[]
 }
 
 export type ViewModel = {
   id: string
   username: string
-  roles: string[]
-  user?: {
-    id: string
-    name: string
-  }
+  roleIds: string[]
+  userId?: string
 }
 
 export type ListModel = {
