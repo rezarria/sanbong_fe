@@ -1,9 +1,9 @@
 export type EditModel = {
   id: string
   name: string
-  pictures: string
-  description: string
-  price: number
+  images: string[]
+  description?: string
+  price?: number
   lastModifiedDate: string
 }
 

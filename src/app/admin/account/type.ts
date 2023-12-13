@@ -19,6 +19,7 @@ export type EditModel2 = {
   username: string
   userId?: string
   roleIds: string[]
+  lastModifiedDate: string
 }
 
 export type ViewModel = {

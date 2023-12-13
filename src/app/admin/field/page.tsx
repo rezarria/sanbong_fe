@@ -4,7 +4,7 @@ import { Button, Flex, Input, Space } from "antd"
 import { useRef } from "react"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import ViewComponent, { ViewRef } from "@/components/manager/View"
-import Edit, { EditRef } from "@/components/manager/Edit"
+import Edit, { EditRef } from "@/components/manager/EditNoPatch"
 import List, { Ref as ListRef } from "@/components/manager/List"
 import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
@@ -110,7 +110,12 @@ export default function Page() {
             title: "price",
             name: "price",
             input: (data) => (
-              <Input readOnly value={data.price} suffix={"vnđ"} />
+              <Input
+                readOnly
+                value={data.price}
+                suffix={"vnđ"}
+                placeholder="Chưa đặt giá"
+              />
             ),
           },
           {
@@ -149,9 +154,16 @@ export default function Page() {
         sections={[
           { name: "name", label: "Tên sân" },
           {
-            name: "pictures",
+            name: "images",
             label: "Hình ảnh",
             input: <UploadMultiImage url={"api/files"} />,
+          },
+          {
+            name: "price",
+            label: "Giá",
+            input: (
+              <Input type="number" suffix="vnd" placeholder="Chưa đặt giá" />
+            ),
           },
           {
             name: "description",

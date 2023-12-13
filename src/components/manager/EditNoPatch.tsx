@@ -29,11 +29,11 @@ type Section<T extends TrackerModel> = {
   customGet?: FormItemProps<T>["getValueProps"]
   customGetFromEvent?: FormItemProps<T>["getValueFromEvent"]
 }
-type Ref = {
+export type Ref = {
   show: (id: string) => void
   hide: () => void
 }
-type Props<T extends { id: string; lastModifiedDate: string }> = {
+export type Props<T extends { id: string; lastModifiedDate: string }> = {
   onComplete?: () => void
   sections?: Section<T>[]
   name: string
