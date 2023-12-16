@@ -9,7 +9,7 @@ type Props = {
 export default function QueryRoleInfo(props: Readonly<Props>) {
   const [names, setNames] = useState<string[]>()
   useEffect(() => {
-    if (props.id) {
+    if (props.id && props.id.length !== 0) {
       connect
         .get<string[]>("api/role/getName", {
           params: { id: props.id },
@@ -23,5 +23,11 @@ export default function QueryRoleInfo(props: Readonly<Props>) {
         })
     }
   }, [props.id])
-  return <>{props.id ? names?.join(", ") ?? <Spin /> : "Không có người dùng"}</>
+  return (
+    <>
+      {props.id && props.id.length !== 0
+        ? names?.join(", ") ?? <Spin />
+        : "Không có người dùng"}
+    </>
+  )
 }

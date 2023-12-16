@@ -2,6 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons"
 import { Button, Form, Input } from "antd"
 import { connect } from "@/lib/Axios"
 import { useRouter } from "next/navigation"
+import useAuth from "../../store/useAuth"
 
 type LoginModel = {
   username: string
@@ -10,11 +11,16 @@ type LoginModel = {
 
 export default function LoginPage() {
   const router = useRouter()
+  const auth = useAuth()
   const onFinish = (data: LoginModel) => {
-    connect.post<{ jwt: string }>("api/security/login", data).then((res) => {
-      localStorage.setItem("jwt", res.data.jwt)
-      router.push("/admin/user")
-    })
+    connect
+      .post<{ jwt: string; refresh: string }>("api/security/login", data)
+      .then((res) => {
+        localStorage.setItem("jwt", res.data.jwt)
+        localStorage.setItem("refresh", res.data.refresh)
+        auth.updateJwt(res.data.jwt)
+        router.push("/admin/user")
+      })
   }
 
   return (

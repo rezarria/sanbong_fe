@@ -11,6 +11,7 @@ interface User {
 }
 
 interface State {
+  jwt?: string
   userId?: string
   accountId?: string
   user?: User
@@ -25,12 +26,29 @@ export type MyPayloadType = JwtPayload & {
   details__userId: string
 }
 const useAuth = create<State>()((set) => {
+  const jwt_token = localStorage.getItem("jwt")
+  let user_info = undefined
+  if (jwt_token) {
+    const jwtObject: MyPayloadType = jwtDecode(jwt_token)
+    user_info = {
+      accountId: jwtObject.details__accountId,
+      userId: jwtObject.details__userId,
+      jwt: jwt_token,
+    }
+  }
   return {
+    ...user_info,
     update: (user: User) => {
       set({ user })
     },
     updateJwt: (jwt) => {
       localStorage.setItem("jwt", jwt)
+      const jwtObject: MyPayloadType = jwtDecode(jwt)
+      set({
+        accountId: jwtObject.details__accountId,
+        userId: jwtObject.details__userId,
+        jwt,
+      })
     },
     parseFromLocal: () => {
       const jwt = localStorage.getItem("jwt")
@@ -39,6 +57,7 @@ const useAuth = create<State>()((set) => {
         set({
           accountId: jwtObject.details__accountId,
           userId: jwtObject.details__userId,
+          jwt,
         })
       }
     },
