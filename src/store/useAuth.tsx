@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { create } from "zustand"
 import { JwtPayload, jwtDecode } from "jwt-decode"
 
@@ -18,7 +17,7 @@ interface State {
   user?: User
   update: (user: User) => void
   updateJwt: (jwt: string, refresh: string) => void
-  parseFromLocal: () => void
+  parseFromLocal: () => boolean
 }
 
 export type MyPayloadType = JwtPayload & {
@@ -26,25 +25,25 @@ export type MyPayloadType = JwtPayload & {
   details__accountId: string
   details__userId: string
 }
-const useAuth = create<State>()((set) => {
-  const jwt_token = localStorage.getItem("jwt")
-  let user_info = undefined
-  if (jwt_token) {
-    const jwtObject: MyPayloadType = jwtDecode(jwt_token)
-    user_info = {
+const useAuth = create<State>()((set) => ({
+  update: (user: User) => {
+    set({ user })
+  },
+  updateJwt: (jwt, refesh) => {
+    localStorage.setItem("jwt", jwt)
+    localStorage.setItem("refesh", refesh)
+    const jwtObject: MyPayloadType = jwtDecode(jwt)
+    set({
       accountId: jwtObject.details__accountId,
       userId: jwtObject.details__userId,
-      jwt: jwt_token,
-    }
-  }
-  return {
-    ...user_info,
-    update: (user: User) => {
-      set({ user })
-    },
-    updateJwt: (jwt, refesh) => {
-      localStorage.setItem("jwt", jwt)
-      localStorage.setItem("refesh", refesh)
+      jwt,
+      refesh,
+    })
+  },
+  parseFromLocal: () => {
+    const jwt = localStorage.getItem("jwt")
+    const refesh = localStorage.getItem("refesh")
+    if (jwt && refesh) {
       const jwtObject: MyPayloadType = jwtDecode(jwt)
       set({
         accountId: jwtObject.details__accountId,
@@ -52,21 +51,10 @@ const useAuth = create<State>()((set) => {
         jwt,
         refesh,
       })
-    },
-    parseFromLocal: () => {
-      const jwt = localStorage.getItem("jwt")
-      const refesh = localStorage.getItem("refesh")
-      if (jwt && refesh) {
-        const jwtObject: MyPayloadType = jwtDecode(jwt)
-        set({
-          accountId: jwtObject.details__accountId,
-          userId: jwtObject.details__userId,
-          jwt,
-          refesh,
-        })
-      }
-    },
-  }
-})
+      return true
+    }
+    return false
+  },
+}))
 
 export default useAuth

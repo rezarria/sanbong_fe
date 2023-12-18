@@ -7,9 +7,9 @@ import {
   useMemo,
   useState,
 } from "react"
-import { connect } from "@/lib/Axios"
 import { AxiosError, HttpStatusCode } from "axios"
 import dayjs from "dayjs"
+import useConnect from "../../store/useConnect"
 type Section<T> = {
   name: Extract<keyof T, string>
   title: string
@@ -33,6 +33,7 @@ function View<T extends { id: string }>(
   props: Props<T>,
   ref: ForwardedRef<Ref>,
 ) {
+  const connect = useConnect((s) => s.connect)
   const [isShowing, setIsShowing] = useState(false)
   const [info, setInfo] = useState<T>()
   const data: Section<T>[] = useMemo(() => {

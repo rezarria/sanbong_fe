@@ -8,6 +8,7 @@ import AppMenu from "./AppMenu"
 import { usePathname } from "next/navigation"
 import useAppStore from "@/store/useAppStore"
 import { PrivateSession } from "../../components/session/PrivateSession"
+import useAuth from "../../store/useAuth"
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -16,13 +17,10 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = (props) => {
-  const [change] = useAppStore((s) => [s.change])
-  const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer },
   } = theme.useToken()
-  useEffect(() => {}, [pathname])
   return (
     <PrivateSession>
       <Layout style={{ height: "100vh" }}>

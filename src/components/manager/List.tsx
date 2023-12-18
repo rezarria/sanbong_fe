@@ -1,6 +1,5 @@
 "use client"
 
-import { connect } from "@/lib/Axios"
 import { Flex, Pagination, Table } from "antd"
 import { AnyObject } from "antd/es/_util/type"
 import { ColumnsType, TablePaginationConfig } from "antd/es/table"
@@ -19,6 +18,7 @@ import {
   useRef,
   useState,
 } from "react"
+import useConnect from "../../store/useConnect"
 
 type Pagination = {
   current: number
@@ -37,6 +37,7 @@ function ListFC<T extends AnyObject & { id: string }>(
   props: Props<T>,
   ref: ForwardedRef<Ref>,
 ) {
+  const connect = useConnect((s) => s.connect)
   const [data, setData] = useState<T[]>([])
   const [paginationA, setPaginationA] = useState<TablePaginationConfig>({
     showSizeChanger: true,
