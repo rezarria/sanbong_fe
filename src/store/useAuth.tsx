@@ -12,11 +12,12 @@ interface User {
 
 interface State {
   jwt?: string
+  refesh?: string
   userId?: string
   accountId?: string
   user?: User
   update: (user: User) => void
-  updateJwt: (jwt: string) => void
+  updateJwt: (jwt: string, refresh: string) => void
   parseFromLocal: () => void
 }
 
@@ -41,23 +42,27 @@ const useAuth = create<State>()((set) => {
     update: (user: User) => {
       set({ user })
     },
-    updateJwt: (jwt) => {
+    updateJwt: (jwt, refesh) => {
       localStorage.setItem("jwt", jwt)
+      localStorage.setItem("refesh", refesh)
       const jwtObject: MyPayloadType = jwtDecode(jwt)
       set({
         accountId: jwtObject.details__accountId,
         userId: jwtObject.details__userId,
         jwt,
+        refesh,
       })
     },
     parseFromLocal: () => {
       const jwt = localStorage.getItem("jwt")
-      if (jwt != null) {
+      const refesh = localStorage.getItem("refesh")
+      if (jwt && refesh) {
         const jwtObject: MyPayloadType = jwtDecode(jwt)
         set({
           accountId: jwtObject.details__accountId,
           userId: jwtObject.details__userId,
           jwt,
+          refesh,
         })
       }
     },

@@ -2,10 +2,12 @@ import { create } from "zustand"
 import config from "@/config/Config"
 import axios, { AxiosInstance } from "axios"
 
-interface State {}
+interface State {
+  connect: AxiosInstance
+}
 
 interface Action {
-  connect: AxiosInstance
+  setJwt: (token: string) => void
 }
 
 const useConnect = create<State & Action>((set) => {
@@ -14,6 +16,16 @@ const useConnect = create<State & Action>((set) => {
   })
   return {
     connect,
+    setJwt: (token) => {
+      set({
+        connect: axios.create({
+          baseURL: config.baseUrl,
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }),
+      })
+    },
   }
 })
 
