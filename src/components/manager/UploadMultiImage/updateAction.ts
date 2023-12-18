@@ -1,6 +1,6 @@
-import { connect } from "@/lib/Axios"
 import { UploadFile } from "antd"
 import { StateType } from "./type"
+import config from "@/config/Config"
 
 export type UpdateType = {
   type: "update"
@@ -19,7 +19,7 @@ export function updateReducer(state: StateType, action: UpdateType) {
   const newFiles = newUrls.map(
     (url) =>
       ({
-        url: [connect.defaults.baseURL, url].join(""),
+        url: [config.baseUrl, url].join(""),
         uid: url,
         response: [{ url }],
         status: "done",

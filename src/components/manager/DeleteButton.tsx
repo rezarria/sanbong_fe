@@ -1,7 +1,7 @@
 import { Button, Popconfirm } from "antd"
-import { connect } from "@/lib/Axios"
 import { DeleteOutlined } from "@ant-design/icons"
 import { useState } from "react"
+import useConnect from "../../store/useConnect"
 
 type Props = {
   id: string[]
@@ -14,6 +14,7 @@ type Props = {
 export default function DeleteButton(props: Readonly<Props>) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const connect = useConnect((s) => s.connect)
   return (
     <Popconfirm
       open={open}

@@ -1,6 +1,5 @@
 "use client"
 
-import { connect } from "@/lib/Axios"
 import {
   Button,
   DatePicker,
@@ -17,6 +16,7 @@ import { NamePath } from "antd/es/form/interface"
 import { HttpStatusCode } from "axios"
 import { ReactNode, useState } from "react"
 import UserAvatar from "../../app/admin/user/UserAvatar"
+import useConnect from "../../store/useConnect"
 
 type Props<T extends Record<string, any>> = Readonly<{
   title: string
@@ -37,6 +37,7 @@ type Props<T extends Record<string, any>> = Readonly<{
 }>
 
 export default function Add<T extends Record<string, any>>(props: Props<T>) {
+  const connect = useConnect((s) => s.connect)
   const [isSpining, setIsSpining] = useState(false)
   const [form] = Form.useForm<T>()
   const [isModalOpen, setIsModalOpen] = useState(false)

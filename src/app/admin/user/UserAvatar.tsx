@@ -2,7 +2,7 @@ import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"
 import { Upload, UploadProps, message, Image, Form } from "antd"
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload"
 import { useCallback, useEffect, useId, useState } from "react"
-import { connect } from "@/lib/Axios"
+import useConnect from "../../../store/useConnect"
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png"
@@ -31,6 +31,7 @@ export default function UserAvatar(props: Readonly<Props>) {
   const [list, setList] = useState<UploadFile[]>([])
   const form = Form.useFormInstance()
   const id = useId()
+  const connect = useConnect((s) => s.connect)
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
       setLoading(info.file.status == "uploading")

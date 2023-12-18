@@ -1,13 +1,13 @@
 import { UploadOutlined } from "@ant-design/icons"
 import { Button, Upload, message } from "antd"
 import { useCallback, useRef } from "react"
-import { connect } from "@/lib/Axios"
 import {
   RcFile,
   UploadChangeParam,
   UploadFile,
   UploadProps,
 } from "antd/es/upload"
+import useConnect from "../../store/useConnect"
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png"
@@ -30,6 +30,7 @@ export default function EditAvatarUploadButton(
   }>,
 ) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const connect = useConnect((s) => s.connect)
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile>) => {
       if (info.file.status == "done") {

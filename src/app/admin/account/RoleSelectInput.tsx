@@ -1,7 +1,7 @@
 import { Select, SelectProps } from "antd"
 import { useCallback, useEffect, useState } from "react"
-import { connect } from "@/lib/Axios"
 import { DefaultOptionType } from "antd/es/select"
+import useConnect from "@/store/useConnect"
 
 type Props = {
   value?: string[]
@@ -15,13 +15,17 @@ export { type Props as RoleSelectInputProps }
 
 type RoleType = { id: string; name: string; displayName: string }
 
-async function fetch(name?: string) {
-  return (await connect.get<RoleType[]>("api/role", { params: { name } })).data
-}
-
 export default function RoleSelectInput(props: Readonly<Props>) {
   const [options, setOptions] = useState<SelectProps["options"]>([])
   const [data, setData] = useState<RoleType[]>([])
+  const connect = useConnect((s) => s.connect)
+  const fetch = useCallback(
+    async (name?: string) => {
+      return (await connect.get<RoleType[]>("api/role", { params: { name } }))
+        .data
+    },
+    [connect],
+  )
   useEffect(() => {
     fetch().then(setData)
   }, [])

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { Spin } from "antd"
-import { connect } from "@/lib/Axios"
+import useConnect from "@/store/useConnect"
 type Props = {
   id?: string
 }
 
 export default function QueryUserInfo(props: Readonly<Props>) {
   const [name, setName] = useState<string>()
+  const connect = useConnect((s) => s.connect)
   useEffect(() => {
     if (props.id) {
       connect

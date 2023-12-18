@@ -1,16 +1,17 @@
 "use client"
 import { useCallback, useRef, useState } from "react"
-import { connect } from "@/lib/Axios"
 import { Button, Card, Col, Image, Popconfirm, Row, Space } from "antd"
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons"
 import EditDefaultAvatar from "./EditDefautAvatar"
 import EditAvatarUploadButton from "./EditAvatarUploadButton"
+import useConnect from "../../store/useConnect"
 
 export function EditAvatar(
   props: Readonly<{ value?: string; onChange?: (value: string) => void }>,
 ) {
   const [imageUrl, setImageUrl] = useState(props.value)
   const [lock, setLock] = useState(false)
+  const connectt = useConnect((s) => s.connect)
   const [preview, setPreview] = useState(false)
   const [modalConfig, setModalConfig] = useState({
     preview: props.value != null && props.value.length != 0,

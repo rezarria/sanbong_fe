@@ -1,6 +1,5 @@
 import { UploadFile } from "antd"
 import { StateType } from "./type"
-import { connect } from "@/lib/Axios"
 
 export type UpdateUrlType = {
   type: "updateUrl"

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
 import { Spin } from "antd"
-import { connect } from "@/lib/Axios"
 import queryString from "query-string"
+import useConnect from "../../../store/useConnect"
 type Props = {
   id?: string[]
 }
 
 export default function QueryRoleInfo(props: Readonly<Props>) {
   const [names, setNames] = useState<string[]>()
+  const connect = useConnect((s) => s.connect)
   useEffect(() => {
     if (props.id && props.id.length !== 0) {
       connect
