@@ -7,9 +7,9 @@ import {
   useImperativeHandle,
   useState,
 } from "react"
-import { connect } from "@/lib/Axios"
 import { AxiosError, HttpStatusCode } from "axios"
 import Descriptions, { DescriptionsItemType } from "antd/es/descriptions"
+import useConnect from "../store/useConnect"
 type Section<T> = {
   label: string
   span?: number
@@ -61,6 +61,7 @@ function CustomDescriptions<T extends { id: string }>(
   const [isShowing, setIsShowing] = useState(false)
   const [info, setInfo] = useState<T>()
   const [items, setItems] = useState<DescriptionsProps["items"]>()
+  const connect = useConnect((s) => s.connect)
   useEffect(() => {
     if (info && props.sections) {
       setItems(

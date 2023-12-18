@@ -9,13 +9,13 @@ import {
   useImperativeHandle,
   useState,
 } from "react"
-import { connect } from "@/lib/Axios"
 import { HttpStatusCode } from "axios"
 import { DatePicker, Form, FormItemProps, Input, Modal, Space } from "antd"
 import * as jsonpatch from "fast-json-patch"
 import dayjs from "dayjs"
 import { EditAvatar } from "./EditAvatar"
 import { ModalFooterRender } from "antd/es/modal/interface"
+import useConnect from "../../store/useConnect"
 
 interface TrackerModel {
   lastModifiedDate: string
@@ -49,6 +49,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
   const [isOpening, setIsOpening] = useState(false)
   const [data, setData] = useState<T>()
   const [form] = Form.useForm<T>()
+  const connect = useConnect((s) => s.connect)
   const fetch = useCallback(
     (id: string) =>
       connect
@@ -58,7 +59,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
             setData(res.data)
           }
         }),
-    [props.url],
+    [connect, props.url],
   )
   const onFinish = useCallback(
     (newData: T) => {
@@ -92,7 +93,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
           })
       }
     },
-    [data, props],
+    [connect, data, props],
   )
   useImperativeHandle(
     ref,

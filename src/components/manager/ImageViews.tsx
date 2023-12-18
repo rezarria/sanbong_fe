@@ -1,9 +1,10 @@
 import { Carousel, Image } from "antd"
-import { connect } from "../../lib/Axios"
+import useConnect from "../../store/useConnect"
 
 type Props = { value?: string[] }
 
 export default function ImageViews(props: Readonly<Props>) {
+  const connect = useConnect((s) => s.connect)
   return (
     <Image.PreviewGroup>
       <Carousel

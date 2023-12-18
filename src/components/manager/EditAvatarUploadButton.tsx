@@ -41,7 +41,7 @@ export default function EditAvatarUploadButton(
         props.onChange?.(fileUrl)
       }
     },
-    [props],
+    [connect.defaults.baseURL, props],
   )
   return (
     <Upload

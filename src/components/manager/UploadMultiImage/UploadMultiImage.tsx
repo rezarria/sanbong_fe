@@ -1,9 +1,9 @@
 import { PlusOutlined } from "@ant-design/icons"
 import { Upload, UploadFile, message } from "antd"
 import { useCallback, useEffect, useReducer } from "react"
-import { connect } from "@/lib/Axios"
 import { RcFile, UploadChangeParam, UploadProps } from "antd/es/upload"
 import { uploadMultiImageReducer } from "./UploadMultiImageReducer"
+import useConnect from "../../../store/useConnect"
 
 type Props = {
   value?: string[]
@@ -28,6 +28,7 @@ export default function UploadMultiImage(props: Readonly<Props>) {
     url: [],
     file: [],
   })
+  const connect = useConnect((s) => s.connect)
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile<Response[]>>) => {
       if (info.file.status == "done") {
@@ -37,7 +38,7 @@ export default function UploadMultiImage(props: Readonly<Props>) {
       }
       dispatch({ type: "updateFile", payload: info.fileList })
     },
-    [props.onChange, state.url],
+    [connect.defaults.baseURL, props, state.url],
   )
   useEffect(() => {
     if (props.value != null) {

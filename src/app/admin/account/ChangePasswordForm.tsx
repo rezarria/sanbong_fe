@@ -9,7 +9,7 @@ import {
   useState,
 } from "react"
 import { ChangePasswordModel } from "./type"
-import { connect } from "@/lib/Axios"
+import useConnect from "@/store/useConnect"
 type Ref = {
   show(id: string): void
   hide(): void
@@ -20,6 +20,7 @@ function ChangePasswordForm(props: Readonly<{}>, ref: ForwardedRef<Ref>) {
   const [open, setOpen] = useState(false)
   const [id, setId] = useState<string>()
   const [form] = Form.useForm<ChangePasswordModel>()
+  const connect = useConnect((s) => s.connect)
   useImperativeHandle(
     ref,
     () => ({
