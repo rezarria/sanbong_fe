@@ -1,8 +1,9 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons"
 import { Button, Form, Input } from "antd"
-import { connect } from "@/lib/Axios"
 import { useRouter } from "next/navigation"
-import useAuth from "../../store/useAuth"
+import useAuth from "@/store/useAuth"
+import useConnect from "@/store/useConnect"
+import { useCallback } from "react"
 
 type LoginModel = {
   username: string
@@ -12,16 +13,20 @@ type LoginModel = {
 export default function LoginPage() {
   const router = useRouter()
   const auth = useAuth()
-  const onFinish = (data: LoginModel) => {
-    connect
-      .post<{ jwt: string; refresh: string }>("api/security/login", data)
-      .then((res) => {
-        localStorage.setItem("jwt", res.data.jwt)
-        localStorage.setItem("refresh", res.data.refresh)
-        auth.updateJwt(res.data.jwt)
-        router.push("/admin/user")
-      })
-  }
+  const connect = useConnect((s) => s.connect)
+  const onFinish = useCallback(
+    (data: LoginModel) => {
+      connect
+        .post<{ jwt: string; refresh: string }>("api/security/login", data)
+        .then((res) => {
+          localStorage.setItem("jwt", res.data.jwt)
+          localStorage.setItem("refresh", res.data.refresh)
+          auth.updateJwt(res.data.jwt)
+          router.push("/admin/user")
+        })
+    },
+    [auth, connect, router],
+  )
 
   return (
     <Form<LoginModel>
