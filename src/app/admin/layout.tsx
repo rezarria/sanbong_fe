@@ -1,14 +1,11 @@
 "use client"
 
-import React, { ReactNode, useEffect, useState } from "react"
+import React, { ReactNode, useState } from "react"
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons"
 import { Button, Layout, theme } from "antd"
 import AppBreadcrumb from "@/components/AppBreadcrumb/AppBreadcrumb"
 import AppMenu from "./AppMenu"
-import { usePathname } from "next/navigation"
-import useAppStore from "@/store/useAppStore"
-import { PrivateSession } from "../../components/session/PrivateSession"
-import useAuth from "../../store/useAuth"
+import { PrivateSession } from "../../session/PrivateSession"
 
 const { Header, Content, Footer, Sider } = Layout
 

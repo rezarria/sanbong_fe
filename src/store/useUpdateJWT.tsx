@@ -22,11 +22,11 @@ export default function useUpdateJWT() {
         const now = Date.now() / 1000
         if (exp > now) {
           connect
-            .post<{ jwt: string; refresh: string }>("api/refesh", refesh)
+            .post<{ jwt: string; refesh: string }>("api/refesh", refesh)
             .then((res) => {
               if (res.status === HttpStatusCode.Ok) {
                 setJwt(res.data.jwt)
-                updateJwt(res.data.jwt, res.data.refresh)
+                updateJwt(res.data.jwt, res.data.refesh)
               }
             })
             .catch(() => {
