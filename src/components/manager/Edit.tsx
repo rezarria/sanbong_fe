@@ -126,7 +126,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
             name={section.name as string}
             label={section.label}
             getValueProps={(i: string) => ({
-              value: i === undefined ? undefined : dayjs(i),
+              value: i == null ? "" : dayjs(i),
             })}
           >
             <DatePicker className="!w-full" format="DD-MM-YYYY" />

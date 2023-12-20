@@ -128,11 +128,12 @@ function selectType<T>(section: Section<T>, data: T): ReactNode {
     )
   switch (section.type) {
     case "datepicker":
+      const date: string | null = data[section.name] as string
       return (
         <DatePicker
           inputReadOnly
           format={"DD-MM-YYYY"}
-          value={dayjs(data[section.name] as string)}
+          value={date ? dayjs(date) : null}
           className="!w-full"
         />
       )
