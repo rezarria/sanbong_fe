@@ -10,7 +10,7 @@ import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
 import { AddModel, EditModel, ListModel, ViewModel } from "./type"
 import UserAvatar from "./UserAvatar"
-import useConnect from "../../../store/useConnect"
+import useConnect from "@/store/useConnect"
 
 const MyList = List<ListModel>()
 const MyView = ViewComponent<ViewModel>()
@@ -20,7 +20,7 @@ export default function Page() {
   const listRef = useRef<ListRef>(null)
   const viewRef = useRef<ViewRef>(null)
   const editRef = useRef<EditRef>(null)
-  const connect = useConnect()
+  const connect = useConnect((s) => s.connect)
 
   return (
     <Flex vertical={true} className="h-full">

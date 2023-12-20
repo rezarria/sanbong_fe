@@ -13,13 +13,16 @@ type Props = {
 }
 
 export function PrivateSession(props: Readonly<Props>) {
-  const connect = useConnect((s) => s.connect)
   const [loading, setLoading] = useState(true)
   const [parseFromLocal, jwt] = useAuth((s) => [s.parseFromLocal, s.jwt])
+  const [ok, setOk] = useState(false)
   const router = useRouter()
   const setJwt = useConnect((s) => s.setJwt)
   useEffect(() => {
     switch (parseFromLocal()) {
+      case ParseStatus.LOADED:
+        setOk(true)
+        break
       case ParseStatus.EMPTY:
         router.push("/login")
         break
@@ -37,8 +40,10 @@ export function PrivateSession(props: Readonly<Props>) {
     }
   }, [parseFromLocal, router])
   useEffect(() => {
-    if (jwt) setJwt(jwt)
-    setLoading(false)
-  }, [jwt, setJwt])
+    if (jwt && ok) {
+      setJwt(jwt)
+      setLoading(false)
+    }
+  }, [jwt, ok, setJwt])
   return <>{loading ? <Spin /> : props.children}</>
 }
