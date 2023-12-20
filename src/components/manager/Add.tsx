@@ -15,8 +15,8 @@ import {
 import { NamePath } from "antd/es/form/interface"
 import { HttpStatusCode } from "axios"
 import { ReactNode, useState } from "react"
-import UserAvatar from "../../app/admin/user/UserAvatar"
-import useConnect from "../../store/useConnect"
+import UserAvatar from "./UserAvatar"
+import useConnect from "@/store/useConnect"
 
 type Props<T extends Record<string, any>> = Readonly<{
   title: string

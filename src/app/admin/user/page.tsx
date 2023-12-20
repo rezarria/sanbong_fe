@@ -9,7 +9,7 @@ import List, { Ref as ListRef } from "@/components/manager/List"
 import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
 import { AddModel, EditModel, ListModel, ViewModel } from "./type"
-import UserAvatar from "./UserAvatar"
+import UserAvatar from "@/components/manager/UserAvatar"
 import useConnect from "@/store/useConnect"
 
 const MyList = List<ListModel>()
