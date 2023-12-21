@@ -116,7 +116,6 @@ function selectInput<T extends Record<string, any>>(section: SelectInput<T>) {
       return (
         <>
           <UserAvatar url="api/files" name={section.name as string} />
-          {/* <Input className="hidden" /> */}
         </>
       )
     case "datepicker":

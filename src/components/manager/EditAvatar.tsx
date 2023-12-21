@@ -4,14 +4,15 @@ import { Button, Card, Col, Image, Popconfirm, Row, Space } from "antd"
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons"
 import EditDefaultAvatar from "./EditDefautAvatar"
 import EditAvatarUploadButton from "./EditAvatarUploadButton"
-import useConnect from "../../store/useConnect"
+import useConnect from "@/store/useConnect"
+import config from "../../config/Config"
 
 export function EditAvatar(
   props: Readonly<{ value?: string; onChange?: (value: string) => void }>,
 ) {
   const [imageUrl, setImageUrl] = useState(props.value)
   const [lock, setLock] = useState(false)
-  const connectt = useConnect((s) => s.connect)
+  const connect = useConnect((s) => s.connect)
   const [preview, setPreview] = useState(false)
   const [modalConfig, setModalConfig] = useState({
     preview: props.value != null && props.value.length != 0,
@@ -32,7 +33,7 @@ export function EditAvatar(
           width={"100%"}
           height={"100%"}
           alt={"avatar"}
-          src={connect.defaults.baseURL + imageUrl}
+          src={config.baseUrl + imageUrl}
           className="aspect-square object-cover"
           preview={
             preview

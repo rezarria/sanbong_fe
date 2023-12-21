@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Flex, Space } from "antd"
+import { Button, Flex, Image, Space } from "antd"
 import { useRef } from "react"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import List, { Ref as ListRef } from "@/components/manager/List"
@@ -11,6 +11,8 @@ import ForwardedRefCustomDescriptions, {
   CustomDescriptionRef,
 } from "@/components/CustomDescriptions"
 import EditNoPatch, { Ref as EditRef } from "@/components/manager/EditNoPatch"
+import UserAvatar from "../../../components/manager/UserAvatar"
+import config from "../../../config/Config"
 
 const MyList = List<ListModel>()
 const MyEdit2 = EditNoPatch<EditModel2>()
@@ -25,7 +27,7 @@ export default function Page() {
     <Flex vertical={true} className="h-full">
       <Add<AddModel>
         title={"Thêm Người dùng mới"}
-        url={"api/account"}
+        url={"api/organization"}
         sections={[
           {
             label: "Tên tổ chức",
@@ -54,6 +56,7 @@ export default function Page() {
           {
             label: "Ảnh",
             name: "image",
+            input: <UserAvatar url="api/files" name="image" />,
           },
         ]}
         onClose={() => {
@@ -61,7 +64,7 @@ export default function Page() {
         }}
       />
       <MyList
-        url={"api/account"}
+        url={"api/organization"}
         columnsDef={[
           {
             key: "#",
@@ -69,8 +72,8 @@ export default function Page() {
             render: (_v, _d, i) => <span>{i + 1}</span>,
           },
           {
-            key: "username",
-            dataIndex: "username",
+            key: "name",
+            dataIndex: "name",
             title: "Tên",
           },
           {
@@ -95,7 +98,7 @@ export default function Page() {
                     }}
                   />
                   <DeleteButton
-                    title="Xoá tài khoản"
+                    title="Xoá tổ chức này"
                     description="Bạn có chắc chắn xoá tài khoản này"
                     url="api/account"
                     id={[record.id]}
@@ -114,9 +117,9 @@ export default function Page() {
       <MyDescriptions
         column={12}
         ref={descriptionRef}
-        url={"api/account"}
+        url={"api/organization"}
         layout="vertical"
-        modalTitle="Thông tin về người dùng"
+        modalTitle="Thông tin về tổ chức"
         sections={[
           {
             label: "ID",
@@ -124,21 +127,30 @@ export default function Page() {
             span: 12,
           },
           {
-            label: "Tài khoản",
-            span: 6,
-            children: (data) => data.username,
-          },
-          {
-            label: "Người dùng",
-            span: 6,
-            children: (data) => {
-              return <QueryUserInfo id={data.userId} />
-            },
-          },
-          {
-            label: "Quyền",
+            label: "Tên tổ chức",
             span: 12,
-            children: (data) => <QueryRoleInfo id={data.roleIds} />,
+            children: (data) => data.name,
+          },
+          {
+            label: "Số điện thoại",
+            span: 6,
+            children: (data) => data.phone,
+          },
+          {
+            label: "Email",
+            span: 6,
+            children: (data) => data.email,
+          },
+          {
+            label: "Image",
+            span: 12,
+            children: (data) => (
+              <Image
+                className="rounded"
+                src={[config.baseUrl, data.image].join("")}
+                alt="ảnh tổ chức"
+              />
+            ),
           },
         ]}
         button={(id) => (
@@ -155,22 +167,32 @@ export default function Page() {
       />
 
       <MyEdit2
-        url="api/account"
-        name="tài khoản"
+        url="api/organization"
+        name="tổ chức"
         ref={editRef}
         onComplete={() => {
           listRef.current?.reload()
         }}
         sections={[
-          { name: "username", label: "Tài khoản" },
-          { name: "roleIds", label: "Quyền", input: <WrapRoleSelectInput /> },
+          { name: "name", label: "Tên" },
           {
-            name: "userId",
-            label: "Người dùng",
-            input: <WrapUserSelectInput />,
+            name: "phone",
+            label: "điện thoại",
+          },
+          {
+            name: "email",
+            label: "email",
+          },
+          {
+            name: "address",
+            label: "địa chỉ",
+          },
+          {
+            name: "image",
+            label: "Ảnh",
+            type: "avatar",
           },
         ]}
-        button={(id) => <ChangePasswordButton accountId={id} />}
       />
     </Flex>
   )

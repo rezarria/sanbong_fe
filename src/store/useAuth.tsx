@@ -24,8 +24,8 @@ interface State {
 
 export type MyPayloadType = JwtPayload & {
   roles: string
-  details__accountId: string
-  details__userId: string
+  ACCOUNTID: string
+  USERID: string
 }
 const useAuth = create<State>()((set) => ({
   update: (user: User) => {
@@ -36,8 +36,8 @@ const useAuth = create<State>()((set) => ({
     localStorage.setItem("refesh", refesh)
     const jwtObject: MyPayloadType = jwtDecode(jwt)
     set({
-      accountId: jwtObject.details__accountId,
-      userId: jwtObject.details__userId,
+      accountId: jwtObject.ACCOUNTID,
+      userId: jwtObject.USERID,
       jwt,
       refesh,
     })
@@ -66,8 +66,8 @@ const useAuth = create<State>()((set) => ({
         return ParseStatus.EXP
       }
       set({
-        accountId: jwtObject.details__accountId,
-        userId: jwtObject.details__userId,
+        accountId: jwtObject.ACCOUNTID,
+        userId: jwtObject.USERID,
         jwt,
         refesh,
       })

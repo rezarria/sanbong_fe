@@ -14,6 +14,12 @@ const routerItems: RouterItems[] = [
     icon: <FootballIcon />,
   },
   {
+    name: "organization",
+    src: "/admin/organization",
+    title: "Tổ chức",
+    icon: <FootballIcon />,
+  },
+  {
     name: "comsuerProduct",
     src: "/admin/cosumerProduct",
     title: "Sản phẩm tiêu thụ",

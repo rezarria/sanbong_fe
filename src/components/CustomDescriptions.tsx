@@ -3,13 +3,15 @@ import {
   ForwardedRef,
   ReactNode,
   forwardRef,
+  isValidElement,
   useEffect,
   useImperativeHandle,
   useState,
 } from "react"
 import { AxiosError, HttpStatusCode } from "axios"
 import Descriptions, { DescriptionsItemType } from "antd/es/descriptions"
-import useConnect from "../store/useConnect"
+import useConnect from "@/store/useConnect"
+import Paragraph from "antd/es/typography/Paragraph"
 type Section<T> = {
   label: string
   span?: number
@@ -126,7 +128,15 @@ function CustomDescriptions<T extends { id: string }>(
         <Descriptions
           column={props.column}
           bordered
-          items={items}
+          items={items?.map((i) => {
+            if (!isValidElement(i.children)) {
+              return {
+                ...i,
+                children: <Paragraph copyable={true}>{i.children}</Paragraph>,
+              } as DescriptionsItemType
+            }
+            return i
+          })}
           layout={props.layout}
         />
       }
