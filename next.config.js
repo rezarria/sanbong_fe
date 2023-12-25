@@ -10,6 +10,10 @@ const nextConfig = {
         port: "8080",
         pathname: "/api/**",
       },
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
   webpack(config) {
