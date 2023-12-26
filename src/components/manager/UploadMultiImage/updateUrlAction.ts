@@ -27,7 +27,7 @@ export function updateUrlAction(
     (url) =>
       ({
         uid: url,
-        url: [config.baseUrl, url].join(""),
+        url: [url.startsWith("http") ? "" : config.baseUrl, url].join(""),
         response: [{ url }],
         status: "done",
       }) as UploadFile<Response[]>,

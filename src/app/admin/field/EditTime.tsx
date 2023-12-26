@@ -59,6 +59,11 @@ function _EditTime(
           values.duration != null
             ? values.duration.hour() * 60 + values.duration.minute()
             : null,
+        minimumDuration:
+          values.minimumDuration != null
+            ? values.minimumDuration.hour() * 60 +
+              values.minimumDuration.minute()
+            : null,
         openTime: start != null ? start.hour() * 60 + start.minute() : null,
         closeTime: end != null ? end.hour() * 60 + end.minute() : null,
         fieldId,
@@ -109,7 +114,9 @@ function _EditTime(
       today.setMilliseconds(0)
       today.setHours(0)
       let duration = dayjs("00:00:00", "HH:mm:ss")
+      let minimumDuration = dayjs(duration)
       duration = duration.add(setting.duration, "minutes")
+      minimumDuration = minimumDuration.add(setting.minimumDuration, "minutes")
 
       const startTime = dayjs(new Date(today).setMinutes(setting.openTime))
       const endTime = dayjs(new Date(today).setMinutes(setting.closeTime))
@@ -118,6 +125,7 @@ function _EditTime(
         unitName: setting.unitName,
         unitStyle: setting.unitStyle,
         duration,
+        minimumDuration,
         openCloseTime: [startTime, endTime],
       })
     }
@@ -164,6 +172,12 @@ function _EditTime(
             disabled={!useUnit}
           />
         </Form.Item>
+        <Form.Item<FieldForm>
+          name={"minimumDuration"}
+          label={"Thời gian tối thiểu"}
+        >
+          <TimePicker showNow={false} showSecond={false} format={"HH:mm"} />
+        </Form.Item>
       </Form>
     </Modal>
   )
@@ -176,6 +190,7 @@ type FieldSetting = {
   unitStyle: boolean
   closeTime: number
   duration: number
+  minimumDuration: number
   openTime: number
   fieldId: string
 }
@@ -183,7 +198,11 @@ type FieldSetting = {
 type FieldForm = {
   openCloseTime: RangePickerProps["value"]
   duration: TimePickerProps["value"]
-} & Omit<FieldSetting, "openTime" | "closeTime" | "duration">
+  minimumDuration: TimePickerProps["value"]
+} & Omit<
+  FieldSetting,
+  "openTime" | "closeTime" | "duration" | "minimumDuration"
+>
 
 function useCurrentFieldSetting(
   id?: string,

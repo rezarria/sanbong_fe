@@ -12,7 +12,6 @@ export function EditAvatar(
 ) {
   const [imageUrl, setImageUrl] = useState(props.value)
   const [lock, setLock] = useState(false)
-  const connect = useConnect((s) => s.connect)
   const [preview, setPreview] = useState(false)
   const [modalConfig, setModalConfig] = useState({
     preview: props.value != null && props.value.length != 0,
@@ -23,6 +22,9 @@ export function EditAvatar(
   const handleMouseEnter = useCallback(() => {
     if (!lock) card.current?.classList.remove("hidden")
   }, [lock])
+  let src = ""
+  if (imageUrl?.startsWith("http")) src = imageUrl
+  else src = config.baseUrl + imageUrl
   return (
     <Card
       className="w-full h-full aspect-square overflow-hidden"
@@ -33,7 +35,7 @@ export function EditAvatar(
           width={"100%"}
           height={"100%"}
           alt={"avatar"}
-          src={config.baseUrl + imageUrl}
+          src={src}
           className="aspect-square object-cover"
           preview={
             preview

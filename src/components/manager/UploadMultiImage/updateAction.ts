@@ -19,7 +19,7 @@ export function updateReducer(state: StateType, action: UpdateType) {
   const newFiles = newUrls.map(
     (url) =>
       ({
-        url: [config.baseUrl, url].join(""),
+        url: [url.startsWith("http") ? "" : config.baseUrl, url].join(""),
         uid: url,
         response: [{ url }],
         status: "done",

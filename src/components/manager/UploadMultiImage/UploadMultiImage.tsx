@@ -32,7 +32,9 @@ export default function UploadMultiImage(props: Readonly<Props>) {
   const handleChange: UploadProps["onChange"] = useCallback(
     (info: UploadChangeParam<UploadFile<Response[]>>) => {
       if (info.file.status == "done") {
-        info.file.url = connect.defaults.baseURL! + info.file.response![0].url
+        info.file.url = info.file.response![0].url
+        if (!info.file.url.startsWith("http"))
+          info.file.url = connect.defaults.baseURL! + info.file.url
         dispatch({ type: "addUrl", payload: info.file.response![0].url })
         props.onChange?.(state.url.concat(info.file.response![0].url))
       }

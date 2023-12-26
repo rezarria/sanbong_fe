@@ -1,9 +1,8 @@
 "use client"
 
-import { Button, Flex, Input, Space } from "antd"
+import { Button, Flex, Image, Input, Space } from "antd"
 import { useRef } from "react"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
-import ViewComponent, { ViewRef } from "@/components/manager/View"
 import Edit, { EditRef } from "@/components/manager/EditNoPatch"
 import List, { Ref as ListRef } from "@/components/manager/List"
 import Add from "@/components/manager/Add"
@@ -11,18 +10,25 @@ import DeleteButton from "@/components/manager/DeleteButton"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
 import UploadMultiImage from "@/components/manager/UploadMultiImage/UploadMultiImage"
-import ImageViews from "@/components/manager/ImageViews"
 import EditTime, { EditTimeRef } from "./EditTime"
+import ForwardedRefCustomDescriptions, {
+  CustomDescriptionRef,
+} from "@/components/CustomDescriptions"
+import Paragraph from "antd/es/typography/Paragraph"
+import CurrentFieldStatus, { CurrentFieldStatusRef } from "./CurrentFieldStatus"
+import config from "../../../config/Config"
+import ImageList from "../../../components/ImageList"
 
 const MyList = List<ListType>()
-const MyView = ViewComponent<ViewModel>()
 const MyEdit = Edit<EditModel>()
+const MyDescription = ForwardedRefCustomDescriptions<ViewModel>()
 
 export default function Page() {
   const listRef = useRef<ListRef>(null)
-  const viewRef = useRef<ViewRef>(null)
   const editRef = useRef<EditRef>(null)
   const editTimeRef = useRef<EditTimeRef>(null)
+  const descriptionRef = useRef<CustomDescriptionRef>(null)
+  const fieldStatusRef = useRef<CurrentFieldStatusRef>(null)
 
   return (
     <Flex vertical={true} className="h-full" gap={15}>
@@ -71,7 +77,8 @@ export default function Page() {
                     type="primary"
                     icon={<EyeOutlined />}
                     onClick={() => {
-                      viewRef.current?.show(record.id)
+                      descriptionRef.current?.show(record.id)
+                      fieldStatusRef.current?.run()
                     }}
                   />
                   <Button
@@ -97,47 +104,47 @@ export default function Page() {
         ]}
         ref={listRef}
       />
-      <MyView
-        ref={viewRef}
+      <MyDescription
+        ref={descriptionRef}
         url={"api/field"}
         modalTitle="Thông tin về sân"
+        column={24}
+        layout="horizontal"
         sections={[
           {
-            label: "Tên sân",
-            title: "name",
-            name: "name",
+            label: "Tên",
+            span: 24,
+            children: (p) => p.name,
+          },
+          {
+            label: "Ảnh",
+            span: 24,
+            children: (p) => <ImageList className="" src={p.pictures} />,
           },
           {
             label: "Giá",
-            title: "price",
-            name: "price",
-            input: (data) => (
-              <Input
-                readOnly
-                value={data.price}
-                suffix={"vnđ"}
-                placeholder="Chưa đặt giá"
-              />
+            span: 12,
+            children: (p) => p.price,
+          },
+          {
+            label: "Trạng thái",
+            span: 12,
+            children: (p) => (
+              <CurrentFieldStatus ref={fieldStatusRef} fieldId={p.id} />
             ),
           },
           {
-            label: "Hình ảnh",
-            title: "pictures",
-            name: "pictures",
-            input: (data) => <ImageViews value={data.pictures} />,
-          },
-          {
             label: "Miêu tả",
-            title: "description",
-            name: "description",
-            input: (data) => <TextArea value={data.description} readOnly />,
+            span: 24,
+            children: (p) => p.description,
           },
         ]}
         button={(id) => (
           <Button
             type="dashed"
             onClick={() => {
-              viewRef.current?.hide()
+              fieldStatusRef.current?.stop()
+              descriptionRef.current?.hide()
               editRef.current?.show(id)
             }}
           >
