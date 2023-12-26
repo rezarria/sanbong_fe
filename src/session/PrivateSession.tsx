@@ -3,10 +3,8 @@
 import { ReactNode, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Spin } from "antd"
-import useAuth, { ParseStatus } from "../store/useAuth"
-import useConnect from "../store/useConnect"
-import axios, { HttpStatusCode } from "axios"
-import config from "../config/Config"
+import useAuth, { ParseStatus } from "@/store/useAuth"
+import useConnect from "@/store/useConnect"
 
 type Props = {
   children?: ReactNode
@@ -27,15 +25,8 @@ export function PrivateSession(props: Readonly<Props>) {
         router.push("/login")
         break
       case ParseStatus.EXP:
-        // axios
-        //   .post<{ jwt: string; refesh: string }>(
-        //     [config.baseUrl, "api/security/refesh"].join("/"),
-        //     jwt,
-        //   )
-        //   .then((res) => {
-        //     if (res.status === HttpStatusCode.Ok) {
-        //     }
-        //   })
+        localStorage.clear()
+        router.push("/login")
         break
     }
   }, [parseFromLocal, router])
