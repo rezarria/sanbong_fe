@@ -6,7 +6,7 @@ export default function Layout(props: Readonly<{ children?: ReactNode }>) {
   return (
     <>
       <Header />
-      {props.children}
+      <div className="overflow-hidden w-full">{props.children}</div>
       <Footer />
     </>
   )

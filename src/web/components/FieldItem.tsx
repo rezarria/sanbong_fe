@@ -37,7 +37,7 @@ export default function FieldItem(props: Readonly<Props>) {
         <div className="flex flex-row gap-[5px]">
           <Link
             className="rounded overflow-hidden bg-blue-300 p-3 no-underline"
-            href={"/field?id=" + props.fieldId}
+            href={"/san/" + props.fieldId}
           >
             Xem chi tiết
           </Link>

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aldabil/react-scheduler": "^2.8.0",
     "@ant-design/cssinjs": "^1.17.2",
     "@ant-design/icons": "^5.2.6",
     "antd": "^5.10.2",
@@ -21,7 +22,13 @@
     "query-string": "^8.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "zustand": "^4.4.6"
+    "zustand": "^4.4.6",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.6",
+    "@mui/material": "^5.10.8",
+    "@mui/x-date-pickers": "^6.0.1",
+    "date-fns": "^2.29.3"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
