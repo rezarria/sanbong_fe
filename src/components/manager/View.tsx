@@ -9,7 +9,7 @@ import {
 } from "react"
 import { AxiosError, HttpStatusCode } from "axios"
 import dayjs from "dayjs"
-import useConnect from "../../store/useConnect"
+import useConnect from "@/store/useConnect"
 type Section<T> = {
   name: Extract<keyof T, string>
   title: string
@@ -73,7 +73,7 @@ function View<T extends { id: string }>(
         setIsShowing(false)
       },
     }),
-    [props.url],
+    [connect, props.url],
   )
 
   return (

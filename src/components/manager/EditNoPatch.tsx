@@ -15,7 +15,7 @@ import * as jsonpatch from "fast-json-patch"
 import dayjs from "dayjs"
 import { EditAvatar } from "./EditAvatar"
 import { ModalFooterRender } from "antd/es/modal/interface"
-import useConnect from "../../store/useConnect"
+import useConnect from "@/store/useConnect"
 
 interface TrackerModel {
   lastModifiedDate: string
@@ -103,7 +103,9 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
           setIsOpening(true)
         })
       },
-      hide: () => {},
+      hide: () => {
+        setIsOpening(false)
+      },
     }),
     [fetch],
   )
@@ -179,7 +181,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
         {o}
       </Space>
     ),
-    [data, props.button],
+    [data, props],
   )
   return (
     <Modal

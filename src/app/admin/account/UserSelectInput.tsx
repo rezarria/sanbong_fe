@@ -25,13 +25,16 @@ export default function UserSelectInput(props: Readonly<Props>) {
   )
   useEffect(() => {
     fetch().then(setData)
-  }, [])
+  }, [fetch])
   useEffect(() => {
     setOptions(data.map((i) => ({ value: i.id, label: i.name })))
   }, [data])
-  const handleSearch = useCallback((query: string) => {
-    fetch(query).then(setData)
-  }, [])
+  const handleSearch = useCallback(
+    (query: string) => {
+      fetch(query).then(setData)
+    },
+    [fetch],
+  )
   return (
     <Select<string>
       showSearch

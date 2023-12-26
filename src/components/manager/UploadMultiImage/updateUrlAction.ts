@@ -1,5 +1,6 @@
 import { UploadFile } from "antd"
 import { StateType } from "./type"
+import config from "@/config/Config"
 
 export type UpdateUrlType = {
   type: "updateUrl"
@@ -26,7 +27,7 @@ export function updateUrlAction(
     (url) =>
       ({
         uid: url,
-        url: [connect.defaults.baseURL, url].join(""),
+        url: [config.baseUrl, url].join(""),
         response: [{ url }],
         status: "done",
       }) as UploadFile<Response[]>,

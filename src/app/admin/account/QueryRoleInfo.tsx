@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Spin } from "antd"
 import queryString from "query-string"
-import useConnect from "../../../store/useConnect"
+import useConnect from "@/store/useConnect"
 type Props = {
   id?: string[]
 }
@@ -23,7 +23,7 @@ export default function QueryRoleInfo(props: Readonly<Props>) {
           }
         })
     }
-  }, [props.id])
+  }, [connect, props.id])
   return (
     <>
       {props.id && props.id.length !== 0

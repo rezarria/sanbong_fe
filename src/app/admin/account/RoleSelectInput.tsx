@@ -28,13 +28,16 @@ export default function RoleSelectInput(props: Readonly<Props>) {
   )
   useEffect(() => {
     fetch().then(setData)
-  }, [])
+  }, [fetch])
   useEffect(() => {
     setOptions(data.map((i) => ({ value: i.id, label: i.displayName })))
   }, [data])
-  const handleSearch = useCallback((query: string) => {
-    fetch(query).then(setData)
-  }, [])
+  const handleSearch = useCallback(
+    (query: string) => {
+      fetch(query).then(setData)
+    },
+    [fetch],
+  )
   return (
     <Select<string[]>
       showSearch

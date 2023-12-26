@@ -40,12 +40,15 @@ function ChangePasswordForm(props: Readonly<{}>, ref: ForwardedRef<Ref>) {
       form.setFieldsValue({})
     }
   }, [form, id])
-  const handleFinish = useCallback((data: ChangePasswordModel) => {
-    delete data["newPassword2"]
-    connect.post("api/account/changePassword", data).then((res) => {
-      setOpen(false)
-    })
-  }, [])
+  const handleFinish = useCallback(
+    (data: ChangePasswordModel) => {
+      delete data["newPassword2"]
+      connect.post("api/account/changePassword", data).then((res) => {
+        setOpen(false)
+      })
+    },
+    [connect],
+  )
   return (
     <Modal
       open={open}
