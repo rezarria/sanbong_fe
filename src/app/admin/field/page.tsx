@@ -12,6 +12,7 @@ import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
 import UploadMultiImage from "@/components/manager/UploadMultiImage/UploadMultiImage"
 import ImageViews from "@/components/manager/ImageViews"
+import EditTime, { EditTimeRef } from "./EditTime"
 
 const MyList = List<ListType>()
 const MyView = ViewComponent<ViewModel>()
@@ -21,6 +22,7 @@ export default function Page() {
   const listRef = useRef<ListRef>(null)
   const viewRef = useRef<ViewRef>(null)
   const editRef = useRef<EditRef>(null)
+  const editTimeRef = useRef<EditTimeRef>(null)
 
   return (
     <Flex vertical={true} className="h-full" gap={15}>
@@ -144,8 +146,21 @@ export default function Page() {
           </Button>
         )}
       />
+      <EditTime ref={editTimeRef} />
       <MyEdit
         url="api/field"
+        button={(id) => (
+          <Button
+            onClick={() => {
+              editRef.current?.hide()
+              editTimeRef.current?.show(id)
+            }}
+            type="dashed"
+            title="Thay đổi cách đặt"
+          >
+            Thay đổi cách đặt
+          </Button>
+        )}
         name="sân"
         ref={editRef}
         onComplete={() => {

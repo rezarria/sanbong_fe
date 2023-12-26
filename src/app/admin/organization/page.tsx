@@ -11,8 +11,8 @@ import ForwardedRefCustomDescriptions, {
   CustomDescriptionRef,
 } from "@/components/CustomDescriptions"
 import EditNoPatch, { Ref as EditRef } from "@/components/manager/EditNoPatch"
-import UserAvatar from "../../../components/manager/UserAvatar"
-import config from "../../../config/Config"
+import UserAvatar from "@/components/manager/UserAvatar"
+import config from "@/config/Config"
 
 const MyList = List<ListModel>()
 const MyEdit2 = EditNoPatch<EditModel2>()
@@ -196,12 +196,4 @@ export default function Page() {
       />
     </Flex>
   )
-}
-
-function WrapRoleSelectInput(props: Readonly<RoleSelectInputProps>) {
-  return <RoleSelectInput value={props.value} onChange={props.onChange} />
-}
-
-function WrapUserSelectInput(props: Readonly<UserSelectInputProps>) {
-  return <UserSelectInput value={props.value} onChange={props.onChange} />
 }

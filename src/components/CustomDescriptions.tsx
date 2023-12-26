@@ -38,8 +38,8 @@ type ValueAtPath<
     ? ValueAtPath<T[Key], Rest>
     : never
   : Path extends keyof T
-  ? T[Path]
-  : never
+    ? T[Path]
+    : never
 
 // Hàm để truy cập giá trị dựa trên path
 const getValueByPath = <T, Path extends string>(
@@ -104,7 +104,7 @@ function CustomDescriptions<T extends { id: string }>(
         setIsShowing(false)
       },
     }),
-    [props.url],
+    [connect, props.url],
   )
   return (
     <Modal
