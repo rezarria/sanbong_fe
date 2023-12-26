@@ -5,7 +5,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons"
 import { Button, Layout, theme } from "antd"
 import AppBreadcrumb from "@/components/AppBreadcrumb/AppBreadcrumb"
 import AppMenu from "./AppMenu"
-import { PrivateSession } from "../../session/PrivateSession"
+import { PrivateSession } from "@/session/PrivateSession"
 
 const { Header, Content, Footer, Sider } = Layout
 
