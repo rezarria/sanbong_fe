@@ -9,6 +9,8 @@ import Link from "next/link"
 import { Scheduler } from "@aldabil/react-scheduler"
 import { DayHours } from "@aldabil/react-scheduler/types"
 import Lich from "@/web/components/Lich"
+import ReactImageGallery, { ReactImageGalleryItem } from "react-image-gallery"
+import "react-image-gallery/styles/css/image-gallery.css"
 
 type Props = {
   params: { id: string }
@@ -58,12 +60,17 @@ export default function Page(props: Readonly<Props>) {
       <div className="columns-2">
         <div>
           <div>
-            <Image
-              className="!relative"
-              src={data?.pictures[0] ?? "/field.svg"}
-              fill
-              alt="field image"
-            />
+            {data && (
+              <ReactImageGallery
+                items={data.pictures.map(
+                  (i) =>
+                    ({
+                      original: i,
+                      originalHeight: 300,
+                    }) as ReactImageGalleryItem,
+                )}
+              />
+            )}
           </div>
         </div>
         <div className="flex flex-col">
@@ -82,8 +89,8 @@ export default function Page(props: Readonly<Props>) {
         </div>
       </div>
       <div className="flex flex-row w-full">
-        <div className="flex-grow max-h-[300px]">
-          <Lich />
+        <div className="flex-grow max-h-[400px]">
+          <Lich fieldId={props.params.id} />
         </div>
         <div className="basis-1/2 box-border part2">
           <h2>Mô tả</h2>

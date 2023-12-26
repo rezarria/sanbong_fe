@@ -1,13 +1,113 @@
 import { Scheduler } from "@aldabil/react-scheduler"
-import { useEffect, useState } from "react"
+import axios, { HttpStatusCode } from "axios"
+import { useEffect, useRef, useState } from "react"
+import config from "@/config/Config"
+import { DayHours, ProcessedEvent } from "@aldabil/react-scheduler/types"
+import { DayProps } from "@aldabil/react-scheduler/views/Day"
 
-export default function Lich() {
+type Props = {
+  fieldId?: string
+}
+
+type SettingType = {
+  id: string
+  unitStyle: boolean
+  unitName: string
+  duration: number
+  minimumDuration: number
+  openTime: number
+  closeTime: number
+}
+
+export default function Lich(props: Readonly<Props>) {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [hour, setHour] = useState(0)
+  const [data, setData] = useState<ProcessedEvent[]>([])
+  const divRef = useRef<HTMLDivElement>(null)
+  const [setting, setSetting] = useState<DayProps>()
+
+  useEffect(() => {
+    axios
+      .get<SettingType>(
+        [config.baseUrl, "public/api/fieldUnitSetting"].join("/"),
+        {
+          params: {
+            id: props.fieldId,
+          },
+        },
+      )
+      .then((res) => {
+        if (res.status === HttpStatusCode.Ok) {
+          const setting = res.data
+          let now = new Date()
+          now.setHours(0)
+          now.setMinutes(0)
+          now.setSeconds(0)
+          now.setSeconds(0)
+          const start = new Date(now)
+          const end = new Date(now)
+          start.setMinutes(setting.openTime)
+          end.setMinutes(setting.closeTime)
+          let startHour = start.getHours() as DayHours
+          let endHour = end.getHours() as DayHours
+          if (start.getMinutes() > 0) startHour = (startHour - 1) as DayHours
+          if (end.getMinutes() > 0) endHour = (endHour + 1) as DayHours
+          setSetting({
+            startHour,
+            endHour,
+            step: 30,
+          })
+        }
+      })
+  }, [props.fieldId])
+
   useEffect(() => {
     setHour(new Date().getHours())
   }, [])
+
+  useEffect(() => {
+    axios
+      .get<{ id: string; from: string; to: string }[]>(
+        [config.baseUrl, "public/api/field/schedule"].join("/"),
+        {
+          params: {
+            id: props.fieldId,
+          },
+        },
+      )
+      .then((res) => {
+        if (res.status === HttpStatusCode.Ok) {
+          setData(
+            res.data.map(
+              (i) =>
+                ({
+                  event_id: i.id,
+                  title: "đã thuê",
+                  start: new Date(i.from),
+                  end: new Date(i.to),
+                }) as ProcessedEvent,
+            ),
+          )
+        }
+      })
+  }, [props.fieldId])
+
+  useEffect(() => {
+    if (divRef.current && setting) {
+      const ratio =
+        divRef.current.scrollHeight / (setting.endHour - setting.startHour) / 60
+      const interval = setInterval(() => {
+        const now = new Date()
+        const p = (now.getHours() - setting.startHour) * 60 + now.getMinutes()
+        divRef.current?.scrollTo({ top: ratio * p })
+        console.log(ratio * p)
+      }, 10000)
+      return () => {
+        clearInterval(interval)
+      }
+    }
+  }, [setting])
 
   return (
     <div className="h-full flex flex-col relative">
@@ -18,29 +118,19 @@ export default function Lich() {
       )}
       {error && <CanhBao />}
       <h2>Lịch trong ngày</h2>
-      <div className={`flex-grow overflow-y-scroll `}>
-        <Scheduler
-          editable={false}
-          view="day"
-          month={null}
-          week={null}
-          draggable={true}
-          onSelectedDateChange={(d) => console.log(d)}
-          events={[
-            {
-              event_id: 1,
-              title: "Event 1",
-              start: new Date("2021/5/2 09:30"),
-              end: new Date("2021/5/2 10:30"),
-            },
-            {
-              event_id: 2,
-              title: "Event 2",
-              start: new Date("2021/5/4 10:00"),
-              end: new Date("2021/5/4 11:00"),
-            },
-          ]}
-        />
+      <div ref={divRef} className={`flex-grow overflow-y-scroll scroll-smooth`}>
+        {setting && (
+          <Scheduler
+            day={setting}
+            editable={false}
+            view="day"
+            month={null}
+            week={null}
+            draggable={true}
+            onSelectedDateChange={(d) => console.log(d)}
+            events={data}
+          />
+        )}
       </div>
     </div>
   )
