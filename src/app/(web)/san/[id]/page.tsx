@@ -56,7 +56,7 @@ export default function Page(props: Readonly<Props>) {
     fetch(props.params.id)
   }, [fetch, props.params.id])
   return (
-    <Container className="bg-white text-black">
+    <Container className="bg-white text-black pt-5">
       <div className="columns-2">
         <div>
           <div>
@@ -94,7 +94,11 @@ export default function Page(props: Readonly<Props>) {
         </div>
         <div className="basis-1/2 box-border part2">
           <h2>Mô tả</h2>
-          <p className="m-0 break-all text-clip">{data?.description}</p>
+          <div className="m-0 break-all text-clip">
+            {data && (
+              <div dangerouslySetInnerHTML={{ __html: data.description }} />
+            )}
+          </div>
         </div>
       </div>
     </Container>
