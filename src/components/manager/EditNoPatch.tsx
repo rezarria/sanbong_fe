@@ -190,6 +190,7 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
       onOk={() => form.submit()}
       title={"Sửa thông tin " + props.name}
       footer={footer}
+      width={"70vw"}
     >
       <Form
         autoComplete="false"

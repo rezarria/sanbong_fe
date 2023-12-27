@@ -14,6 +14,12 @@ const routerItems: RouterItems[] = [
     icon: <FootballIcon />,
   },
   {
+    name: "order",
+    src: "/admin/order",
+    title: "Đặt sân",
+    icon: <FootballIcon />,
+  },
+  {
     name: "organization",
     src: "/admin/organization",
     title: "Tổ chức",
@@ -47,6 +53,18 @@ const routerItems: RouterItems[] = [
         name: "user2",
         src: "/admin/user",
         title: "Người dùng",
+        icon: <LockOutlined />,
+      },
+      {
+        name: "staff",
+        src: "/admin/staff",
+        title: "Nhân viên",
+        icon: <LockOutlined />,
+      },
+      {
+        name: "customer",
+        src: "/admin/customer",
+        title: "Khách hàng",
         icon: <LockOutlined />,
       },
     ],

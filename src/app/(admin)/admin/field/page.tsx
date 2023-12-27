@@ -18,6 +18,7 @@ import Paragraph from "antd/es/typography/Paragraph"
 import CurrentFieldStatus, { CurrentFieldStatusRef } from "./CurrentFieldStatus"
 import config from "@/config/Config"
 import ImageList from "@/components/ImageList"
+import MonacoInput from "../../../../components/manager/MonocoInput"
 
 const MyList = List<ListType>()
 const MyEdit = Edit<EditModel>()
@@ -190,7 +191,7 @@ export default function Page() {
           {
             name: "description",
             label: "Mô tả",
-            input: <TextArea />,
+            input: <MonacoInput />,
           },
         ]}
       />

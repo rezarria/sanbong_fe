@@ -8,8 +8,12 @@ import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
 import { AddModel, EditModel2, ListModel, ViewModel } from "./type"
 import { ChangePasswordButton } from "./ChangePasswordButton"
-import RoleSelectInput, { RoleSelectInputProps } from "./RoleSelectInput"
-import UserSelectInput, { UserSelectInputProps } from "./UserSelectInput"
+import RoleSelectInput, {
+  RoleSelectInputProps,
+} from "@/components/manager/RoleSelectInput"
+import UserSelectInput, {
+  UserSelectInputProps,
+} from "@/components/manager/UserSelectInput"
 import ForwardedRefCustomDescriptions, {
   CustomDescriptionRef,
 } from "@/components/CustomDescriptions"
