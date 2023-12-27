@@ -116,7 +116,6 @@ export default function Lich(props: Readonly<Props>) {
         {setting && (
           <Scheduler
             day={setting}
-            editable={false}
             deletable={false}
             view="day"
             month={null}

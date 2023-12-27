@@ -89,7 +89,7 @@ export default function Page(props: Readonly<Props>) {
         </div>
       </div>
       <div className="flex flex-row w-full">
-        <div className="flex-grow max-h-[400px]">
+        <div className="flex-grow max-h-[600px]">
           <Lich fieldId={props.params.id} />
         </div>
         <div className="basis-1/2 box-border part2">
