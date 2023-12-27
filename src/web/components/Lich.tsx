@@ -97,15 +97,9 @@ export default function Lich(props: Readonly<Props>) {
     if (divRef.current && setting) {
       const ratio =
         divRef.current.scrollHeight / (setting.endHour - setting.startHour) / 60
-      const interval = setInterval(() => {
-        const now = new Date()
-        const p = (now.getHours() - setting.startHour) * 60 + now.getMinutes()
-        divRef.current?.scrollTo({ top: ratio * p })
-        console.log(ratio * p)
-      }, 10000)
-      return () => {
-        clearInterval(interval)
-      }
+      const now = new Date()
+      const p = (now.getHours() - setting.startHour) * 60 + now.getMinutes()
+      divRef.current.scrollTo({ top: ratio * p })
     }
   }, [setting])
 
@@ -123,6 +117,7 @@ export default function Lich(props: Readonly<Props>) {
           <Scheduler
             day={setting}
             editable={false}
+            deletable={false}
             view="day"
             month={null}
             week={null}
