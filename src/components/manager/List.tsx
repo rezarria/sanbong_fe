@@ -18,7 +18,7 @@ import {
   useRef,
   useState,
 } from "react"
-import useConnect from "../../store/useConnect"
+import useConnect from "@/store/useConnect"
 
 type Pagination = {
   current: number
@@ -44,34 +44,36 @@ function ListFC<T extends AnyObject & { id: string }>(
   })
   const fetch = useCallback(
     (
-      limit: number = 300,
-      paginationPostion?: {
-        current: number
-        pageSize: number
+      paginationPostion: { current: number; pageSize: number } = {
+        current: 0,
+        pageSize: 20,
       },
     ) => {
       const config: AxiosRequestConfig = {
-        params: { limit },
+        params: {
+          size: paginationPostion.pageSize,
+          page: paginationPostion.current,
+        },
       }
       if (paginationPostion != null) {
         config.params = {
           ...config.params,
-          ...paginationPostion,
         }
       }
       Promise.all([
-        connect.get<T[]>(props.url, config),
+        connect.get<{ content: T[] }>(props.url, config),
         connect.get<number>(resolve(props.url + "/", "size")),
-      ]).then((api) => {
+      ]).then((resData) => {
         if (
-          api.filter((i) => i.status == HttpStatusCode.Ok).length === api.length
+          resData.filter((i) => i.status == HttpStatusCode.Ok).length ===
+          resData.length
         ) {
-          const list = api[0].data.map((i) => i.id)
+          const list = resData[0].data.content.map((i) => i.id)
           const oldData = data.filter((i) => !list.includes(i.id))
-          setData([...oldData, ...api[0].data])
+          setData([...oldData, ...resData[0].data.content])
           setPaginationA({
             ...paginationA,
-            total: api[1].data,
+            total: resData[1].data,
           })
         }
       })
