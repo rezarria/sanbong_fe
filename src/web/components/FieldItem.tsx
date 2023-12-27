@@ -21,7 +21,7 @@ export default function FieldItem(props: Readonly<Props>) {
         />
       </div>
       <div className="flex flex-col">
-        <div className="flex-grow">
+        <div className="flex-grow flex flex-col">
           <h2 className="m-0">{props.name}</h2>
           {props.organization && (
             <p className="m-0">
@@ -32,7 +32,10 @@ export default function FieldItem(props: Readonly<Props>) {
             </p>
           )}
           <p className="m-0">Giá {props.price}</p>
-          <p className="m-0">Mô tả: {props.description}</p>
+          <div
+            className="m-0 flex-grow"
+            dangerouslySetInnerHTML={{ __html: props.description }}
+          ></div>
         </div>
         <div className="flex flex-row gap-[5px]">
           <Link

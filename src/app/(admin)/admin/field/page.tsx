@@ -16,8 +16,8 @@ import ForwardedRefCustomDescriptions, {
 } from "@/components/CustomDescriptions"
 import Paragraph from "antd/es/typography/Paragraph"
 import CurrentFieldStatus, { CurrentFieldStatusRef } from "./CurrentFieldStatus"
-import config from "../../../config/Config"
-import ImageList from "../../../components/ImageList"
+import config from "@/config/Config"
+import ImageList from "@/components/ImageList"
 
 const MyList = List<ListType>()
 const MyEdit = Edit<EditModel>()

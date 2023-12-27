@@ -52,10 +52,10 @@ export default function FieldSection() {
   useEffect(() => {
     fetch().then((r) => {
       if (r != null) {
-        fetchOrganization(data.map((i) => i.organization))
+        fetchOrganization(r.map((i) => i.organization))
       }
     })
-  }, [data, fetch, fetchOrganization])
+  }, [fetch, fetchOrganization])
   return (
     <section className="py-3 flex flex-col gap-[15px]">
       {data.map((i, index) => (

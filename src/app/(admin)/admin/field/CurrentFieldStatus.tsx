@@ -1,6 +1,6 @@
 import { Badge, BadgeProps, Spin } from "antd"
 import useSWR from "swr"
-import useConnect from "../../../store/useConnect"
+import useConnect from "@/store/useConnect"
 import { ForwardedRef, forwardRef, useImperativeHandle, useState } from "react"
 
 type Props = {
