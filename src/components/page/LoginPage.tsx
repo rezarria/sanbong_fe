@@ -17,11 +17,11 @@ export default function LoginPage() {
   const onFinish = useCallback(
     (data: LoginModel) => {
       connect
-        .post<{ jwt: string; refesh: string }>("api/security/login", data)
+        .post<{ jwt: string; refresh: string }>("api/security/login", data)
         .then((res) => {
           localStorage.setItem("jwt", res.data.jwt)
-          localStorage.setItem("refesh", res.data.refesh)
-          auth.updateJwt(res.data.jwt, res.data.refesh)
+          localStorage.setItem("refresh", res.data.refresh)
+          auth.updateJwt(res.data.jwt, res.data.refresh)
           router.push("/admin/user")
         })
     },

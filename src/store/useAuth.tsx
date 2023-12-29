@@ -12,14 +12,14 @@ interface User {
 
 interface State {
   jwt?: string
-  refesh?: string
+  refresh?: string
   userId?: string
   accountId?: string
   user?: User
   update: (user: User) => void
-  updateJwt: (jwt: string, refesh: string) => void
+  updateJwt: (jwt: string, refresh: string) => void
   parseFromLocal: () => ParseStatus
-  refeshToken: (token: string) => Promise<void>
+  refreshToken: (token: string) => Promise<void>
 }
 
 export type MyPayloadType = JwtPayload & {
@@ -31,36 +31,36 @@ const useAuth = create<State>()((set) => ({
   update: (user: User) => {
     set({ user })
   },
-  updateJwt: (jwt, refesh) => {
+  updateJwt: (jwt, refresh) => {
     localStorage.setItem("jwt", jwt)
-    localStorage.setItem("refesh", refesh)
+    localStorage.setItem("refresh", refresh)
     const jwtObject: MyPayloadType = jwtDecode(jwt)
     set({
       accountId: jwtObject.ACCOUNTID,
       userId: jwtObject.USERID,
       jwt,
-      refesh,
+      refresh: refresh,
     })
   },
-  refeshToken: async (token) => {
+  refreshToken: async (token) => {
     const payload = jwtDecode(token)
     if (!payload.exp) throw new Error("không tồn tại hạn")
-    if (payload.exp < Date.now() / 1000) throw new Error("refesh hết hạn")
-    const res = await axios.post<{ jwt: string; refesh: string }>("", token)
+    if (payload.exp < Date.now() / 1000) throw new Error("refresh hết hạn")
+    const res = await axios.post<{ jwt: string; refresh: string }>("", token)
     if (res.status !== HttpStatusCode.Ok)
       throw new Error("truy vấn api không thành công")
     const data = res.data
     localStorage.setItem("jwt", res.data.jwt)
-    localStorage.setItem("refesh", data.refesh)
+    localStorage.setItem("refresh", data.refresh)
     set({
       jwt: data.jwt,
-      refesh: data.refesh,
+      refresh: data.refresh,
     })
   },
   parseFromLocal: () => {
     const jwt = localStorage.getItem("jwt")
-    const refesh = localStorage.getItem("refesh")
-    if (jwt && refesh) {
+    const refresh = localStorage.getItem("refresh")
+    if (jwt && refresh) {
       const jwtObject: MyPayloadType = jwtDecode(jwt)
       if (jwtObject.exp && jwtObject.exp < Date.now() / 1000) {
         return ParseStatus.EXP
@@ -69,7 +69,7 @@ const useAuth = create<State>()((set) => ({
         accountId: jwtObject.ACCOUNTID,
         userId: jwtObject.USERID,
         jwt,
-        refesh,
+        refresh: refresh,
       })
       return ParseStatus.LOADED
     }
