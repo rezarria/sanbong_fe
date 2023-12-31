@@ -1,73 +1,125 @@
 "use client"
 
-import { Col, Form, Input, Row, TimePicker } from "antd"
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  List,
+  Row,
+  Space,
+  Table,
+  TimePicker,
+} from "antd"
 import { Order } from "./type"
 import FieldSelectInput from "@/components/manager/FieldSelectInput"
 import useConnect from "@/store/useConnect"
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import CustomerSelectInput from "@/components/manager/CustomerSelectInput"
+import PaymentMethod from "./PaymentMethod"
+import Details from "./Details"
 
 export default function Page() {
   const [setting, getSetting] = useFieldUnitSetting()
+  const [form] = Form.useForm()
+  const startTime = useMemo(() => {
+    if (setting) {
+      const date = new Date()
+      date.setMilliseconds(0)
+      date.setHours(0)
+      date.setMinutes(0)
+      date.setSeconds(setting?.openTime)
+      return date
+    }
+  }, [setting])
+  const endTime = useMemo(() => {
+    if (setting) {
+      const date = new Date()
+      date.setMilliseconds(0)
+      date.setHours(0)
+      date.setMinutes(0)
+      date.setSeconds(setting?.closeTime)
+      return date
+    }
+  }, [setting])
   return (
-    <Row>
-      <Col span={12}>
-        <Form<Order> layout="vertical">
-          <Form.Item<Order> label="sân">
+    <Form<Order>
+      layout="vertical"
+      form={form}
+      onValuesChange={(c, v) => console.log(v)}
+    >
+      <Row gutter={15}>
+        <Col span={12}>
+          <Form.Item<Order> label="Sân" name={"fieldId"}>
             <FieldSelectInput
               onChange2={(id) => {
                 if (id) getSetting(id)
               }}
             />
           </Form.Item>
-          <Form.Item<Order> label="Khách hàng">
+          <Form.Item<Order> label="Khách hàng" name={"customerId"}>
             <CustomerSelectInput />
           </Form.Item>
-
           <Form.Item>
-            <Form.Item<Order> label="Từ">
-              {setting?.unitStyle ? (
-                <TimePicker format={"HH:mm"} />
-              ) : (
-                <TimePicker.RangePicker
+            <Space>
+              <Form.Item<Order>
+                label="Từ"
+                name={"from"}
+                className="inline-block"
+              >
+                <TimePicker
                   format={"HH:mm"}
-                  disabled={setting == null}
-                  disabledTime={(d, t) => {
-                    if (setting?.unitStyle && t == "end") {
-                      return {
-                        disabledHours: () => Array.from(Array(24).keys()),
-                        disabledMinutes: () => Array.from(Array(60).keys()),
-                      }
-                    }
+                  disabledTime={(d) => {
                     return {
+                      disabledMinutes(hour) {
+                        return Array.from(Array(60).keys()).filter((m) => {
+                          if (hour == endTime?.getHours()) {
+                            return m < endTime.getMinutes()
+                          }
+                          if (hour == d.hour()) return m < d.minute()
+                          return false
+                        })
+                      },
                       disabledHours() {
-                        const hour = new Date().getHours()
-                        return Array.from(Array(24).keys()).filter(
-                          (i) => i < hour,
-                        )
+                        const now = new Date()
+                        return Array.from(Array(24).keys()).filter((h) => {
+                          if (startTime != null && startTime.getHours() > h)
+                            return false
+                          if (endTime != null && endTime.getHours() < h)
+                            return false
+                          return h < now.getHours()
+                        })
                       },
                     }
                   }}
                 />
-              )}
-            </Form.Item>
-            {setting?.unitStyle && (
-              <Form.Item label="Đến">
-                <TimePicker format={"HH:mm"} disabled />
               </Form.Item>
-            )}
+              <Form.Item<Order>
+                label="Đến"
+                name={"to"}
+                className="inline-block"
+              >
+                <TimePicker format={"HH:mm"} disabled={setting?.unitStyle} />
+              </Form.Item>
+            </Space>
           </Form.Item>
-
-          <Form.Item<Order> label={`Số ${setting?.unitName ?? "..."}`}>
+          <Form.Item<Order>
+            label={`Số ${
+              setting?.unitName ?? "..."
+            } (${setting?.duration} phút)`}
+          >
             <Input
               type="number"
               disabled={setting == null || !setting.unitStyle}
             />
           </Form.Item>
-        </Form>
-      </Col>
-      <Col span={12} />
-    </Row>
+          <PaymentMethod />
+        </Col>
+        <Col span={12}>
+          <Details />
+        </Col>
+      </Row>
+    </Form>
   )
 }
 

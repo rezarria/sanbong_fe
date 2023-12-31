@@ -26,7 +26,7 @@ export default function Page() {
     <Flex vertical={true} className="h-full" gap={15}>
       <Add<AddType>
         title={"Thêm sân"}
-        url={"api/field"}
+        url={"api/consumerProduct"}
         sections={[
           { label: "Tên sân", name: "name" },
           {
@@ -46,7 +46,7 @@ export default function Page() {
         }}
       />
       <MyList
-        url={"api/field"}
+        url={"api/consumerProduct"}
         columnsDef={[
           {
             key: "#",
@@ -97,7 +97,7 @@ export default function Page() {
       />
       <MyView
         ref={viewRef}
-        url={"api/field"}
+        url={"api/consumerProduct"}
         modalTitle="Thông tin về sân"
         sections={[
           {
@@ -145,7 +145,7 @@ export default function Page() {
         )}
       />
       <MyEdit
-        url="api/field"
+        url="api/consumerProduct"
         name="sân"
         ref={editRef}
         onComplete={() => {
