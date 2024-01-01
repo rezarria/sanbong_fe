@@ -50,7 +50,6 @@ export default function Details() {
               >
                 Thêm
               </Button>
-              DD
             </Space>
           </Space>
         )}
