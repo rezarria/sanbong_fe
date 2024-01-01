@@ -81,6 +81,7 @@ type Props = {
   value?: string
   onChange?: (value?: string) => void
   onChange2?: (value?: string) => void
+  onChange3?: (value?: Field) => void
 }
 
 type Ref = {
@@ -121,6 +122,7 @@ function _FieldSelectInput(props: Readonly<Props>, ref: ForwardedRef<Ref>) {
         setValue(e)
         props.onChange?.(e.value)
         props.onChange2?.(e.value)
+        props.onChange3?.(fields.find((i) => i.id == e.value))
       }}
       style={{ width: "100%" }}
     />

@@ -19,7 +19,7 @@ export default function TotalMoney(props: Readonly<Props>) {
   const productMoney = details
     ? details
         .map((i) => {
-          if (i.consumerProductId) {
+          if (i && i.consumerProductId) {
             const product = products.data.get(i.consumerProductId)
             if (product) {
               return i.count * product.price
