@@ -2,14 +2,22 @@ import { StateType } from "./type"
 import updateFileAction, { UpdateFileType } from "./updateFileAction"
 import { UpdateType, updateReducer } from "./updateAction"
 import { UpdateUrlType, updateUrlAction } from "./updateUrlAction"
-import { AddUrlType } from "./addUrlAction"
+import addUrlAction, { AddUrlType } from "./addUrlAction"
+import removeUrlAction, { RemoveUrlType } from "./removeUrlAction"
+import { RemoveType, removeAction } from "./removeAction"
 
 export type ActionType = {
   type?: "update"
   payload: StateType
 }
 
-export type Actions = UpdateType | UpdateFileType | UpdateUrlType | AddUrlType
+export type Actions =
+  | UpdateType
+  | UpdateFileType
+  | UpdateUrlType
+  | AddUrlType
+  | RemoveUrlType
+  | RemoveType
 
 export function uploadMultiImageReducer(
   state: StateType,
@@ -22,6 +30,12 @@ export function uploadMultiImageReducer(
       return updateFileAction(state, action)
     case "updateUrl":
       return updateUrlAction(state, action)
+    case "removeUrl":
+      return removeUrlAction(state, action)
+    case "addUrl":
+      return addUrlAction(state, action)
+    case "remove":
+      return removeAction(state, action)
     default:
       return state
   }

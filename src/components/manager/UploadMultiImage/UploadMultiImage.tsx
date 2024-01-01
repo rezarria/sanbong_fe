@@ -1,6 +1,6 @@
 import { PlusOutlined } from "@ant-design/icons"
 import { Upload, UploadFile, message } from "antd"
-import { useCallback, useEffect, useReducer } from "react"
+import { useCallback, useEffect, useReducer, useState } from "react"
 import { RcFile, UploadChangeParam, UploadProps } from "antd/es/upload"
 import { uploadMultiImageReducer } from "./UploadMultiImageReducer"
 import useConnect from "../../../store/useConnect"
@@ -35,18 +35,36 @@ export default function UploadMultiImage(props: Readonly<Props>) {
         info.file.url = info.file.response![0].url
         if (!info.file.url.startsWith("http"))
           info.file.url = connect.defaults.baseURL! + info.file.url
-        dispatch({ type: "addUrl", payload: info.file.response![0].url })
-        props.onChange?.(state.url.concat(info.file.response![0].url))
       }
-      dispatch({ type: "updateFile", payload: info.fileList })
+      dispatch({ type: "updateFile", payload: { files: info.fileList } })
     },
-    [connect.defaults.baseURL, props, state.url],
+    [connect.defaults.baseURL],
   )
+
   useEffect(() => {
     if (props.value != null) {
       dispatch({ type: "updateUrl", payload: props.value })
     }
   }, [props.value])
+
+  const [firstRun, setFirstRun] = useState(true)
+
+  useEffect(() => {
+    if (!firstRun && props.value) {
+      const valueSet = new Set<string>()
+      const currentSet = new Set<string>()
+      props.value.forEach((i) => valueSet.add(i))
+      state.url.forEach((i) => currentSet.add(i))
+      if (
+        !(
+          valueSet.size === currentSet.size &&
+          [...valueSet].every((v) => currentSet.has(v))
+        )
+      ) {
+        props.onChange?.(state.url)
+      }
+    } else setFirstRun(false)
+  }, [firstRun, props, state.url])
 
   return (
     <Upload

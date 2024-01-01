@@ -1,6 +1,6 @@
 import { UploadFile } from "antd"
-import { connect } from "../../../lib/Axios"
 import { Response, StateType } from "./type"
+import config from "@/config/Config"
 
 export type AddUrlType = {
   type: "addUrl"
@@ -15,7 +15,7 @@ export default function addUrlAction(
     url: state.url.concat(payload.payload),
     file: state.file.concat({
       uid: payload.payload,
-      url: [connect.defaults.baseURL, payload.payload].join(""),
+      url: [config.baseUrl, payload.payload].join(""),
       response: [{ url: payload.payload }],
       status: "done",
     } as UploadFile<Response[]>),
