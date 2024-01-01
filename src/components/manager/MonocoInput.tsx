@@ -1,8 +1,8 @@
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react"
 
 type Props = {
-  value: string
-  onChange: (data?: string) => {}
+  value?: string
+  onChange?: (data?: string) => {}
 }
 
 export default function MonacoInput(props: Readonly<Props>) {

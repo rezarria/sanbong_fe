@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Flex, Image, Input, Space } from "antd"
+import { Button, Flex, Input, Space } from "antd"
 import { useRef } from "react"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import Edit, { EditRef } from "@/components/manager/EditNoPatch"
@@ -14,11 +14,9 @@ import EditTime, { EditTimeRef } from "./EditTime"
 import ForwardedRefCustomDescriptions, {
   CustomDescriptionRef,
 } from "@/components/CustomDescriptions"
-import Paragraph from "antd/es/typography/Paragraph"
 import CurrentFieldStatus, { CurrentFieldStatusRef } from "./CurrentFieldStatus"
-import config from "@/config/Config"
 import ImageList from "@/components/ImageList"
-import MonacoInput from "../../../../components/manager/MonocoInput"
+import MonacoInput from "@/components/manager/MonocoInput"
 
 const MyList = List<ListType>()
 const MyEdit = Edit<EditModel>()
@@ -111,6 +109,9 @@ export default function Page() {
         modalTitle="Thông tin về sân"
         column={24}
         layout="horizontal"
+        onClose={() => {
+          fieldStatusRef.current?.stop()
+        }}
         sections={[
           {
             label: "Tên",
@@ -144,7 +145,6 @@ export default function Page() {
           <Button
             type="dashed"
             onClick={() => {
-              fieldStatusRef.current?.stop()
               descriptionRef.current?.hide()
               editRef.current?.show(id)
             }}

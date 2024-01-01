@@ -27,6 +27,8 @@ type Props<T> = {
   column: DescriptionsProps["column"]
   modalTitle: string
   sections?: Section<T>[]
+  onClose?: () => void
+  onOpen?: () => void
   button?: (id: string) => ReactNode
 }
 
@@ -123,6 +125,10 @@ function CustomDescriptions<T extends { id: string }>(
           </Button>
         </>
       }
+      afterOpenChange={(o) => {
+        if (o) props?.onOpen?.()
+        else props?.onClose?.()
+      }}
     >
       {
         <Descriptions
