@@ -1,27 +1,21 @@
 "use client"
 
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  List,
-  Row,
-  Space,
-  Table,
-  TimePicker,
-} from "antd"
+import { Col, Form, Input, Row, Space, TimePicker } from "antd"
 import { Order } from "./type"
-import FieldSelectInput from "@/components/manager/FieldSelectInput"
-import useConnect from "@/store/useConnect"
-import { useCallback, useMemo, useState } from "react"
+import FieldSelectInput, {
+  FieldSelectInputRef,
+} from "@/components/manager/FieldSelectInput"
+import { useMemo, useRef } from "react"
 import CustomerSelectInput from "@/components/manager/CustomerSelectInput"
 import PaymentMethod from "./PaymentMethod"
 import Details from "./Details"
+import useFieldUnitSetting from "./useFieldUnitSetting"
+import TotalMoney from "./TotalMoney"
 
 export default function Page() {
   const [setting, getSetting] = useFieldUnitSetting()
   const [form] = Form.useForm()
+  const fieldInputRef = useRef<FieldSelectInputRef>(null)
   const startTime = useMemo(() => {
     if (setting) {
       const date = new Date()
@@ -43,15 +37,12 @@ export default function Page() {
     }
   }, [setting])
   return (
-    <Form<Order>
-      layout="vertical"
-      form={form}
-      onValuesChange={(c, v) => console.log(v)}
-    >
+    <Form<Order> layout="vertical" form={form}>
       <Row gutter={15}>
         <Col span={12}>
           <Form.Item<Order> label="Sân" name={"fieldId"}>
             <FieldSelectInput
+              ref={fieldInputRef}
               onChange2={(id) => {
                 if (id) getSetting(id)
               }}
@@ -114,6 +105,7 @@ export default function Page() {
             />
           </Form.Item>
           <PaymentMethod />
+          <TotalMoney fieldRef={fieldInputRef.current} />
         </Col>
         <Col span={12}>
           <Details />
@@ -121,34 +113,4 @@ export default function Page() {
       </Row>
     </Form>
   )
-}
-
-type UnitSettingType = {
-  unitStyle: boolean
-  unitName: string
-  minimumDuration: number
-  openTime: number
-  closeTime: number
-  id: string
-  duration: number
-}
-
-function useFieldUnitSetting(): [
-  UnitSettingType | undefined,
-  (id: string) => Promise<void>,
-] {
-  const connect = useConnect((s) => s.connect)
-  const [data, setData] = useState<UnitSettingType>()
-  const get = useCallback(
-    (id: string) =>
-      connect
-        .get<UnitSettingType>("api/fieldUnitSetting/byFieldId", {
-          params: { id },
-        })
-        .then((res) => {
-          setData(res.data)
-        }),
-    [connect],
-  )
-  return [data, get]
 }

@@ -1,4 +1,13 @@
-import { Button, Divider, Form, Input, Select, Space, Table } from "antd"
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Space,
+  Table,
+} from "antd"
 import ConsumerProductSelectInput from "./ConsumerProductSelectInput"
 
 export default function Details() {
@@ -24,7 +33,10 @@ export default function Details() {
                     dataIndex: "name",
                     key: "consumerProductId",
                     render: (v) => (
-                      <Form.Item name={[v, "consumerProductId"]}>
+                      <Form.Item
+                        name={[v, "consumerProductId"]}
+                        initialValue={null}
+                      >
                         <ConsumerProductSelectInput />
                       </Form.Item>
                     ),
@@ -36,16 +48,34 @@ export default function Details() {
                     rowSpan: 6,
                     width: "20%",
                     render: (v) => (
-                      <Form.Item name={[v, "count"]}>
-                        <Input type="number" />
+                      <Form.Item name={[v, "count"]} initialValue={0}>
+                        <InputNumber />
                       </Form.Item>
+                    ),
+                  },
+                  {
+                    title: "Thao tác",
+                    dataIndex: "action",
+                    width: "100px",
+                    rowScope: "row",
+                    key: "consumerProductId",
+                    render: (_v, _r, index) => (
+                      <Button
+                        danger
+                        type="primary"
+                        onClick={() => {
+                          opt.remove(index)
+                        }}
+                      >
+                        Xóa
+                      </Button>
                     ),
                   },
                 ]}
               />
               <Button
                 onClick={() => {
-                  opt.add()
+                  opt.add({ consumerProductId: null, count: 0 })
                 }}
               >
                 Thêm

@@ -1,4 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import React, {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import debounce from "lodash/debounce"
 import { Select, Spin } from "antd"
 import type { SelectProps } from "antd/es/select"
@@ -61,6 +70,8 @@ function DebounceSelect<
   )
 }
 
+type Field = { id: string; name: string; price: number; priceId: string }
+
 interface FieldValue {
   label: string
   value: string
@@ -72,25 +83,42 @@ type Props = {
   onChange2?: (value?: string) => void
 }
 
-export default function FieldSelectInput(props: Readonly<Props>) {
+type Ref = {
+  getField(): Field | undefined
+}
+
+export { type Ref as FieldSelectInputRef }
+
+function _FieldSelectInput(props: Readonly<Props>, ref: ForwardedRef<Ref>) {
   const connect = useConnect((s) => s.connect)
   const [value, setValue] = useState<FieldValue>()
+  const [fields, setFields] = useState<Field[]>([])
   const fetchByName = useCallback(
     (name: string) =>
-      connect
-        .get<{ id: string; name: string }[]>("api/field", { params: { name } })
-        .then((res) =>
-          res.data.map((i) => ({ label: i.name, value: i.id }) as FieldValue),
-        ),
+      connect.get<Field[]>("api/field", { params: { name } }).then((res) => {
+        setFields(res.data)
+        return res.data.map(
+          (i) => ({ label: i.name, value: i.id }) as FieldValue,
+        )
+      }),
     [connect],
   )
-
+  useImperativeHandle(
+    ref,
+    () => ({
+      getField() {
+        return fields.filter((i) => i.id == props.value)[0]
+      },
+    }),
+    [fields, props.value],
+  )
   return (
     <DebounceSelect
       value={value}
       placeholder="Chọn sân"
       fetchOptions={fetchByName}
       onChange={(e) => {
+        setValue(e)
         props.onChange?.(e.value)
         props.onChange2?.(e.value)
       }}
@@ -98,3 +126,7 @@ export default function FieldSelectInput(props: Readonly<Props>) {
     />
   )
 }
+
+const FieldSelectInput = forwardRef(_FieldSelectInput)
+
+export default FieldSelectInput

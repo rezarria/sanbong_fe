@@ -1,7 +1,8 @@
 import { Select, SelectProps } from "antd"
 import { useCallback, useEffect, useState } from "react"
 import { DefaultOptionType } from "antd/es/select"
-import useConnect from "@/store/useConnect"
+import useConsumerProduct from "@/hooks/useConsumerProduct"
+import { ConsumerProduct } from "@/store/useConsumerProductStore"
 
 type Props = {
   value?: string
@@ -10,39 +11,22 @@ type Props = {
 
 export { type Props as AccountSelectInputProps }
 
-type ProductType = {
-  id: string
-  name: string
-  price: number
-  priceId: number
-  pictures: string[]
-}
-
 export default function ConsumerProductSelectInput(props: Readonly<Props>) {
   const [options, setOptions] = useState<SelectProps["options"]>([])
-  const [data, setData] = useState<ProductType[]>([])
-  const connect = useConnect((s) => s.connect)
-  const fetch = useCallback(
-    async (name?: string) => {
-      return (
-        await connect.get<ProductType[]>("api/consumerProduct", {
-          params: { name },
-        })
-      ).data
-    },
-    [connect],
-  )
+  const consumerProductService = useConsumerProduct()
+  const [data, setData] = useState<ConsumerProduct[]>([])
+
   useEffect(() => {
-    fetch().then(setData)
-  }, [fetch])
+    setData([...consumerProductService.data.values()])
+  }, [consumerProductService.data])
   useEffect(() => {
     setOptions(data.map((i) => ({ value: i.id, label: i.name })))
   }, [data])
   const handleSearch = useCallback(
     (query: string) => {
-      fetch(query).then(setData)
+      consumerProductService.search(query).then(setData)
     },
-    [fetch],
+    [consumerProductService.search],
   )
   return (
     <Select<string>
