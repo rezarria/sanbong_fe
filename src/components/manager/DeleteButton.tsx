@@ -26,7 +26,7 @@ export default function DeleteButton(props: Readonly<Props>) {
         setLoading(true)
         connect
           .delete<string[]>(props.url, {
-            data: props.id,
+            data: { ids: props.id },
           })
           .then(() => {
             setOpen(false)

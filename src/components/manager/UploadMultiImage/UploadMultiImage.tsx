@@ -50,10 +50,10 @@ export default function UploadMultiImage(props: Readonly<Props>) {
   const [firstRun, setFirstRun] = useState(true)
 
   useEffect(() => {
-    if (!firstRun && props.value) {
+    if (!firstRun) {
       const valueSet = new Set<string>()
       const currentSet = new Set<string>()
-      props.value.forEach((i) => valueSet.add(i))
+      if (props.value) props.value.forEach((i) => valueSet.add(i))
       state.url.forEach((i) => currentSet.add(i))
       if (
         !(

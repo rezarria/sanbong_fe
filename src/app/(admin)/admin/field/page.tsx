@@ -38,7 +38,7 @@ export default function Page() {
           { label: "Tên sân", name: "name" },
           {
             label: "Hình ảnh",
-            name: "pictures",
+            name: "images",
             input: <UploadMultiImage url="api/files" />,
           },
           {
@@ -121,7 +121,7 @@ export default function Page() {
           {
             label: "Ảnh",
             span: 24,
-            children: (p) => <ImageList className="" src={p.pictures} />,
+            children: (p) => <ImageList className="" src={p.images} />,
           },
           {
             label: "Giá",
