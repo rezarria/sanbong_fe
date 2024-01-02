@@ -25,8 +25,8 @@ export default function Page() {
       const date = new Date()
       date.setMilliseconds(0)
       date.setHours(0)
-      date.setMinutes(0)
-      date.setSeconds(setting?.openTime)
+      date.setMinutes(setting?.openTime)
+      date.setSeconds(0)
       return date
     }
   }, [setting])
@@ -35,8 +35,8 @@ export default function Page() {
       const date = new Date()
       date.setMilliseconds(0)
       date.setHours(0)
-      date.setMinutes(0)
-      date.setSeconds(setting?.closeTime)
+      date.setMinutes(setting?.closeTime)
+      date.setSeconds(0)
       return date
     }
   }, [setting])
@@ -78,7 +78,11 @@ export default function Page() {
                       disabledMinutes(hour) {
                         return Array.from(Array(60).keys()).filter((m) => {
                           if (hour == endTime?.getHours()) {
-                            return m < endTime.getMinutes()
+                            return (
+                              m >
+                              endTime.getMinutes() -
+                                (setting ? setting.minimumDuration : 0)
+                            )
                           }
                           if (hour == d.hour()) return m < d.minute()
                           return false
@@ -88,9 +92,9 @@ export default function Page() {
                         const now = new Date()
                         return Array.from(Array(24).keys()).filter((h) => {
                           if (startTime != null && startTime.getHours() > h)
-                            return false
+                            return true
                           if (endTime != null && endTime.getHours() < h)
-                            return false
+                            return true
                           return h < now.getHours()
                         })
                       },
@@ -103,7 +107,33 @@ export default function Page() {
                 name={"to"}
                 className="inline-block"
               >
-                <TimePicker format={"HH:mm"} disabled={setting?.unitStyle} />
+                <TimePicker
+                  format={"HH:mm"}
+                  disabled={setting?.unitStyle}
+                  disabledTime={(d) => {
+                    return {
+                      disabledMinutes(hour) {
+                        return Array.from(Array(60).keys()).filter((m) => {
+                          if (hour == endTime?.getHours()) {
+                            return m > endTime.getMinutes()
+                          }
+                          if (hour == d.hour()) return m < d.minute()
+                          return false
+                        })
+                      },
+                      disabledHours() {
+                        const now = new Date()
+                        return Array.from(Array(24).keys()).filter((h) => {
+                          if (startTime != null && startTime.getHours() > h)
+                            return true
+                          if (endTime != null && endTime.getHours() < h)
+                            return true
+                          return h < now.getHours()
+                        })
+                      },
+                    }
+                  }}
+                />
               </Form.Item>
             </Space>
           </Form.Item>
