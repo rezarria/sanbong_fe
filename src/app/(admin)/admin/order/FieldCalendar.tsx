@@ -3,7 +3,7 @@ import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import { useEffect, useState } from "react"
 import { Schedule } from "./type"
-import useConnect from "../../../../store/useConnect"
+import useConnect from "@/store/useConnect"
 dayjs.extend(timezone)
 const localizer = dayjsLocalizer(dayjs)
 
