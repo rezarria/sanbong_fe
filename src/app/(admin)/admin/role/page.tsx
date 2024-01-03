@@ -115,7 +115,7 @@ export default function Page() {
         }}
         sections={[
           { name: "name", label: "Tên quyền" },
-          { name: "displayName", label: "Tên hiện thị" },
+          { name: "displayName", label: "Tên hiển thị" },
         ]}
       />
     </Flex>
