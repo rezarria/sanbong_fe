@@ -6,7 +6,7 @@ import config from "../../config/Config"
 import FieldItem from "./FieldItem"
 
 type Field = {
-  pictures: string[]
+  images: string[]
   price: number
   prices: number[]
   name: string
@@ -64,7 +64,7 @@ export default function FieldSection() {
           fieldId={i.id}
           name={i.name}
           price={i.price}
-          picture={i.pictures.length != 0 ? i.pictures[0] : undefined}
+          picture={i.images.length != 0 ? i.images[0] : undefined}
           description={i.description}
           organization={
             i.organization

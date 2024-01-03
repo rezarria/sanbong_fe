@@ -4,7 +4,7 @@ import { Button, Flex, Space } from "antd"
 import { useRef } from "react"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import ViewComponent, { ViewRef } from "@/components/manager/View"
-import Edit, { EditRef } from "@/components/manager/Edit"
+import Edit, { EditRef } from "@/components/manager/EditNoPatch"
 import List, { Ref as ListRef } from "@/components/manager/List"
 import Add from "@/components/manager/Add"
 import DeleteButton from "@/components/manager/DeleteButton"
@@ -113,7 +113,10 @@ export default function Page() {
         onComplete={() => {
           listRef.current?.reload()
         }}
-        sections={[{ name: "name", label: "Tên quyền" }]}
+        sections={[
+          { name: "name", label: "Tên quyền" },
+          { name: "displayName", label: "Tên hiện thị" },
+        ]}
       />
     </Flex>
   )
