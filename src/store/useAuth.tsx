@@ -16,6 +16,7 @@ interface State {
   userId?: string
   accountId?: string
   user?: User
+  payload?: MyPayloadType
   update: (user: User) => void
   updateJwt: (jwt: string, refresh: string) => void
   parseFromLocal: () => ParseStatus
@@ -40,6 +41,7 @@ const useAuth = create<State>()((set) => ({
       userId: jwtObject.USERID,
       jwt,
       refresh: refresh,
+      payload: jwtObject,
     })
   },
   refreshToken: async (token) => {
@@ -62,7 +64,7 @@ const useAuth = create<State>()((set) => ({
     const refresh = localStorage.getItem("refresh")
     if (jwt && refresh) {
       const jwtObject: MyPayloadType = jwtDecode(jwt)
-      if (jwtObject.exp && jwtObject.exp < Date.now() / 1000) {
+      if (jwtObject.exp && jwtObject.exp < Date.now() / 1000 - 5 * 60) {
         return ParseStatus.EXP
       }
       set({
@@ -70,6 +72,7 @@ const useAuth = create<State>()((set) => ({
         userId: jwtObject.USERID,
         jwt,
         refresh: refresh,
+        payload: jwtObject,
       })
       return ParseStatus.LOADED
     }

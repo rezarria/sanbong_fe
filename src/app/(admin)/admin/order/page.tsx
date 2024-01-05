@@ -1,6 +1,5 @@
 "use client"
-
-import { Button, Col, Form, Input, Row, Space, TimePicker, message } from "antd"
+import { Button, Col, Form, Input, Row, message } from "antd"
 import { Order } from "./type"
 import FieldSelectInput, {
   FieldSelectInputRef,
@@ -12,6 +11,7 @@ import Details from "./Details"
 import useFieldUnitSetting from "./useFieldUnitSetting"
 import TotalMoney from "./TotalMoney"
 import WrapperFieldCalendar from "./WrapperFieldCalendar"
+import FromToTimeInput from "./FromToTimeInput"
 
 export default function Page() {
   const [setting, getSetting] = useFieldUnitSetting()
@@ -64,79 +64,11 @@ export default function Page() {
           <Form.Item<Order> label="Khách hàng" name={"customerId"}>
             <CustomerSelectInput />
           </Form.Item>
-          <Form.Item>
-            <Space>
-              <Form.Item<Order>
-                label="Từ"
-                name={"from"}
-                className="inline-block"
-              >
-                <TimePicker
-                  format={"HH:mm"}
-                  disabledTime={(d) => {
-                    return {
-                      disabledMinutes(hour) {
-                        return Array.from(Array(60).keys()).filter((m) => {
-                          if (hour == endTime?.getHours()) {
-                            return (
-                              m >
-                              endTime.getMinutes() -
-                                (setting ? setting.minimumDuration : 0)
-                            )
-                          }
-                          if (hour == d.hour()) return m < d.minute()
-                          return false
-                        })
-                      },
-                      disabledHours() {
-                        const now = new Date()
-                        return Array.from(Array(24).keys()).filter((h) => {
-                          if (startTime != null && startTime.getHours() > h)
-                            return true
-                          if (endTime != null && endTime.getHours() < h)
-                            return true
-                          return h < now.getHours()
-                        })
-                      },
-                    }
-                  }}
-                />
-              </Form.Item>
-              <Form.Item<Order>
-                label="Đến"
-                name={"to"}
-                className="inline-block"
-              >
-                <TimePicker
-                  format={"HH:mm"}
-                  disabled={setting?.unitStyle}
-                  disabledTime={(d) => {
-                    return {
-                      disabledMinutes(hour) {
-                        return Array.from(Array(60).keys()).filter((m) => {
-                          if (hour == endTime?.getHours()) {
-                            return m > endTime.getMinutes()
-                          }
-                          if (hour == d.hour()) return m < d.minute()
-                          return false
-                        })
-                      },
-                      disabledHours() {
-                        const now = new Date()
-                        return Array.from(Array(24).keys()).filter((h) => {
-                          if (startTime != null && startTime.getHours() > h)
-                            return true
-                          if (endTime != null && endTime.getHours() < h)
-                            return true
-                          return h < now.getHours()
-                        })
-                      },
-                    }
-                  }}
-                />
-              </Form.Item>
-            </Space>
-          </Form.Item>
+          <FromToTimeInput
+            startTime={startTime}
+            endTime={endTime}
+            setting={setting}
+          />
           <Form.Item<Order>
             label={`Số ${
               setting?.unitName ?? "..."

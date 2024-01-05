@@ -48,7 +48,6 @@ export default function FieldCalendar(props: Readonly<Props>) {
     <div>
       <Calendar
         events={data}
-        view="day"
         showMultiDayTimes
         localizer={localizer}
         startAccessor="start"
