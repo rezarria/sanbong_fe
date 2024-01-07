@@ -10,14 +10,14 @@ export type EditModel = {
 export type ViewModel = {
   id: string
   name: string
-  pictures: string[]
+  images: string[]
   description: string
   price: number
 }
 
 export type AddType = {
   name: string
-  pictures: string[]
+  images: string[]
   description: string
   price: number
 }
@@ -25,5 +25,5 @@ export type AddType = {
 export type ListType = {
   id: string
   name: string
-  pictures: string
+  images: string
 }

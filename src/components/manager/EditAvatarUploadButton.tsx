@@ -7,7 +7,7 @@ import {
   UploadFile,
   UploadProps,
 } from "antd/es/upload"
-import useConnect from "../../store/useConnect"
+import useConnect from "@/store/useConnect"
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png"

@@ -1,26 +1,30 @@
 "use client"
 
-import { Button, Flex, Input, Space } from "antd"
+import { Button, Flex, Input } from "antd"
 import { useRef } from "react"
-import { EditOutlined, EyeOutlined } from "@ant-design/icons"
-import ViewComponent, { ViewRef } from "@/components/manager/View"
+import { EditOutlined } from "@ant-design/icons"
 import Edit, { EditRef } from "@/components/manager/EditNoPatch"
-import List, { Ref as ListRef } from "@/components/manager/List"
+import List from "@/components/manager/List"
 import Add from "@/components/manager/Add"
-import DeleteButton from "@/components/manager/DeleteButton"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
 import UploadMultiImage from "@/components/manager/UploadMultiImage/UploadMultiImage"
 import ImageViews from "@/components/manager/ImageViews"
+import ForwardedRefCustomDescriptions, {
+  CustomDescriptionRef,
+} from "@/components/CustomDescriptions"
+import Table, { TableRef } from "@/components/manager/list/Table"
+import TableRowButton from "@/components/manager/list/TableRowButton"
 
 const MyList = List<ListType>()
-const MyView = ViewComponent<ViewModel>()
+const MyTable = Table<ListType>()
+const MyDescription = ForwardedRefCustomDescriptions<ViewModel>()
 const MyEdit = Edit<EditModel>()
 
 export default function Page() {
-  const listRef = useRef<ListRef>(null)
-  const viewRef = useRef<ViewRef>(null)
+  const viewRef = useRef<CustomDescriptionRef>(null)
   const editRef = useRef<EditRef>(null)
+  const tableRef = useRef<TableRef>(null)
 
   return (
     <Flex vertical={true} className="h-full" gap={15}>
@@ -31,7 +35,7 @@ export default function Page() {
           { label: "Tên sân", name: "name" },
           {
             label: "Hình ảnh",
-            name: "pictures",
+            name: "images",
             input: <UploadMultiImage url="api/files" />,
           },
           {
@@ -42,93 +46,62 @@ export default function Page() {
           { label: "Mô tả", name: "description", input: <TextArea /> },
         ]}
         onClose={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
       />
-      <MyList
-        url={"api/consumerProduct"}
-        columnsDef={[
+      <MyTable
+        ref={tableRef}
+        url="api/consumerProduct"
+        buttonColRender={(v: string, r, i) => (
+          <TableRowButton
+            id={v}
+            title="Xóa sản phẩm"
+            description={<></>}
+            url="api/consumerProduct"
+            onView={() => {
+              viewRef.current?.show(r.id)
+            }}
+            onDelete={() => {
+              tableRef.current?.update()
+            }}
+            onEdit={() => {
+              editRef.current?.show(r.id)
+            }}
+          />
+        )}
+        columns={[
           {
-            key: "#",
-            title: "#",
-            render: (_v, _d, i) => <span>{i + 1}</span>,
-          },
-          {
-            key: "name",
             dataIndex: "name",
-            title: "Tên sân",
-          },
-          {
-            key: "buttons",
-            title: "Thao tác",
-            render(value, record, index) {
-              return (
-                <Space>
-                  <Button
-                    title="xem"
-                    type="primary"
-                    icon={<EyeOutlined />}
-                    onClick={() => {
-                      viewRef.current?.show(record.id)
-                    }}
-                  />
-                  <Button
-                    title="sửa"
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                      editRef.current?.show(record.id)
-                    }}
-                  />
-                  <DeleteButton
-                    title="Xoá sân"
-                    description="Bạn có chắc chắn xoá sân này"
-                    url="api/field"
-                    id={[record.id]}
-                    onFinish={() => {
-                      listRef.current?.reload()
-                    }}
-                  />
-                </Space>
-              )
-            },
+            title: "Tên sản phẩm",
           },
         ]}
-        ref={listRef}
       />
-      <MyView
+      <MyDescription
+        modalTitle="Sản phẩm tiêu thụ"
+        layout="vertical"
         ref={viewRef}
-        url={"api/consumerProduct"}
-        modalTitle="Thông tin về sân"
+        column={24}
+        url="api/consumerProduct"
         sections={[
           {
             label: "Tên sân",
-            title: "name",
-            name: "name",
+            span: 24,
+            children: (data) => data.name,
           },
           {
             label: "Giá",
-            title: "price",
-            name: "price",
-            input: (data) => (
-              <Input
-                readOnly
-                value={data.price}
-                suffix={"vnđ"}
-                placeholder="Chưa đặt giá"
-              />
-            ),
+            span: 24,
+            children: (data) => data.price,
           },
           {
             label: "Hình ảnh",
-            title: "pictures",
-            name: "pictures",
-            input: (data) => <ImageViews value={data.pictures} />,
+            span: 24,
+            children: (data) => <ImageViews value={data.images} />,
           },
           {
             label: "Miêu tả",
-            title: "description",
-            name: "description",
-            input: (data) => <TextArea value={data.description} readOnly />,
+            span: 24,
+            children: (data) => data.description,
           },
         ]}
         button={(id) => (
@@ -144,12 +117,13 @@ export default function Page() {
           </Button>
         )}
       />
+
       <MyEdit
         url="api/consumerProduct"
         name="sân"
         ref={editRef}
         onComplete={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
         sections={[
           { name: "name", label: "Tên sân" },

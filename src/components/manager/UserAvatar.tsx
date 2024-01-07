@@ -3,7 +3,7 @@ import { Upload, UploadProps, message, Image, Form } from "antd"
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload"
 import { useCallback, useEffect, useId, useState } from "react"
 import useConnect from "@/store/useConnect"
-import config from "../../config/Config"
+import config from "@/config/Config"
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png"
@@ -97,7 +97,7 @@ export default function UserAvatar(props: Readonly<Props>) {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={true}
-        action={[config.baseUrl, props.url].join("")}
+        action={[config.baseUrl, props.url].join("/")}
         headers={Object.fromEntries(
           Object.entries(connect.defaults.headers).map(
             (i) => [i[0], i[1]?.toString()] as [string, string],

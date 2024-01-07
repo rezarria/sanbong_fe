@@ -20,7 +20,7 @@ export default function updateFileAction(
   )
   const files = oldFiles.concat(newFiles)
   return {
-    url: files.filter((i) => i.status == "done").map((i) => i.url),
+    url: files.filter((i) => i.status == "done").map((i) => i.response![0].url),
     file: files,
   }
 }

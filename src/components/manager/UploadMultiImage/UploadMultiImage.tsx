@@ -3,7 +3,8 @@ import { Upload, UploadFile, message } from "antd"
 import { useCallback, useEffect, useReducer, useState } from "react"
 import { RcFile, UploadChangeParam, UploadProps } from "antd/es/upload"
 import { uploadMultiImageReducer } from "./UploadMultiImageReducer"
-import useConnect from "../../../store/useConnect"
+import useConnect from "@/store/useConnect"
+import config from "@/config/Config"
 
 type Props = {
   value?: string[]
@@ -34,11 +35,11 @@ export default function UploadMultiImage(props: Readonly<Props>) {
       if (info.file.status == "done") {
         info.file.url = info.file.response![0].url
         if (!info.file.url.startsWith("http"))
-          info.file.url = connect.defaults.baseURL! + info.file.url
+          info.file.url = config.baseUrl + info.file.url
       }
       dispatch({ type: "updateFile", payload: { files: info.fileList } })
     },
-    [connect.defaults.baseURL],
+    [],
   )
 
   useEffect(() => {

@@ -1,11 +1,10 @@
 "use client"
 
-import { Button, Flex, Space } from "antd"
+import { Button, Flex } from "antd"
 import { useRef } from "react"
-import { EditOutlined, EyeOutlined } from "@ant-design/icons"
+import { EditOutlined } from "@ant-design/icons"
 import List, { Ref as ListRef } from "@/components/manager/List"
 import Add from "@/components/manager/Add"
-import DeleteButton from "@/components/manager/DeleteButton"
 import { AddModel, EditModel2, ListModel, ViewModel } from "./type"
 import { ChangePasswordButton } from "./ChangePasswordButton"
 import RoleSelectInput, {
@@ -20,13 +19,16 @@ import ForwardedRefCustomDescriptions, {
 import EditNoPatch, { Ref as EditRef } from "@/components/manager/EditNoPatch"
 import QueryUserInfo from "./QueryUserInfo"
 import QueryRoleInfo from "./QueryRoleInfo"
+import Table, { TableRef } from "@/components/manager/list/Table"
+import TableRowButton from "@/components/manager/list/TableRowButton"
 
 const MyList = List<ListModel>()
+const AccountTable = Table<ListModel>()
 const MyEdit2 = EditNoPatch<EditModel2>()
 const MyDescriptions = ForwardedRefCustomDescriptions<ViewModel>()
 
 export default function Page() {
-  const listRef = useRef<ListRef>(null)
+  const tableRef = useRef<TableRef>(null)
   const editRef = useRef<EditRef>(null)
   const descriptionRef = useRef<CustomDescriptionRef>(null)
 
@@ -111,58 +113,35 @@ export default function Page() {
           },
         ]}
         onClose={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
       />
-      <MyList
-        url={"api/account"}
-        columnsDef={[
+      <AccountTable
+        ref={tableRef}
+        url="api/account"
+        columns={[
           {
-            key: "#",
-            title: "#",
-            render: (_v, _d, i) => <span>{i + 1}</span>,
-          },
-          {
-            key: "username",
             dataIndex: "username",
-            title: "Tên",
-          },
-          {
-            key: "buttons",
-            title: "Thao tác",
-            render(value, record, index) {
-              return (
-                <Space>
-                  <Button
-                    title="xem"
-                    type="primary"
-                    icon={<EyeOutlined />}
-                    onClick={() => {
-                      descriptionRef.current?.show(record.id)
-                    }}
-                  />
-                  <Button
-                    title="sửa"
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                      editRef.current?.show(record.id)
-                    }}
-                  />
-                  <DeleteButton
-                    title="Xoá tài khoản"
-                    description="Bạn có chắc chắn xoá tài khoản này"
-                    url="api/account"
-                    id={[record.id]}
-                    onFinish={() => {
-                      listRef.current?.reload()
-                    }}
-                  />
-                </Space>
-              )
-            },
+            title: "tài khoản",
           },
         ]}
-        ref={listRef}
+        buttonColRender={(id: string, r, index) => (
+          <TableRowButton
+            url="api/account"
+            description={"xóa tài khoản" + r.username}
+            title="Xóa Tài khoản"
+            id={id}
+            onView={() => {
+              descriptionRef.current?.show(r.id)
+            }}
+            onEdit={() => {
+              editRef.current?.show(r.id)
+            }}
+            onDelete={() => {
+              tableRef.current?.update()
+            }}
+          />
+        )}
       />
 
       <MyDescriptions
@@ -213,7 +192,7 @@ export default function Page() {
         name="tài khoản"
         ref={editRef}
         onComplete={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
         sections={[
           { name: "username", label: "Tài khoản" },

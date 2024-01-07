@@ -97,9 +97,6 @@ function ListFC<T extends AnyObject & { id: string }>(
     <div className="flex-grow overflow-hidden">
       <Flex vertical={true} className="h-full">
         {TableWrapper<T>(props, data)}
-        <div className="">
-          <Pagination className="w-full" />
-        </div>
       </Flex>
     </div>
   )

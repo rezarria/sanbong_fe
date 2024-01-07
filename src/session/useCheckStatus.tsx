@@ -36,9 +36,11 @@ export default function useCheckStatus() {
               localStorage.clear()
               router.push("/login")
             },
-            Date.now() - jwtPayload!.iat! * 1000,
+            jwtPayload!.exp! * 1000 - Date.now(),
           )
-          console.log(`đăng xuất trong ${Date.now() / 1000 - jwtPayload!.iat!}`)
+          console.log(
+            `đăng xuất trong ${Math.abs(jwtPayload!.exp! - Date.now() / 1000)}`,
+          )
           setOk(true)
           return () => {
             clearTimeout(timeout)

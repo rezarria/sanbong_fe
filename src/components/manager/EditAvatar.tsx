@@ -4,8 +4,7 @@ import { Button, Card, Col, Image, Popconfirm, Row, Space } from "antd"
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons"
 import EditDefaultAvatar from "./EditDefautAvatar"
 import EditAvatarUploadButton from "./EditAvatarUploadButton"
-import useConnect from "@/store/useConnect"
-import config from "../../config/Config"
+import config from "@/config/Config"
 
 export function EditAvatar(
   props: Readonly<{ value?: string; onChange?: (value: string) => void }>,

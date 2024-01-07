@@ -1,12 +1,11 @@
 "use client"
 
-import { Button, Flex, Input, Space } from "antd"
+import { Button, Flex, Input } from "antd"
 import { useRef } from "react"
-import { EditOutlined, EyeOutlined } from "@ant-design/icons"
+import { EditOutlined } from "@ant-design/icons"
 import Edit, { EditRef } from "@/components/manager/EditNoPatch"
-import List, { Ref as ListRef } from "@/components/manager/List"
+import List from "@/components/manager/List"
 import Add from "@/components/manager/Add"
-import DeleteButton from "@/components/manager/DeleteButton"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
 import UploadMultiImage from "@/components/manager/UploadMultiImage/UploadMultiImage"
@@ -17,13 +16,16 @@ import ForwardedRefCustomDescriptions, {
 import CurrentFieldStatus, { CurrentFieldStatusRef } from "./CurrentFieldStatus"
 import ImageList from "@/components/ImageList"
 import MonacoInput from "@/components/manager/MonocoInput"
+import Table, { TableRef } from "@/components/manager/list/Table"
+import TableRowButton from "@/components/manager/list/TableRowButton"
 
 const MyList = List<ListType>()
+const FieldTable = Table<ListType>()
 const MyEdit = Edit<EditModel>()
 const MyDescription = ForwardedRefCustomDescriptions<ViewModel>()
 
 export default function Page() {
-  const listRef = useRef<ListRef>(null)
+  const tableRef = useRef<TableRef>(null)
   const editRef = useRef<EditRef>(null)
   const editTimeRef = useRef<EditTimeRef>(null)
   const descriptionRef = useRef<CustomDescriptionRef>(null)
@@ -49,59 +51,36 @@ export default function Page() {
           { label: "Mô tả", name: "description", input: <TextArea /> },
         ]}
         onClose={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
       />
-      <MyList
-        url={"api/field"}
-        columnsDef={[
+      <FieldTable
+        ref={tableRef}
+        url="api/field"
+        columns={[
           {
-            key: "#",
-            title: "#",
-            render: (_v, _d, i) => <span>{i + 1}</span>,
-          },
-          {
-            key: "name",
             dataIndex: "name",
             title: "Tên sân",
           },
-          {
-            key: "buttons",
-            title: "Thao tác",
-            render(value, record, index) {
-              return (
-                <Space>
-                  <Button
-                    title="xem"
-                    type="primary"
-                    icon={<EyeOutlined />}
-                    onClick={() => {
-                      descriptionRef.current?.show(record.id)
-                      fieldStatusRef.current?.run()
-                    }}
-                  />
-                  <Button
-                    title="sửa"
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                      editRef.current?.show(record.id)
-                    }}
-                  />
-                  <DeleteButton
-                    title="Xoá sân"
-                    description="Bạn có chắc chắn xoá sân này"
-                    url="api/field"
-                    id={[record.id]}
-                    onFinish={() => {
-                      listRef.current?.reload()
-                    }}
-                  />
-                </Space>
-              )
-            },
-          },
         ]}
-        ref={listRef}
+        buttonColRender={(v: string, r, i) => (
+          <TableRowButton
+            id={v}
+            onView={() => {
+              descriptionRef.current?.show(r.id)
+              fieldStatusRef.current?.run()
+            }}
+            onEdit={() => {
+              editRef.current?.show(r.id)
+            }}
+            onDelete={() => {
+              tableRef.current?.update()
+            }}
+            url="api/field"
+            description={"xóa sân " + r.name}
+            title="Xóa Sân"
+          />
+        )}
       />
       <MyDescription
         ref={descriptionRef}
@@ -172,7 +151,7 @@ export default function Page() {
         name="sân"
         ref={editRef}
         onComplete={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
         sections={[
           { name: "name", label: "Tên sân" },

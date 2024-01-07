@@ -14,7 +14,7 @@ import {
 } from "antd"
 import { NamePath } from "antd/es/form/interface"
 import { HttpStatusCode } from "axios"
-import { ReactNode, useState } from "react"
+import { ReactNode, useCallback, useState } from "react"
 import UserAvatar from "./UserAvatar"
 import useConnect from "@/store/useConnect"
 
@@ -46,22 +46,25 @@ export default function Add<T extends Record<string, any>>(props: Props<T>) {
     form.submit()
   }
   const handleCancel = () => setIsModalOpen(false)
-  const onFinish = (data: T) => {
-    setIsSpining(true)
-    props.sections
-      .filter((i) => i.ignore != null && i.ignore)
-      .forEach((section) => {
-        delete data[section.name as string]
+  const onFinish = useCallback(
+    (data: T) => {
+      setIsSpining(true)
+      props.sections
+        .filter((i) => i.ignore != null && i.ignore)
+        .forEach((section) => {
+          delete data[section.name as string]
+        })
+      connect.post<T>(props.url, data).then((res) => {
+        if (res.status === HttpStatusCode.Ok) {
+          props.onClose?.()
+          form.resetFields()
+          setIsSpining(false)
+          setIsModalOpen(false)
+        }
       })
-    connect.post<T>(props.url, data).then((res) => {
-      if (res.status === HttpStatusCode.Ok) {
-        setIsSpining(false)
-        setIsModalOpen(false)
-        form.resetFields()
-        props.onClose?.()
-      }
-    })
-  }
+    },
+    [connect, form, props],
+  )
   return (
     <Space>
       <Button type="primary" onClick={showModal}>
@@ -113,11 +116,7 @@ function selectInput<T extends Record<string, any>>(section: SelectInput<T>) {
   if (!section.type) return <Input />
   switch (section.type) {
     case "avatar":
-      return (
-        <>
-          <UserAvatar url="api/files" name={section.name as string} />
-        </>
-      )
+      return <UserAvatar url="api/files" name={section.name as string} />
     case "datepicker":
       return <DatePicker format={"DD-MM-YYYY"} className="w-full" />
     default:
