@@ -1,16 +1,8 @@
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Table,
-} from "antd"
+import { Button, Form, Input, InputNumber, Space, Table, message } from "antd"
 import ConsumerProductSelectInput from "./ConsumerProductSelectInput"
 
 export default function Details() {
+  const form = Form.useFormInstance()
   return (
     <Form.Item>
       <Form.List name={"details"}>
@@ -33,11 +25,27 @@ export default function Details() {
                     dataIndex: "name",
                     key: "consumerProductId",
                     render: (v) => (
-                      <Form.Item
-                        name={[v, "consumerProductId"]}
-                        initialValue={null}
-                      >
-                        <ConsumerProductSelectInput />
+                      <Form.Item noStyle>
+                        <Form.Item
+                          name={[v, "consumerProductId"]}
+                          initialValue={null}
+                        >
+                          <ConsumerProductSelectInput
+                            onChange2={(data) => {
+                              form.setFieldValue(
+                                ["details", v, "priceId"],
+                                data?.priceId,
+                              )
+                            }}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          hidden
+                          name={[v, "priceId"]}
+                          initialValue={null}
+                        >
+                          <Input />
+                        </Form.Item>
                       </Form.Item>
                     ),
                   },
