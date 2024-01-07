@@ -1,27 +1,32 @@
 "use client"
 
-import { Button, Flex, Form, Image, Space } from "antd"
+import { Button, Flex, Form, Image } from "antd"
 import { useRef } from "react"
-import { EditOutlined, EyeOutlined } from "@ant-design/icons"
+import { EditOutlined } from "@ant-design/icons"
 import ViewComponent, { ViewRef } from "@/components/manager/View"
 import Edit, { EditRef } from "@/components/manager/Edit"
-import List, { Ref as ListRef } from "@/components/manager/List"
 import Add from "@/components/manager/Add"
-import DeleteButton from "@/components/manager/DeleteButton"
 import { AddModel, EditModel, ListModel, ViewModel } from "./type"
 import UserAvatar from "@/components/manager/UserAvatar"
 import useConnect from "@/store/useConnect"
 import RoleSelectInput, {
   RoleSelectInputProps,
 } from "@/components/manager/RoleSelectInput"
-import AccountSelectInput from "../../../../components/manager/AccountSelectInput"
+import AccountSelectInput from "@/components/manager/AccountSelectInput"
+import Table, { TableRef } from "@/components/manager/list/Table"
+import TableRowButton from "@/components/manager/list/TableRowButton"
+import ForwardedRefCustomDescriptions, {
+  CustomDescriptionRef,
+} from "@/components/CustomDescriptions"
 
-const MyList = List<ListModel>()
+const MyTable = Table<ListModel>()
+const MyDescription = ForwardedRefCustomDescriptions<ViewModel>()
 const MyView = ViewComponent<ViewModel>()
 const MyEdit = Edit<EditModel>()
 
 export default function Page() {
-  const listRef = useRef<ListRef>(null)
+  const tableRef = useRef<TableRef>(null)
+  const descriptionRef = useRef<CustomDescriptionRef>(null)
   const viewRef = useRef<ViewRef>(null)
   const editRef = useRef<EditRef>(null)
   const connect = useConnect((s) => s.connect)
@@ -64,80 +69,56 @@ export default function Page() {
           },
         ]}
         onClose={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
       />
-      <MyList
-        url={"api/staff"}
-        columnsDef={[
+      <MyTable
+        url="api/staff"
+        ref={tableRef}
+        buttonColRender={(v: string, r, i) => (
+          <TableRowButton
+            url="api/staff"
+            description="Xóa Nhân viên"
+            title="Xóa nhân viên"
+            id={v}
+            onView={() => {
+              descriptionRef.current?.show(v)
+            }}
+            onEdit={() => {
+              editRef.current?.show(v)
+            }}
+            onDelete={() => {
+              tableRef.current?.update()
+            }}
+          />
+        )}
+        columns={[
           {
-            key: "#",
-            title: "#",
-            render: (_v, _d, i) => <span>{i + 1}</span>,
-          },
-          {
-            key: "name",
             dataIndex: "name",
-            title: "Tên",
-          },
-          {
-            key: "buttons",
-            title: "Thao tác",
-            render(value, record, index) {
-              return (
-                <Space>
-                  <Button
-                    title="xem"
-                    type="primary"
-                    icon={<EyeOutlined />}
-                    onClick={() => {
-                      viewRef.current?.show(record.id)
-                    }}
-                  />
-                  <Button
-                    title="sửa"
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                      editRef.current?.show(record.id)
-                    }}
-                  />
-                  <DeleteButton
-                    title="Xoá người dùng"
-                    description="Bạn có chắc chắn xoá người dùng này"
-                    url="api/user"
-                    id={[record.id]}
-                    onFinish={() => {
-                      listRef.current?.reload()
-                    }}
-                  />
-                </Space>
-              )
-            },
+            title: "Tên nhân viên",
           },
         ]}
-        ref={listRef}
       />
-      <MyView
-        ref={viewRef}
-        url={"api/user"}
-        modalTitle="Thông tin về người dùng"
+      <MyDescription
+        column={24}
+        layout="horizontal"
+        modalTitle="Thông tin nhân viên"
+        url="api/staff"
+        ref={descriptionRef}
         sections={[
           {
             label: "Tên",
-            title: "name",
-            name: "name",
+            span: 24,
+            children: (data) => data.name,
           },
           {
             label: "Ngày sinh",
-            title: "Ngày sinh",
-            name: "dob",
-            type: "datepicker",
+            children: (data) => data.dob,
           },
           {
             label: "Avatar",
-            title: "Avatar",
-            name: "avatar",
-            input: (data) => (
+            span: 24,
+            children: (data) => (
               <Image
                 className="relative"
                 src={connect.defaults.baseURL + data.avatar}
@@ -163,7 +144,7 @@ export default function Page() {
         name="người dùng"
         ref={editRef}
         onComplete={() => {
-          listRef.current?.reload()
+          tableRef.current?.update()
         }}
         sections={[
           { name: "name", label: "Tên" },

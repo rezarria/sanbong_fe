@@ -53,7 +53,7 @@ const App: React.FC<AppProps> = (props) => {
                   background: colorBgContainer,
                 }}
               >
-                <>{props.children}</>
+                {props.children}
               </Content>
             </Layout>
           </Content>
