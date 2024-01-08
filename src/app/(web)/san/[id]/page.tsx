@@ -78,6 +78,9 @@ export default function Page(props: Readonly<Props>) {
             <p>
               Giá <span>{data?.price}</span> vnd
             </p>
+            {data && data.description && (
+              <div dangerouslySetInnerHTML={{ __html: data.description }} />
+            )}
           </div>
           <Link
             className="no-underline"

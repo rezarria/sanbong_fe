@@ -26,7 +26,7 @@ export default function FieldItem(props: Readonly<Props>) {
           {props.organization && (
             <p className="m-0">
               Địa điểm{" "}
-              <Link href={"/organization?id=" + props.organization.id}>
+              <Link href={"/organization/" + props.organization.id}>
                 <span className="font-bold m-0">{props.organization.name}</span>
               </Link>
             </p>
