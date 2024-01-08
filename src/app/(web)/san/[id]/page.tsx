@@ -4,10 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import Container from "@/web/components/Container"
 import axios, { HttpStatusCode } from "axios"
 import config from "@/config/Config"
-import Image from "next/image"
 import Link from "next/link"
-import { Scheduler } from "@aldabil/react-scheduler"
-import { DayHours } from "@aldabil/react-scheduler/types"
 import Lich from "@/web/components/Lich"
 import ReactImageGallery, { ReactImageGalleryItem } from "react-image-gallery"
 import "react-image-gallery/styles/css/image-gallery.css"
@@ -20,7 +17,7 @@ type Data = {
   id: string
   name: string
   organization: string
-  pictures: string[]
+  images: string[]
   price: string[]
   description: string
 }
@@ -62,10 +59,12 @@ export default function Page(props: Readonly<Props>) {
           <div>
             {data && (
               <ReactImageGallery
-                items={data.pictures.map(
+                items={data.images.map(
                   (i) =>
                     ({
-                      original: i,
+                      original: i.startsWith("http")
+                        ? i
+                        : "http://localhost:8080" + i,
                       originalHeight: 300,
                     }) as ReactImageGalleryItem,
                 )}

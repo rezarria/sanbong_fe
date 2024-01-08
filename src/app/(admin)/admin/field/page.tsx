@@ -4,7 +4,6 @@ import { Button, Flex, Input } from "antd"
 import { useRef } from "react"
 import { EditOutlined } from "@ant-design/icons"
 import Edit, { EditRef } from "@/components/manager/EditNoPatch"
-import List from "@/components/manager/List"
 import Add from "@/components/manager/Add"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
 import TextArea from "antd/es/input/TextArea"
@@ -18,8 +17,8 @@ import ImageList from "@/components/ImageList"
 import MonacoInput from "@/components/manager/MonocoInput"
 import Table, { TableRef } from "@/components/manager/list/Table"
 import TableRowButton from "@/components/manager/list/TableRowButton"
+import OrganizationSelectInput from "./OrganizationSelectInpu"
 
-const MyList = List<ListType>()
 const FieldTable = Table<ListType>()
 const MyEdit = Edit<EditModel>()
 const MyDescription = ForwardedRefCustomDescriptions<ViewModel>()
@@ -42,6 +41,11 @@ export default function Page() {
             label: "Hình ảnh",
             name: "images",
             input: <UploadMultiImage url="api/files" />,
+          },
+          {
+            label: "Tổ chức",
+            name: "organizationId",
+            input: <OrganizationSelectInput />,
           },
           {
             label: "Giá",
@@ -166,6 +170,11 @@ export default function Page() {
             input: (
               <Input type="number" suffix="vnd" placeholder="Chưa đặt giá" />
             ),
+          },
+          {
+            name: "organizationId",
+            label: "Tổ chức",
+            input: <OrganizationSelectInput />,
           },
           {
             name: "description",

@@ -4,6 +4,7 @@ export type EditModel = {
   images: string[]
   description?: string
   price?: number
+  organizationId?: string
   lastModifiedDate: string
 }
 
@@ -20,6 +21,7 @@ export type AddType = {
   images: string[]
   description: string
   price: number
+  organizationId: string
 }
 
 export type ListType = {
