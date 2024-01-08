@@ -1,4 +1,7 @@
 // @ts-check
+const { styles } = require("@ckeditor/ckeditor5-dev-utils")
+// @ts-check
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
@@ -33,6 +36,26 @@ const nextConfig = {
           not: [...fileLoaderRule.resourceQuery.not, /url/],
         },
         use: ["@svgr/webpack"],
+      },
+      {
+        test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
+        use: ["raw-loader"],
+      },
+      {
+        test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
+        use: [
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: styles.getPostCssConfig({
+                themeImporter: {
+                  themePath: require.resolve("@ckeditor/ckeditor5-theme-lark"),
+                },
+                minify: true,
+              }),
+            },
+          },
+        ],
       },
     )
     return config

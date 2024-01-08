@@ -6,7 +6,6 @@ import { EditOutlined } from "@ant-design/icons"
 import Edit, { EditRef } from "@/components/manager/EditNoPatch"
 import Add from "@/components/manager/Add"
 import { AddType, EditModel, ListType, ViewModel } from "./type"
-import TextArea from "antd/es/input/TextArea"
 import UploadMultiImage from "@/components/manager/UploadMultiImage/UploadMultiImage"
 import EditTime, { EditTimeRef } from "./EditTime"
 import ForwardedRefCustomDescriptions, {
@@ -14,11 +13,14 @@ import ForwardedRefCustomDescriptions, {
 } from "@/components/CustomDescriptions"
 import CurrentFieldStatus, { CurrentFieldStatusRef } from "./CurrentFieldStatus"
 import ImageList from "@/components/ImageList"
-import MonacoInput from "@/components/manager/MonocoInput"
 import Table, { TableRef } from "@/components/manager/list/Table"
 import TableRowButton from "@/components/manager/list/TableRowButton"
 import OrganizationSelectInput from "./OrganizationSelectInpu"
+import dynamic from "next/dynamic"
 
+const Editor = dynamic(() => import("@/components/manager/Editor"), {
+  ssr: false,
+})
 const FieldTable = Table<ListType>()
 const MyEdit = Edit<EditModel>()
 const MyDescription = ForwardedRefCustomDescriptions<ViewModel>()
@@ -52,7 +54,7 @@ export default function Page() {
             name: "price",
             input: <Input suffix="vnđ" />,
           },
-          { label: "Mô tả", name: "description", input: <TextArea /> },
+          { label: "Mô tả", name: "description", input: <Editor /> },
         ]}
         onClose={() => {
           tableRef.current?.update()
@@ -179,7 +181,7 @@ export default function Page() {
           {
             name: "description",
             label: "Mô tả",
-            input: <MonacoInput />,
+            input: <Editor />,
           },
         ]}
       />
