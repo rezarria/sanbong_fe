@@ -35,15 +35,43 @@ function _DangKy(props: {}, ref: ForwardedRef<DangKyRef>) {
         Đăng ký
       </h1>
       <div className="w-full flex-1 mt-8">
-        <div className="mx-auto max-w-xs">
+        <form
+          method="post"
+          action={"http://localhost:8080/public/api/security/register"}
+          className="mx-auto max-w-xs"
+          onSubmit={(e) => {
+            e.preventDefault()
+            let data = new FormData(e.currentTarget)
+            let body = JSON.stringify(Object.fromEntries(data.entries()))
+            fetch("http://localhost:8080/public/api/security/register", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body,
+            }).then((res) => {
+              if (res.status == 200) {
+                setOpen(false)
+              }
+            })
+          }}
+        >
           <input
             className="w-full box-border px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+            type="text"
+            name="name"
+            placeholder="Tên người dùng"
+          />
+          <input
+            className="w-full box-border px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
             type="email"
+            name="email"
             placeholder="Email"
           />
           <input
             className="w-full box-border px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
             type="password"
+            name="password"
             placeholder="Password"
           />
           <button className="cursor-pointer mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
@@ -70,7 +98,7 @@ function _DangKy(props: {}, ref: ForwardedRef<DangKyRef>) {
           >
             <span className="ml-3">Quay lại</span>
           </button>
-        </div>
+        </form>
       </div>
     </div>
   )

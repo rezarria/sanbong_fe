@@ -1,9 +1,9 @@
-import { Form, Input, Segmented, Space } from "antd"
+import { Form, Segmented, Space } from "antd"
 import Image from "next/image"
 
 export default function PaymentMethod() {
   return (
-    <Form.Item label="Phương thức thanh toán">
+    <Form.Item label="Phương thức thanh toán" name={"paymentMethod"}>
       <Segmented
         options={[
           {
@@ -20,7 +20,7 @@ export default function PaymentMethod() {
                 <p>Tiền mặt</p>
               </Space>
             ),
-            value: 1,
+            value: "MONEY",
           },
           {
             label: (
@@ -36,7 +36,7 @@ export default function PaymentMethod() {
                 <p>VNPAY</p>
               </Space>
             ),
-            value: 2,
+            value: "VNPAY",
           },
         ]}
       />

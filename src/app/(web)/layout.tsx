@@ -4,6 +4,7 @@ import Footer from "@/web/components/Footer"
 import "./globals.css"
 import StyledComponentsRegistry from "@/lib/AntdRegistry"
 import { Inter } from "next/font/google"
+import WebPrivateSession from "@/session/WebPrivateSession"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
@@ -16,9 +17,11 @@ export default function Layout(props: Readonly<{ children?: ReactNode }>) {
     <html lang="en">
       <body className={`${inter.className} m-0 flex flex-col`}>
         <StyledComponentsRegistry>
-          <Header />
-          <div className="overflow-hidden w-full">{props.children}</div>
-          <Footer />
+          <WebPrivateSession>
+            <Header />
+            <div className="overflow-hidden w-full">{props.children}</div>
+            <Footer />
+          </WebPrivateSession>
         </StyledComponentsRegistry>
       </body>
     </html>

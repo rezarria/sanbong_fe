@@ -234,7 +234,6 @@ function Edit<T extends { id: string; lastModifiedDate: string }>(
 }
 
 export { type Ref as EditRef }
-const ForwardedRefEdit = <
-  T extends { id: string; lastModifiedDate: string },
->() => forwardRef(Edit<T>)
+const ForwardedRefEdit = <T extends { id: string; lastModifiedDate: any }>() =>
+  forwardRef(Edit<T>)
 export default ForwardedRefEdit

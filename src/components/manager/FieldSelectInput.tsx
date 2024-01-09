@@ -57,9 +57,9 @@ function DebounceSelect<
   useEffect(() => {
     fetchOptions("").then(setOptions)
   }, [fetchOptions])
-
   return (
     <Select
+      disabled={props.disabled}
       labelInValue
       filterOption={true}
       onSearch={debounceFetcher}
@@ -82,6 +82,7 @@ type Props = {
   onChange?: (value?: string) => void
   onChange2?: (value?: string) => void
   onChange3?: (value?: Field) => void
+  readonly?: boolean
 }
 
 type Ref = {
@@ -113,8 +114,20 @@ function _FieldSelectInput(props: Readonly<Props>, ref: ForwardedRef<Ref>) {
     }),
     [fields, props.value],
   )
+  useEffect(() => {
+    const field = fields.find((i) => i.id == props.value)
+    if (field) {
+      setValue({
+        label: field.name,
+        value: field.id,
+      })
+    } else {
+      fetchByName("")
+    }
+  }, [fetchByName, fields, props.value])
   return (
     <DebounceSelect
+      disabled={props.readonly}
       value={value}
       placeholder="Chọn sân"
       fetchOptions={fetchByName}

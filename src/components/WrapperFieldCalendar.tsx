@@ -1,6 +1,6 @@
 import { Form } from "antd"
-import FieldCalendar from "./FieldCalendar"
-import { Order } from "./type"
+import FieldCalendar from "@/components/FieldCalendar"
+import { Order } from "./orderType"
 
 export default function WrapperFieldCalendar() {
   const form = Form.useFormInstance<Order>()

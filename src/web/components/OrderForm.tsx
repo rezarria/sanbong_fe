@@ -15,7 +15,11 @@ import FromToTimeInput from "@/components/FromToTimeInput"
 import useConnect from "@/store/useConnect"
 import { useRouter } from "next/navigation"
 
-export default function Page() {
+type Props = {
+  fieldId: string
+}
+
+export default function OrderForm(props: Readonly<Props>) {
   const [setting, getSetting] = useFieldUnitSetting()
   const [form] = Form.useForm<Order>()
   useEffect(() => {
@@ -58,12 +62,16 @@ export default function Page() {
     },
     [connect, router],
   )
+  useEffect(() => {
+    form.setFieldValue("fieldId", props.fieldId)
+  }, [form, props.fieldId])
   return (
     <Form<Order> layout="vertical" form={form} onFinish={submitHandle}>
       <Row gutter={15}>
         <Col span={12}>
           <Form.Item<Order> label="Sân" name={"fieldId"}>
             <FieldSelectInput
+              readonly={true}
               ref={fieldInputRef}
               onChange2={(id) => {
                 if (id) getSetting(id)

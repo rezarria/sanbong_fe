@@ -2,7 +2,7 @@ import { Calendar, dayjsLocalizer } from "react-big-calendar"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import { useEffect, useState } from "react"
-import { Schedule } from "./type"
+import { Schedule } from "./orderType"
 import useConnect from "@/store/useConnect"
 dayjs.extend(timezone)
 const localizer = dayjsLocalizer(dayjs)

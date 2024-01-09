@@ -9,6 +9,7 @@ export type Order = {
   to?: Dayjs
   unit: number
   description: string
+  paymentMethod: PaymentMethodType
   details?: (
     | {
         consumerProductId?: string
@@ -24,3 +25,5 @@ export type Schedule = {
   from: number
   to: number
 }
+
+export type PaymentMethodType = "MONEY" | "VNPAY"

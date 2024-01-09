@@ -1,5 +1,5 @@
 import { Form, Space, TimePicker } from "antd"
-import { Order } from "./type"
+import { Order } from "./orderType"
 import useFieldUnitSetting from "./useFieldUnitSetting"
 
 type Props = {

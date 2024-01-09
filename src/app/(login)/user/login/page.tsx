@@ -1,16 +1,24 @@
 "use client"
 
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import DangKy, { DangKyRef } from "./DangKy"
+import { useRouter } from "next/navigation"
 
 type Props = {
-  params: {
+  searchParams: {
     returnUrl?: string
+    dangky?: boolean
   }
 }
 
 export default function Page(props: Readonly<Props>) {
   const dangKyRef = useRef<DangKyRef>(null)
+  const router = useRouter()
+  useEffect(() => {
+    if (props.searchParams.dangky) {
+      dangKyRef.current?.show()
+    }
+  }, [props.searchParams.dangky])
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
@@ -19,15 +27,40 @@ export default function Page(props: Readonly<Props>) {
           <div className="mt-12 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold">Đăng nhập</h1>
             <div className="w-full flex-1 mt-8">
-              <div className="mx-auto max-w-xs">
+              <form
+                className="mx-auto max-w-xs"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  const body = JSON.stringify(
+                    Object.fromEntries(new FormData(e.currentTarget).entries()),
+                  )
+                  fetch("http://localhost:8080/api/security/login", {
+                    method: "POST",
+                    body,
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }).then((res) => {
+                    if (res.status === 200) {
+                      res.json().then((d) => {
+                        localStorage.clear()
+                        localStorage.setItem("jwt", d.jwt)
+                        localStorage.setItem("refresh", d.refresh)
+                        router.push("/")
+                      })
+                    }
+                  })
+                }}
+              >
                 <input
                   className="w-full box-border px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="email"
+                  name="username"
                   placeholder="Email"
                 />
                 <input
                   className="w-full box-border px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="password"
+                  name="password"
                   placeholder="Password"
                 />
                 <button className="cursor-pointer mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
@@ -66,7 +99,7 @@ export default function Page(props: Readonly<Props>) {
                   </svg>
                   <span className="ml-3">Đăng ký</span>
                 </button>
-              </div>
+              </form>
             </div>
           </div>
         </div>

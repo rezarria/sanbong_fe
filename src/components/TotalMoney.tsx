@@ -1,7 +1,7 @@
 "use client"
 
 import { Form, InputNumber } from "antd"
-import { Order } from "./type"
+import { Order } from "./orderType"
 import useConsumerProduct from "@/hooks/useConsumerProduct"
 import { FieldSelectInputRef } from "@/components/manager/FieldSelectInput"
 
