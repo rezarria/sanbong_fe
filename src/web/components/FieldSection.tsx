@@ -4,6 +4,7 @@ import axios, { HttpStatusCode } from "axios"
 import { useCallback, useEffect, useState } from "react"
 import config from "@/config/Config"
 import FieldItem from "./FieldItem"
+import { Pagination } from "@mui/material"
 
 type Field = {
   images: string[]
@@ -23,7 +24,7 @@ type ResponeType = {
 }
 
 type Props = {
-  search: string
+  search?: string
 }
 
 export default function FieldSection(props: Readonly<Props>) {
@@ -78,6 +79,7 @@ export default function FieldSection(props: Readonly<Props>) {
           }
         />
       ))}
+      <Pagination count={10} onChange={(e, page) => {}} />
     </section>
   )
 }
