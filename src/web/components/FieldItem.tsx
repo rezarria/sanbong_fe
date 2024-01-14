@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import config from "@/config/Config"
 
 type Props = {
   fieldId: string
@@ -15,7 +16,11 @@ export default function FieldItem(props: Readonly<Props>) {
       <div className="rounded overflow-hidden w-[300px] h-[200px]">
         <Image
           className="!relative"
-          src={props.picture ?? "/field.svg"}
+          src={
+            props.picture?.startsWith("http")
+              ? props.picture
+              : [config.baseUrl, props.picture].join("") ?? "/field.svg"
+          }
           alt="field image"
           fill
         />

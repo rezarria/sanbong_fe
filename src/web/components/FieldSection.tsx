@@ -2,7 +2,7 @@
 
 import axios, { HttpStatusCode } from "axios"
 import { useCallback, useEffect, useState } from "react"
-import config from "../../config/Config"
+import config from "@/config/Config"
 import FieldItem from "./FieldItem"
 
 type Field = {
@@ -22,7 +22,11 @@ type ResponeType = {
   size: number
 }
 
-export default function FieldSection() {
+type Props = {
+  search: string
+}
+
+export default function FieldSection(props: Readonly<Props>) {
   const [data, setData] = useState<Field[]>([])
   const [organization, setOrganization] = useState<Map<string, string>>()
   const fetch = useCallback(async () => {
@@ -32,6 +36,7 @@ export default function FieldSection() {
         params: {
           size: 20,
           page: 0,
+          search: props.search,
         },
       },
     )
@@ -39,7 +44,7 @@ export default function FieldSection() {
       setData(res.data.content)
       return res.data.content
     }
-  }, [])
+  }, [props.search])
   const fetchOrganization = useCallback(async (ids: string[]) => {
     const res = await axios.post<{ id: string; name: string }[]>(
       [config.baseUrl, "public/api/organization/ids"].join("/"),
@@ -57,7 +62,7 @@ export default function FieldSection() {
     })
   }, [fetch, fetchOrganization])
   return (
-    <section className="py-3 flex flex-col gap-[15px]">
+    <section className="py-3 flex flex-col gap-[15px] bg-yellow-50 px-5">
       {data.map((i, index) => (
         <FieldItem
           key={index}
