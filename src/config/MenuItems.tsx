@@ -1,6 +1,7 @@
 import { RouterItems } from "@/components/AppBreadcrumb/type"
 import {
   LockOutlined,
+  LogoutOutlined,
   ThunderboltOutlined,
   UserOutlined,
 } from "@ant-design/icons"
@@ -83,10 +84,10 @@ const routerItems: RouterItems[] = [
     icon: <LockOutlined />,
   },
   {
-    name: "login",
-    src: "/admin/login",
-    title: "Đăng nhập",
-    icon: <UserOutlined />,
+    name: "logout",
+    src: "/admin/logout",
+    title: "Đăng xuất",
+    icon: <LogoutOutlined />,
   },
 ]
 

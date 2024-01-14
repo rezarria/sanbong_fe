@@ -8,6 +8,7 @@ import {
   routerItems,
   structFlated,
 } from "@/components/AppBreadcrumb/MenuItem"
+import { LogoutOutlined } from "@ant-design/icons"
 
 function AppMenu() {
   const router = useRouter()

@@ -8,6 +8,7 @@ function AppBreadcrumb() {
       {path.map((i) => (
         <Breadcrumb.Item key={i.name}>{i.title}</Breadcrumb.Item>
       ))}
+      <Breadcrumb.Item>{"Đăng xuất"}</Breadcrumb.Item>
     </Breadcrumb>
   )
 }

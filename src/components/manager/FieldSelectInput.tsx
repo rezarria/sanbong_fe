@@ -114,6 +114,11 @@ function _FieldSelectInput(props: Readonly<Props>, ref: ForwardedRef<Ref>) {
     }),
     [fields, props.value],
   )
+
+  useEffect(() => {
+    fetchByName("")
+  }, [fetchByName])
+
   useEffect(() => {
     const field = fields.find((i) => i.id == props.value)
     if (field) {
@@ -121,10 +126,9 @@ function _FieldSelectInput(props: Readonly<Props>, ref: ForwardedRef<Ref>) {
         label: field.name,
         value: field.id,
       })
-    } else {
-      fetchByName("")
     }
-  }, [fetchByName, fields, props.value])
+  }, [fields, props.value])
+
   return (
     <DebounceSelect
       disabled={props.readonly}

@@ -1,6 +1,6 @@
 "use client"
 
-import { Form, InputNumber } from "antd"
+import { Form, InputNumber, message } from "antd"
 import { Order } from "./orderType"
 import useConsumerProduct from "@/hooks/useConsumerProduct"
 import { FieldSelectInputRef } from "@/components/manager/FieldSelectInput"
@@ -15,13 +15,20 @@ export default function TotalMoney(props: Readonly<Props>) {
   const from = Form.useWatch("from", form)
   const to = Form.useWatch("to", form)
   const products = useConsumerProduct()
-
+  console.log({
+    from,
+    to,
+    products,
+    details,
+    field: props.fieldRef?.getField(),
+  })
   const productMoney = details
     ? details
         .map((i) => {
-          if (i && i.consumerProductId) {
+          if (i?.consumerProductId) {
             const product = products.data.get(i.consumerProductId)
             if (product) {
+              console.log(product)
               return i.count * product.price
             }
           }
@@ -38,7 +45,6 @@ export default function TotalMoney(props: Readonly<Props>) {
     to.second(0)
     const diff = Math.floor(to.diff(from) / 1000 / 60) / 60
     fieldMoney = diff * field.price
-    console.log(fieldMoney)
   }
   return (
     <Form.Item label="Tổng tiền" preserve>

@@ -14,9 +14,11 @@ import WrapperFieldCalendar from "@/components/WrapperFieldCalendar"
 import FromToTimeInput from "@/components/FromToTimeInput"
 import useConnect from "@/store/useConnect"
 import { useRouter } from "next/navigation"
+import LoadInput from "@/components/manager/LoadInput"
 
 type Props = {
-  fieldId: string
+  fieldId?: string
+  isAdmin: boolean
 }
 
 export default function OrderForm(props: Readonly<Props>) {
@@ -63,7 +65,9 @@ export default function OrderForm(props: Readonly<Props>) {
     [connect, router],
   )
   useEffect(() => {
-    form.setFieldValue("fieldId", props.fieldId)
+    if (props.fieldId) {
+      form.setFieldValue("fieldId", props.fieldId)
+    }
   }, [form, props.fieldId])
   return (
     <Form<Order> layout="vertical" form={form} onFinish={submitHandle}>
@@ -71,7 +75,7 @@ export default function OrderForm(props: Readonly<Props>) {
         <Col span={12}>
           <Form.Item<Order> label="Sân" name={"fieldId"}>
             <FieldSelectInput
-              readonly={true}
+              readonly={!props.isAdmin}
               ref={fieldInputRef}
               onChange2={(id) => {
                 if (id) getSetting(id)
@@ -100,8 +104,9 @@ export default function OrderForm(props: Readonly<Props>) {
               setting?.unitName ?? "..."
             } (${setting?.duration} phút)`}
           >
-            <Input
+            <LoadInput
               type="number"
+              duration={setting?.duration}
               disabled={setting == null || !setting.unitStyle}
             />
           </Form.Item>
